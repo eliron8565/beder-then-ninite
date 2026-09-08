@@ -198,6 +198,31 @@ internal sealed class MainForm : Form
 
     private static List<AppItem> ReadSelectionFromExecutable()
     {
+        // Preferred format: the downloaded EXE is byte-for-byte identical to the built EXE.
+        // A compact bitset token in the filename stores the website selection, preserving
+        // the executable icon and any Authenticode signature.
+        try
+        {
+            var fileName = Path.GetFileNameWithoutExtension(Application.ExecutablePath);
+            const string prefix = "AppForge-";
+            if (fileName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            {
+                var token = fileName[prefix.Length..].Replace('-', '+').Replace('_', '/');
+                token += token.Length % 4 switch { 2 => "==", 3 => "=", _ => "" };
+                var bits = Convert.FromBase64String(token);
+                var ids = new HashSet<int>();
+                for (var index = 0; index < bits.Length * 8; index++)
+                {
+                    if ((bits[index / 8] & (1 << (index % 8))) != 0) ids.Add(index);
+                }
+                var fromName = Catalog.Where(a => ids.Contains(a.Index)).ToList();
+                if (fromName.Count > 0) return fromName;
+            }
+        }
+        catch { }
+
+        // Backward compatibility for older AppForge downloads that stored the selection
+        // in a PE overlay.
         try
         {
             var bytes = File.ReadAllBytes(Application.ExecutablePath);
