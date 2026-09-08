@@ -37,15 +37,11 @@ jobs:
           $g = [System.Drawing.Graphics]::FromImage($bmp)
           $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
           $g.Clear([System.Drawing.Color]::Transparent)
-
-          # Same visual identity as the website favicon: dark rounded square + cyan/white/violet gradient.
           $dark = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255,8,17,31))
           $g.FillRectangle($dark, 10, 10, 236, 236)
-
           $rect = [System.Drawing.Rectangle]::new(18,18,220,220)
           $grad = New-Object System.Drawing.Drawing2D.LinearGradientBrush $rect, ([System.Drawing.Color]::FromArgb(255,110,231,255)), ([System.Drawing.Color]::FromArgb(255,167,139,250)), 45
           $g.FillRectangle($grad, 18, 18, 220, 220)
-
           $inner = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255,7,17,30))
           $fontA = New-Object System.Drawing.Font('Segoe UI',112,[System.Drawing.FontStyle]::Bold,[System.Drawing.GraphicsUnit]::Pixel)
           $fontI = New-Object System.Drawing.Font('Segoe UI',70,[System.Drawing.FontStyle]::Bold,[System.Drawing.GraphicsUnit]::Pixel)
@@ -54,7 +50,6 @@ jobs:
           $sf.LineAlignment = [System.Drawing.StringAlignment]::Center
           $g.DrawString('A',$fontA,$inner,[System.Drawing.RectangleF]::new(22,26,160,195),$sf)
           $g.DrawString('i',$fontI,$inner,[System.Drawing.RectangleF]::new(153,66,72,130),$sf)
-
           $g.Dispose()
           $hIcon = $bmp.GetHicon()
           $ico = [System.Drawing.Icon]::FromHandle($hIcon)
@@ -63,17 +58,16 @@ jobs:
           $fs.Close()
           $bmp.Dispose()
 
-      - name: Publish compact single-file EXE
-        run: dotnet publish src/AppForgeInstaller/AppForgeInstaller.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish
+      - name: Publish self-contained single-file EXE
+        run: dotnet publish src/AppForgeInstaller/AppForgeInstaller.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish
 
       - name: Sign EXE when trusted certificate is configured
         shell: powershell
         run: |
           if ([string]::IsNullOrWhiteSpace($env:WINDOWS_CERTIFICATE_BASE64)) {
-            Write-Host "No Windows code-signing certificate configured. EXE will remain unsigned."
+            Write-Host "No Windows code-signing certificate configured. EXE will remain unsigned until SignPath/trusted signing is connected."
             exit 0
           }
-
           $pfx = Join-Path $env:RUNNER_TEMP 'appforge-signing.pfx'
           [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE_BASE64))
           $signtool = Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\bin\*\x64\signtool.exe' | Sort-Object FullName -Descending | Select-Object -First 1
@@ -88,7 +82,7 @@ jobs:
         run: |
           $size = (Get-Item publish/AppForge.exe).Length
           Write-Host "AppForge EXE size: $([math]::Round($size / 1MB, 2)) MB"
-          if ($size -ge 95MB) { throw "EXE is too large for GitHub Pages repository publishing." }
+          if ($size -ge 95MB) { throw "EXE is too large for repository publishing." }
 
       - name: Copy EXE to website
         shell: powershell
@@ -102,16 +96,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add downloads/AppForge-Windows.exe
-          if git diff --cached --quiet; then
-            echo "EXE unchanged"
-            exit 0
-          fi
-          git commit -m "Build branded AppForge Windows EXE"
+          if git diff --cached --quiet; then echo "EXE unchanged"; exit 0; fi
+          git commit -m "Build AppForge Windows EXE"
           for attempt in 1 2 3; do
             git fetch origin main
             git rebase origin/main && git push origin HEAD:main && exit 0
             git rebase --abort || true
             sleep 3
           done
-          echo "Failed to publish EXE after retries"
           exit 1
