@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 
 namespace AppForgeInstaller;
 
@@ -43,8 +44,8 @@ internal sealed class MainForm : Form
 
     public MainForm()
     {
-        selectedApps = ReadSelectionFromFilename();
-        Text = "AppForge Installer";
+        selectedApps = ReadSelectionFromExecutable();
+        Text = "AppForge";
         StartPosition = FormStartPosition.CenterScreen;
         MinimumSize = new Size(780, 580);
         Size = new Size(980, 720);
@@ -132,13 +133,61 @@ internal sealed class MainForm : Form
         status.Text = $"Finished — {ok}/{apps.Count} completed."; installButton.Enabled = true; installButton.Text = "Run again";
     }
 
-    private static List<AppItem> ReadSelectionFromFilename()
+    private static List<AppItem> ReadSelectionFromExecutable()
     {
-        var file = Path.GetFileNameWithoutExtension(Application.ExecutablePath);
-        var marker = file.IndexOf("--", StringComparison.Ordinal);
-        if (marker < 0) return new();
-        var ids = file[(marker + 2)..].Split('.', StringSplitOptions.RemoveEmptyEntries).Select(x => int.TryParse(x, out var n) ? n : -1).Where(x => x >= 0).ToHashSet();
-        return Catalog.Where(a => ids.Contains(a.Index)).ToList();
+        try
+        {
+            var bytes = File.ReadAllBytes(Application.ExecutablePath);
+            var marker = Encoding.UTF8.GetBytes("\nAPPFORGE_SELECTION_V1:");
+            var endMarker = Encoding.UTF8.GetBytes(":END\n");
+            var start = LastIndexOf(bytes, marker);
+            if (start < 0) return new();
+            start += marker.Length;
+            var end = IndexOf(bytes, endMarker, start);
+            if (end < 0 || end <= start) return new();
+            var code = Encoding.UTF8.GetString(bytes, start, end - start);
+            var ids = code.Split('.', StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => int.TryParse(x, out var n) ? n : -1)
+                .Where(x => x >= 0)
+                .ToHashSet();
+            return Catalog.Where(a => ids.Contains(a.Index)).ToList();
+        }
+        catch
+        {
+            return new();
+        }
+    }
+
+    private static int LastIndexOf(byte[] source, byte[] pattern)
+    {
+        for (var i = source.Length - pattern.Length; i >= 0; i--)
+        {
+            var match = true;
+            for (var j = 0; j < pattern.Length; j++)
+            {
+                if (source[i + j] == pattern[j]) continue;
+                match = false;
+                break;
+            }
+            if (match) return i;
+        }
+        return -1;
+    }
+
+    private static int IndexOf(byte[] source, byte[] pattern, int start)
+    {
+        for (var i = start; i <= source.Length - pattern.Length; i++)
+        {
+            var match = true;
+            for (var j = 0; j < pattern.Length; j++)
+            {
+                if (source[i + j] == pattern[j]) continue;
+                match = false;
+                break;
+            }
+            if (match) return i;
+        }
+        return -1;
     }
 
     private sealed record AppItem(int Index, string Name, string PackageId, string IconUrl);
