@@ -11,11 +11,17 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: appforge-windows-exe
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
@@ -52,11 +58,22 @@ jobs:
           New-Item -ItemType Directory -Force -Path downloads | Out-Null
           Copy-Item publish/AppForge-Windows.exe downloads/AppForge-Windows.exe -Force
 
-      - name: Commit built EXE
+      - name: Commit built EXE safely
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add downloads/AppForge-Windows.exe
-          git diff --cached --quiet || git commit -m "Build AppForge Windows EXE"
-          git push
+          if git diff --cached --quiet; then
+            echo "EXE unchanged"
+            exit 0
+          fi
+          git commit -m "Build AppForge Windows EXE"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main && git push origin HEAD:main && exit 0
+            git rebase --abort || true
+            sleep 3
+          done
+          echo "Failed to publish EXE after retries"
+          exit 1
