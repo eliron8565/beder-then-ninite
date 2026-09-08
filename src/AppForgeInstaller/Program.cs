@@ -45,10 +45,10 @@ internal sealed class MainForm : Form
     public MainForm()
     {
         selectedApps = ReadSelectionFromExecutable();
-        Text = "AppForge";
+        Text = "AppForge Installer";
         StartPosition = FormStartPosition.CenterScreen;
-        MinimumSize = new Size(780, 580);
-        Size = new Size(980, 720);
+        MinimumSize = new Size(760, 520);
+        Size = new Size(900, 650);
         BackColor = Color.FromArgb(6, 16, 29);
         ForeColor = Color.White;
         Font = new Font("Segoe UI", 10f);
@@ -59,31 +59,83 @@ internal sealed class MainForm : Form
     private void BuildUi()
     {
         var root = new TableLayoutPanel { Dock = DockStyle.Fill, Padding = new Padding(26), RowCount = 5, ColumnCount = 1, BackColor = BackColor };
-        root.RowStyles.Add(new RowStyle(SizeType.AutoSize)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize)); root.RowStyles.Add(new RowStyle(SizeType.Percent, 100)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize)); root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        root.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         Controls.Add(root);
 
         root.Controls.Add(new Label { AutoSize = true, Text = "AppForge", Font = new Font("Segoe UI", 28, FontStyle.Bold), ForeColor = Color.White, Margin = new Padding(0, 0, 0, 4) });
-        root.Controls.Add(new Label { AutoSize = true, Text = selectedApps.Count > 0 ? $"Ready to install {selectedApps.Count} selected apps" : "Choose the apps you want to install.", ForeColor = Color.FromArgb(148, 166, 188), Margin = new Padding(0, 0, 0, 18) });
+        root.Controls.Add(new Label { AutoSize = true, Text = selectedApps.Count > 0 ? $"Ready to install the {selectedApps.Count} apps you selected on the website." : "No website selection was found in this installer.", ForeColor = Color.FromArgb(148, 166, 188), Margin = new Padding(0, 0, 0, 18) });
 
-        appList.Dock = DockStyle.Fill; appList.FlowDirection = FlowDirection.TopDown; appList.WrapContents = false; appList.AutoScroll = true; appList.BackColor = Color.FromArgb(10, 23, 39); appList.Padding = new Padding(12); root.Controls.Add(appList);
-        foreach (var app in (selectedApps.Count > 0 ? selectedApps : Catalog.ToList())) AddAppRow(app, selectedApps.Count > 0);
+        appList.Dock = DockStyle.Fill;
+        appList.FlowDirection = FlowDirection.TopDown;
+        appList.WrapContents = false;
+        appList.AutoScroll = true;
+        appList.BackColor = Color.FromArgb(10, 23, 39);
+        appList.Padding = new Padding(12);
+        root.Controls.Add(appList);
 
-        progress.Dock = DockStyle.Top; progress.Height = 18; progress.Style = ProgressBarStyle.Continuous; progress.Margin = new Padding(0, 18, 0, 10); root.Controls.Add(progress);
-        var bottom = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, AutoSize = true }; bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); bottom.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-        status.Text = "Ready"; status.AutoSize = true; status.Anchor = AnchorStyles.Left; status.ForeColor = Color.FromArgb(148, 166, 188);
-        installButton.Text = "Install selected apps"; installButton.AutoSize = true; installButton.Padding = new Padding(20, 10, 20, 10); installButton.FlatStyle = FlatStyle.Flat; installButton.FlatAppearance.BorderSize = 0; installButton.BackColor = Color.FromArgb(67, 215, 255); installButton.ForeColor = Color.FromArgb(6, 16, 29); installButton.Font = new Font("Segoe UI", 10f, FontStyle.Bold); installButton.Click += async (_, _) => await InstallAsync();
-        bottom.Controls.Add(status, 0, 0); bottom.Controls.Add(installButton, 1, 0); root.Controls.Add(bottom);
+        if (selectedApps.Count > 0)
+        {
+            foreach (var app in selectedApps) AddAppRow(app);
+        }
+        else
+        {
+            var empty = new Label
+            {
+                AutoSize = false,
+                Width = 790,
+                Height = 90,
+                Text = "Please return to the AppForge website, select your apps, and download a fresh installer.",
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.FromArgb(148, 166, 188),
+                Font = new Font("Segoe UI", 11f)
+            };
+            appList.Controls.Add(empty);
+        }
+
+        progress.Dock = DockStyle.Top;
+        progress.Height = 18;
+        progress.Style = ProgressBarStyle.Continuous;
+        progress.Margin = new Padding(0, 18, 0, 10);
+        root.Controls.Add(progress);
+
+        var bottom = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, AutoSize = true };
+        bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        bottom.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+        status.Text = selectedApps.Count > 0 ? "Ready" : "Selection missing";
+        status.AutoSize = true;
+        status.Anchor = AnchorStyles.Left;
+        status.ForeColor = Color.FromArgb(148, 166, 188);
+        installButton.Text = "Install my apps";
+        installButton.AutoSize = true;
+        installButton.Padding = new Padding(20, 10, 20, 10);
+        installButton.FlatStyle = FlatStyle.Flat;
+        installButton.FlatAppearance.BorderSize = 0;
+        installButton.BackColor = Color.FromArgb(67, 215, 255);
+        installButton.ForeColor = Color.FromArgb(6, 16, 29);
+        installButton.Font = new Font("Segoe UI", 10f, FontStyle.Bold);
+        installButton.Enabled = selectedApps.Count > 0;
+        installButton.Click += async (_, _) => await InstallAsync();
+        bottom.Controls.Add(status, 0, 0);
+        bottom.Controls.Add(installButton, 1, 0);
+        root.Controls.Add(bottom);
     }
 
-    private void AddAppRow(AppItem app, bool lockedSelection)
+    private void AddAppRow(AppItem app)
     {
-        var panel = new Panel { Width = 875, Height = 68, Margin = new Padding(0, 0, 0, 8), BackColor = Color.FromArgb(16, 31, 51) };
-        var check = new CheckBox { Checked = lockedSelection || selectedApps.Contains(app), Enabled = !lockedSelection, AutoSize = true, Location = new Point(16, 24), Tag = app };
-        var picture = new PictureBox { Location = new Point(48, 10), Size = new Size(46, 46), SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.Transparent };
-        var name = new Label { Text = app.Name, AutoSize = true, Location = new Point(108, 11), Font = new Font("Segoe UI", 10f, FontStyle.Bold), ForeColor = Color.White };
-        var packageText = app.PackageId.StartsWith("url:", StringComparison.OrdinalIgnoreCase) ? "Official download page" : app.PackageId;
-        var id = new Label { Text = packageText, AutoSize = true, Location = new Point(108, 35), Font = new Font("Segoe UI", 8.5f), ForeColor = Color.FromArgb(145, 160, 181) };
-        panel.Controls.Add(check); panel.Controls.Add(picture); panel.Controls.Add(name); panel.Controls.Add(id); appList.Controls.Add(panel);
+        var panel = new Panel { Width = 800, Height = 68, Margin = new Padding(0, 0, 0, 8), BackColor = Color.FromArgb(16, 31, 51) };
+        var picture = new PictureBox { Location = new Point(18, 10), Size = new Size(46, 46), SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.Transparent };
+        var name = new Label { Text = app.Name, AutoSize = true, Location = new Point(82, 11), Font = new Font("Segoe UI", 10f, FontStyle.Bold), ForeColor = Color.White };
+        var detail = new Label { Text = "Selected on AppForge website", AutoSize = true, Location = new Point(82, 35), Font = new Font("Segoe UI", 8.5f), ForeColor = Color.FromArgb(145, 160, 181) };
+        var ready = new Label { Text = "✓ Ready", AutoSize = true, Location = new Point(690, 24), Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = Color.FromArgb(116, 228, 173) };
+        panel.Controls.Add(picture);
+        panel.Controls.Add(name);
+        panel.Controls.Add(detail);
+        panel.Controls.Add(ready);
+        appList.Controls.Add(panel);
         _ = LoadIconAsync(picture, app.IconUrl);
     }
 
@@ -99,21 +151,17 @@ internal sealed class MainForm : Form
         catch { }
     }
 
-    private List<AppItem> CurrentSelection()
-    {
-        var list = new List<AppItem>();
-        foreach (Control p in appList.Controls) foreach (Control c in p.Controls) if (c is CheckBox cb && cb.Checked && cb.Tag is AppItem a) list.Add(a);
-        return list;
-    }
-
     private async Task InstallAsync()
     {
-        var apps = CurrentSelection();
-        if (apps.Count == 0) { MessageBox.Show("Select at least one app.", "AppForge", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
-        installButton.Enabled = false; progress.Maximum = apps.Count; progress.Value = 0; int ok = 0;
-        foreach (var app in apps)
+        if (selectedApps.Count == 0) return;
+        installButton.Enabled = false;
+        progress.Maximum = selectedApps.Count;
+        progress.Value = 0;
+        int ok = 0;
+
+        foreach (var app in selectedApps)
         {
-            status.Text = $"Processing {app.Name}...";
+            status.Text = $"Installing {app.Name}...";
             try
             {
                 if (app.PackageId.StartsWith("url:", StringComparison.OrdinalIgnoreCase))
@@ -123,14 +171,29 @@ internal sealed class MainForm : Form
                 }
                 else
                 {
-                    var psi = new ProcessStartInfo("winget", $"install --id \"{app.PackageId}\" -e --silent --accept-package-agreements --accept-source-agreements") { UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true };
-                    using var p = Process.Start(psi); if (p == null) throw new Exception("Could not start Winget."); await p.WaitForExitAsync(); if (p.ExitCode == 0) ok++;
+                    var psi = new ProcessStartInfo("winget", $"install --id \"{app.PackageId}\" -e --silent --accept-package-agreements --accept-source-agreements")
+                    {
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    };
+                    using var p = Process.Start(psi);
+                    if (p == null) throw new Exception("Could not start Winget.");
+                    await p.WaitForExitAsync();
+                    if (p.ExitCode == 0) ok++;
                 }
             }
-            catch (Exception ex) { MessageBox.Show($"{app.Name}: {ex.Message}", "Installation error", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{app.Name}: {ex.Message}", "Installation error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             progress.Value++;
         }
-        status.Text = $"Finished — {ok}/{apps.Count} completed."; installButton.Enabled = true; installButton.Text = "Run again";
+
+        status.Text = $"Finished — {ok}/{selectedApps.Count} completed.";
+        installButton.Enabled = true;
+        installButton.Text = "Run again";
     }
 
     private static List<AppItem> ReadSelectionFromExecutable()
