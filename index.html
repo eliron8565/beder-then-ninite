@@ -5,107 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0b1220" />
   <title>AppForge — One App Installer for Windows, Linux & macOS</title>
-  <meta name="description" content="Pick your apps and generate one installer command for Windows, Linux or macOS." />
+  <meta name="description" content="Pick your apps and download one installer file for Windows, Linux or macOS." />
   <link rel="icon" type="image/svg+xml" href="/beder-then-ninite/favicon.svg?v=5" />
   <link rel="shortcut icon" href="/beder-then-ninite/favicon.svg?v=5" />
   <link rel="apple-touch-icon" href="/beder-then-ninite/favicon.svg?v=5" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="#top"><span class="brand-mark">AF</span><span>AppForge</span></a>
-    <div class="top-actions">
-      <span id="platformBadge" class="platform-badge">Windows</span>
-      <button id="themeToggle" class="icon-btn" type="button" aria-label="Toggle theme">◐</button>
-    </div>
-  </header>
-
-  <main id="top">
-    <section class="hero compact-hero">
-      <div>
-        <span class="eyebrow">Cross-platform bulk installer</span>
-        <h1>Pick your apps.<br><span>Install everything in one go.</span></h1>
-        <p>One clean Ninite-style app picker for Windows, Linux and macOS. Choose your system, select the apps you want, and AppForge builds the right install command for you.</p>
-      </div>
-      <div class="hero-stats">
-        <div><strong id="appTotal">0</strong><span>Available apps</span></div>
-        <div><strong id="categoryTotal">0</strong><span>Categories</span></div>
-        <div><strong>3</strong><span>Operating systems</span></div>
-      </div>
-    </section>
-
-    <section class="controls-section">
-      <div class="platform-picker" aria-label="Choose operating system">
-        <button class="platform-btn active" data-platform="windows" type="button"><span>⊞</span><b>Windows</b><small>Winget</small></button>
-        <button class="platform-btn" data-platform="linux" type="button"><span>🐧</span><b>Linux</b><small>Flatpak</small></button>
-        <button class="platform-btn" data-platform="mac" type="button"><span>⌘</span><b>macOS</b><small>Homebrew</small></button>
-      </div>
-      <div class="search-wrap large"><span>⌕</span><input id="searchInput" type="search" placeholder="Search Chrome, Steam, Discord, VS Code..." autocomplete="off" /></div>
-      <div class="preset-row">
-        <button class="preset-btn" data-preset="essentials" type="button">✨ Essentials</button>
-        <button class="preset-btn" data-preset="gaming" type="button">🎮 Gaming</button>
-        <button class="preset-btn" data-preset="developer" type="button">💻 Developer</button>
-        <button class="preset-btn" data-preset="student" type="button">🎓 Student</button>
-        <button class="preset-btn" data-preset="creator" type="button">🎬 Creator</button>
-        <button id="clearSelection" class="preset-btn muted-btn" type="button">Clear all</button>
-      </div>
-    </section>
-
-    <section class="layout">
-      <aside class="sidebar">
-        <div class="sidebar-card sticky-card">
-          <h3>Categories</h3>
-          <button class="category-link active" data-category="all" type="button"><span>All apps</span><span id="allCount"></span></button>
-          <div id="categoryNav"></div>
-        </div>
-      </aside>
-
-      <section class="catalog-wrap">
-        <div class="catalog-head">
-          <div><span id="catalogEyebrow" class="eyebrow">Windows catalog</span><h2 id="catalogTitle">All apps</h2></div>
-          <label class="sort-label">Sort
-            <select id="sortSelect">
-              <option value="popular">Popular first</option>
-              <option value="name">A–Z</option>
-              <option value="category">Category</option>
-            </select>
-          </label>
-        </div>
-        <div id="catalog" class="catalog"></div>
-        <div id="emptyState" class="empty-state hidden">No apps match your search on this operating system.</div>
-      </section>
-    </section>
-  </main>
-
-  <aside id="selectionBar" class="selection-bar hidden">
-    <div class="selection-copy"><strong id="selectionCount">0 apps selected</strong><span id="selectionNames">Choose apps to build your installer.</span></div>
-    <button id="reviewButton" class="primary-btn" type="button">Get your installer →</button>
-  </aside>
-
-  <dialog id="reviewDialog">
-    <div class="dialog-card wide-dialog">
-      <button id="dialogClose" class="dialog-close" type="button" aria-label="Close">×</button>
-      <span id="dialogEyebrow" class="eyebrow">Your Windows bundle</span>
-      <h2>Ready to install</h2>
-      <p id="dialogIntro" class="dialog-intro"></p>
-      <div id="selectedList" class="selected-list"></div>
-      <pre id="commandOutput"></pre>
-      <div class="dialog-actions">
-        <button id="copyCommand" class="primary-btn" type="button">Copy command</button>
-        <button id="downloadScript" class="secondary-btn" type="button">Download installer script</button>
-      </div>
-      <p id="platformNote" class="note"></p>
-    </div>
-  </dialog>
-
-  <footer>
-    <div class="brand"><span class="brand-mark">AF</span><span>AppForge</span></div>
-    <p>Independent project. Uses Winget on Windows, Flatpak on Linux and Homebrew on macOS.</p>
-  </footer>
-
-  <script src="app.js"></script>
-</body>
-</html>
+<header class="topbar"><a class="brand" href="#top"><span class="brand-mark">AF</span><span>AppForge</span></a><div class="top-actions"><span id="platformBadge" class="platform-badge">Windows</span><button id="themeToggle" class="icon-btn" type="button" aria-label="Toggle theme">◐</button></div></header>
+<main id="top">
+<section class="hero compact-hero"><div><span class="eyebrow">Cross-platform bulk installer</span><h1>Pick your apps.<br><span>Download one installer.</span></h1><p>Choose Windows, Linux or macOS, select everything you want, then download one ready-to-run installer file. No copying commands from the website.</p></div><div class="hero-stats"><div><strong id="appTotal">0</strong><span>Available apps</span></div><div><strong id="categoryTotal">0</strong><span>Categories</span></div><div><strong>3</strong><span>Operating systems</span></div></div></section>
+<section class="controls-section"><div class="platform-picker" aria-label="Choose operating system"><button class="platform-btn active" data-platform="windows" type="button"><span>⊞</span><b>Windows</b><small>Installer file</small></button><button class="platform-btn" data-platform="linux" type="button"><span>🐧</span><b>Linux</b><small>Installer file</small></button><button class="platform-btn" data-platform="mac" type="button"><span>⌘</span><b>macOS</b><small>Installer file</small></button></div><div class="search-wrap large"><span>⌕</span><input id="searchInput" type="search" placeholder="Search Chrome, Steam, Discord, VS Code..." autocomplete="off" /></div><div class="preset-row"><button class="preset-btn" data-preset="essentials" type="button">✨ Essentials</button><button class="preset-btn" data-preset="gaming" type="button">🎮 Gaming</button><button class="preset-btn" data-preset="developer" type="button">💻 Developer</button><button class="preset-btn" data-preset="student" type="button">🎓 Student</button><button class="preset-btn" data-preset="creator" type="button">🎬 Creator</button><button id="clearSelection" class="preset-btn muted-btn" type="button">Clear all</button></div></section>
+<section class="layout"><aside class="sidebar"><div class="sidebar-card sticky-card"><h3>Categories</h3><button class="category-link active" data-category="all" type="button"><span>All apps</span><span id="allCount"></span></button><div id="categoryNav"></div></div></aside><section class="catalog-wrap"><div class="catalog-head"><div><span id="catalogEyebrow" class="eyebrow">Windows catalog</span><h2 id="catalogTitle">All apps</h2></div><label class="sort-label">Sort <select id="sortSelect"><option value="popular">Popular first</option><option value="name">A–Z</option><option value="category">Category</option></select></label></div><div id="catalog" class="catalog"></div><div id="emptyState" class="empty-state hidden">No apps match your search on this operating system.</div></section></section>
+</main>
+<aside id="selectionBar" class="selection-bar hidden"><div class="selection-copy"><strong id="selectionCount">0 apps selected</strong><span id="selectionNames">Choose apps to build your installer.</span></div><button id="reviewButton" class="primary-btn" type="button">Download installer →</button></aside>
+<dialog id="reviewDialog"><div class="dialog-card wide-dialog"><button id="dialogClose" class="dialog-close" type="button" aria-label="Close">×</button><span id="dialogEyebrow" class="eyebrow">Your Windows installer</span><h2>Your installer is ready</h2><p id="dialogIntro" class="dialog-intro"></p><div id="selectedList" class="selected-list"></div><div class="installer-ready"><strong>One file. Your selected apps.</strong><p id="platformNote" class="note"></p></div><div class="dialog-actions"><button id="downloadScript" class="primary-btn" type="button">⬇ Download installer</button></div></div></dialog>
+<footer><div class="brand"><span class="brand-mark">AF</span><span>AppForge</span></div><p>AppForge generates a local installer file for your selected apps.</p></footer><script src="app.js"></script></body></html>
