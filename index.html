@@ -6,11 +6,12 @@
   <meta name="theme-color" content="#07111f" />
   <title>AppForge — One Installer. All Your Apps.</title>
   <meta name="description" content="Pick your apps and download one installer for Windows, Linux or macOS." />
-  <link rel="icon" type="image/svg+xml" href="/beder-then-ninite/favicon.svg?v=6" />
-  <link rel="shortcut icon" href="/beder-then-ninite/favicon.svg?v=6" />
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="icon" type="image/svg+xml" href="/beder-then-ninite/favicon.svg?v=9" />
+  <link rel="shortcut icon" href="/beder-then-ninite/favicon.svg?v=9" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=9" />
 </head>
 <body>
   <aside class="app-sidebar">
@@ -18,12 +19,12 @@
     <nav class="side-nav">
       <a class="side-link active" href="#top"><span>⌂</span>Home</a>
       <a class="side-link" href="#apps-section"><span>▦</span>Apps</a>
-      <a class="side-link" href="#apps-section"><span>◉</span>Drivers</a>
+      <button class="side-link side-button" type="button" data-jump-category="Drivers"><span>◉</span>Drivers</button>
       <a class="side-link" href="#apps-section"><span>↻</span>Updates</a>
       <button id="themeToggle" class="side-link side-button" type="button"><span>☾</span>Theme</button>
     </nav>
     <div class="side-spacer"></div>
-    <div class="side-note"><b>Setup Less.<br>Do More.</b><small>AppForge v2.0</small></div>
+    <div class="side-note"><b>Setup Less.<br>Do More.</b><small>AppForge v2.1</small></div>
   </aside>
 
   <main id="top" class="workspace">
@@ -78,7 +79,6 @@
     </div>
   </dialog>
 
-  <script src="app.js"></script>
-  <script src="extras.js"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>
