@@ -3,133 +3,112 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0f172a" />
-  <title>AppForge — Install Your Essentials Fast</title>
+  <meta name="theme-color" content="#0b1220" />
+  <title>AppForge — Pick Apps, Install Everything</title>
+  <meta name="description" content="A modern Ninite-style Windows app picker powered by winget." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="bg-grid"></div>
   <header class="topbar">
-    <a class="brand" href="#top" aria-label="AppForge home">
-      <span class="brand-mark">AF</span>
-      <span>AppForge</span>
-    </a>
-    <nav class="nav">
-      <a href="#apps">Apps</a>
-      <a href="#how">How it works</a>
-      <a href="#features">Features</a>
+    <a class="brand" href="#top"><span class="brand-mark">AF</span><span>AppForge</span></a>
+    <div class="top-actions">
+      <span class="windows-badge">Windows 10 / 11</span>
       <button id="themeToggle" class="icon-btn" type="button" aria-label="Toggle theme">◐</button>
-    </nav>
+    </div>
   </header>
 
   <main id="top">
-    <section class="hero">
-      <div class="hero-copy">
-        <span class="eyebrow">A better way to set up Windows</span>
-        <h1>Pick your apps.<br><span>Install them in one go.</span></h1>
-        <p>Choose the software you want, build a clean install list, and get ready to set up a fresh PC without hunting through dozens of download pages.</p>
-        <div class="hero-actions">
-          <a class="primary-btn" href="#apps">Choose apps</a>
-          <button id="selectPopular" class="secondary-btn" type="button">Select popular apps</button>
-        </div>
-        <div class="hero-trust">
-          <span>✓ No bundled junk</span>
-          <span>✓ Fast selection</span>
-          <span>✓ Clean interface</span>
-        </div>
+    <section class="hero compact-hero">
+      <div>
+        <span class="eyebrow">Bulk app installer</span>
+        <h1>Pick the apps you want.<br><span>Install them all at once.</span></h1>
+        <p>Like Ninite, but with a larger catalog, live search, presets, categories, export options, and Winget-powered installs from trusted package sources.</p>
       </div>
-      <div class="hero-panel">
-        <div class="panel-glow"></div>
-        <div class="mini-window">
-          <div class="window-top"><span></span><span></span><span></span></div>
-          <div class="window-body">
-            <div class="window-line wide"></div>
-            <div class="window-line"></div>
-            <div class="window-apps">
-              <div>🌐 Chrome <b>Selected</b></div>
-              <div>💬 Discord <b>Selected</b></div>
-              <div>🎮 Steam <b>Selected</b></div>
-              <div>📦 7-Zip <b>Selected</b></div>
-            </div>
-            <div class="window-button">Build installer</div>
-          </div>
-        </div>
+      <div class="hero-stats">
+        <div><strong id="appTotal">0</strong><span>Apps</span></div>
+        <div><strong id="categoryTotal">0</strong><span>Categories</span></div>
+        <div><strong>1</strong><span>Installer script</span></div>
       </div>
     </section>
 
-    <section id="apps" class="apps-section">
-      <div class="section-heading">
-        <div>
-          <span class="eyebrow">Software catalog</span>
-          <h2>Everything you need, organized.</h2>
-        </div>
-        <div class="catalog-tools">
-          <div class="search-wrap">
-            <span>⌕</span>
-            <input id="searchInput" type="search" placeholder="Search apps..." autocomplete="off" />
-          </div>
-          <select id="categoryFilter" aria-label="Filter by category">
-            <option value="all">All categories</option>
-          </select>
-        </div>
-      </div>
-
-      <div id="appGrid" class="app-grid"></div>
-    </section>
-
-    <section id="how" class="steps-section">
-      <span class="eyebrow">Simple by design</span>
-      <h2>Three steps. No mess.</h2>
-      <div class="steps-grid">
-        <article><strong>01</strong><h3>Pick apps</h3><p>Search or browse by category and select exactly what you want.</p></article>
-        <article><strong>02</strong><h3>Review your bundle</h3><p>Your selected software stays in a live install queue so nothing gets lost.</p></article>
-        <article><strong>03</strong><h3>Generate the setup</h3><p>Copy a ready-to-use Winget command for installing your chosen apps automatically.</p></article>
+    <section class="controls-section">
+      <div class="search-wrap large"><span>⌕</span><input id="searchInput" type="search" placeholder="Search Chrome, Steam, Discord, Python..." autocomplete="off" /></div>
+      <div class="preset-row">
+        <button class="preset-btn" data-preset="essentials">✨ Essentials</button>
+        <button class="preset-btn" data-preset="gaming">🎮 Gaming</button>
+        <button class="preset-btn" data-preset="developer">💻 Developer</button>
+        <button class="preset-btn" data-preset="student">🎓 Student</button>
+        <button class="preset-btn" data-preset="creator">🎬 Creator</button>
+        <button id="clearSelection" class="preset-btn muted-btn">Clear all</button>
       </div>
     </section>
 
-    <section id="features" class="features-section">
-      <div class="feature-main">
-        <span class="eyebrow">Built to beat the old-school installer sites</span>
-        <h2>Modern, fast, transparent.</h2>
-        <p>No confusing download buttons. No fake ads. No digging through endless pages. AppForge keeps the experience focused on one thing: getting your PC ready quickly.</p>
-      </div>
-      <div class="feature-list">
-        <div><span>⚡</span><h3>Instant filtering</h3><p>Find software in seconds with live search and categories.</p></div>
-        <div><span>🛡️</span><h3>Official Winget IDs</h3><p>Uses Microsoft Winget package identifiers instead of shady download mirrors.</p></div>
-        <div><span>🎨</span><h3>Modern UI</h3><p>Responsive glass-style cards, animations, dark mode and mobile support.</p></div>
-        <div><span>🧩</span><h3>Expandable catalog</h3><p>Adding more apps only requires adding entries to the JavaScript catalog.</p></div>
-      </div>
+    <section class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-card sticky-card">
+          <h3>Categories</h3>
+          <button class="category-link active" data-category="all">All apps <span id="allCount"></span></button>
+          <div id="categoryNav"></div>
+        </div>
+      </aside>
+
+      <section class="catalog-wrap">
+        <div class="catalog-head">
+          <div><span class="eyebrow">Choose your software</span><h2 id="catalogTitle">All apps</h2></div>
+          <label class="sort-label">Sort
+            <select id="sortSelect">
+              <option value="popular">Popular first</option>
+              <option value="name">A–Z</option>
+              <option value="category">Category</option>
+            </select>
+          </label>
+        </div>
+        <div id="catalog" class="catalog"></div>
+        <div id="emptyState" class="empty-state hidden">No apps match your search.</div>
+      </section>
     </section>
   </main>
 
   <aside id="selectionBar" class="selection-bar hidden">
-    <div>
-      <span id="selectionCount">0 apps selected</span>
-      <button id="clearSelection" type="button">Clear</button>
-    </div>
-    <button id="generateButton" class="primary-btn" type="button">Generate install command</button>
+    <div class="selection-copy"><strong id="selectionCount">0 apps selected</strong><span id="selectionNames">Choose apps to build your installer.</span></div>
+    <button id="reviewButton" class="primary-btn" type="button">Review & install →</button>
   </aside>
 
-  <dialog id="commandDialog">
-    <form method="dialog" class="dialog-card">
-      <button class="dialog-close" value="cancel" aria-label="Close">×</button>
-      <span class="eyebrow">Your installer</span>
-      <h2>Winget command ready</h2>
-      <p>Open Windows Terminal or PowerShell, paste this command, and Winget will install your selected apps.</p>
+  <dialog id="reviewDialog">
+    <div class="dialog-card wide-dialog">
+      <button id="dialogClose" class="dialog-close" type="button" aria-label="Close">×</button>
+      <span class="eyebrow">Your AppForge bundle</span>
+      <h2>Ready to install</h2>
+      <p class="dialog-intro">Choose how you want to use your bundle. The generated commands use Winget package IDs and accept package/source agreements automatically.</p>
+
+      <div id="selectedList" class="selected-list"></div>
+
+      <div class="options-grid">
+        <label><input id="silentMode" type="checkbox" checked> <span><strong>Silent mode</strong><small>Ask apps to install quietly when supported.</small></span></label>
+        <label><input id="upgradeMode" type="checkbox"> <span><strong>Upgrade mode</strong><small>Upgrade selected apps instead of installing them.</small></span></label>
+      </div>
+
+      <div class="command-tabs">
+        <button class="tab-btn active" data-tab="powershell">PowerShell</button>
+        <button class="tab-btn" data-tab="cmd">CMD</button>
+      </div>
       <pre id="commandOutput"></pre>
+
       <div class="dialog-actions">
         <button id="copyCommand" class="primary-btn" type="button">Copy command</button>
-        <button class="secondary-btn" value="cancel">Close</button>
+        <button id="downloadPs1" class="secondary-btn" type="button">Download .PS1</button>
+        <button id="downloadCmd" class="secondary-btn" type="button">Download .CMD</button>
       </div>
-    </form>
+      <p class="note">AppForge does not host installers itself. Winget resolves packages from configured Windows package sources.</p>
+    </div>
   </dialog>
 
   <footer>
     <div class="brand"><span class="brand-mark">AF</span><span>AppForge</span></div>
-    <p>Built as an independent installer-selection interface. Not affiliated with Ninite or Microsoft.</p>
+    <p>Independent project. Not affiliated with Ninite or Microsoft.</p>
   </footer>
 
   <script src="app.js"></script>
