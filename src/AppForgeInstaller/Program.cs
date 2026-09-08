@@ -18,8 +18,13 @@ internal sealed class MainForm : Form
     private readonly FlowLayoutPanel appList = new();
     private readonly ProgressBar progress = new();
     private readonly Label status = new();
+    private readonly Label counter = new();
+    private readonly Label subtitle = new();
     private readonly Button installButton = new();
+    private readonly Button cancelButton = new();
+    private readonly Dictionary<int, Label> stateLabels = new();
     private readonly List<AppItem> selectedApps;
+    private CancellationTokenSource? cancellation;
     private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(8) };
     private static string Fav(string domain) => $"https://www.google.com/s2/favicons?domain={domain}&sz=128";
 
@@ -47,9 +52,9 @@ internal sealed class MainForm : Form
         selectedApps = ReadSelectionFromExecutable();
         Text = "AppForge Installer";
         StartPosition = FormStartPosition.CenterScreen;
-        MinimumSize = new Size(760, 520);
-        Size = new Size(900, 650);
-        BackColor = Color.FromArgb(6, 16, 29);
+        MinimumSize = new Size(780, 560);
+        Size = new Size(940, 690);
+        BackColor = Color.FromArgb(7, 15, 27);
         ForeColor = Color.White;
         Font = new Font("Segoe UI", 10f);
         Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
@@ -58,7 +63,8 @@ internal sealed class MainForm : Form
 
     private void BuildUi()
     {
-        var root = new TableLayoutPanel { Dock = DockStyle.Fill, Padding = new Padding(26), RowCount = 5, ColumnCount = 1, BackColor = BackColor };
+        var root = new TableLayoutPanel { Dock = DockStyle.Fill, Padding = new Padding(28), RowCount = 6, ColumnCount = 1, BackColor = BackColor };
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         root.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
@@ -66,14 +72,28 @@ internal sealed class MainForm : Form
         root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
         Controls.Add(root);
 
-        root.Controls.Add(new Label { AutoSize = true, Text = "AppForge", Font = new Font("Segoe UI", 28, FontStyle.Bold), ForeColor = Color.White, Margin = new Padding(0, 0, 0, 4) });
-        root.Controls.Add(new Label { AutoSize = true, Text = selectedApps.Count > 0 ? $"Ready to install the {selectedApps.Count} apps you selected on the website." : "No website selection was found in this installer.", ForeColor = Color.FromArgb(148, 166, 188), Margin = new Padding(0, 0, 0, 18) });
+        var brandRow = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, AutoSize = true };
+        brandRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        brandRow.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+        brandRow.Controls.Add(new Label { AutoSize = true, Text = "AppForge", Font = new Font("Segoe UI", 30, FontStyle.Bold), ForeColor = Color.White }, 0, 0);
+        var secure = new Label { AutoSize = true, Text = "● Secure installer", ForeColor = Color.FromArgb(111, 231, 183), Font = new Font("Segoe UI", 9f, FontStyle.Bold), Anchor = AnchorStyles.Right, Padding = new Padding(0, 12, 0, 0) };
+        brandRow.Controls.Add(secure, 1, 0);
+        root.Controls.Add(brandRow);
+
+        subtitle.AutoSize = true;
+        subtitle.Text = selectedApps.Count > 0 ? $"Your {selectedApps.Count} selected apps are ready. AppForge will install them automatically." : "This installer does not contain a website selection.";
+        subtitle.ForeColor = Color.FromArgb(155, 170, 191);
+        subtitle.Margin = new Padding(0, 2, 0, 16);
+        root.Controls.Add(subtitle);
+
+        var tip = new Label { AutoSize = true, Text = "No re-selecting. No commands. No bundled adware. AppForge uses Winget and official download pages.", ForeColor = Color.FromArgb(103, 210, 255), Font = new Font("Segoe UI", 9f), Margin = new Padding(0, 0, 0, 16) };
+        root.Controls.Add(tip);
 
         appList.Dock = DockStyle.Fill;
         appList.FlowDirection = FlowDirection.TopDown;
         appList.WrapContents = false;
         appList.AutoScroll = true;
-        appList.BackColor = Color.FromArgb(10, 23, 39);
+        appList.BackColor = Color.FromArgb(10, 22, 37);
         appList.Padding = new Padding(12);
         root.Controls.Add(appList);
 
@@ -83,58 +103,69 @@ internal sealed class MainForm : Form
         }
         else
         {
-            var empty = new Label
-            {
-                AutoSize = false,
-                Width = 790,
-                Height = 90,
-                Text = "Please return to the AppForge website, select your apps, and download a fresh installer.",
-                TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Color.FromArgb(148, 166, 188),
-                Font = new Font("Segoe UI", 11f)
-            };
-            appList.Controls.Add(empty);
+            appList.Controls.Add(new Label { AutoSize = false, Width = 820, Height = 110, Text = "Go back to the AppForge website, choose your apps, and download a fresh installer.", TextAlign = ContentAlignment.MiddleCenter, ForeColor = Color.FromArgb(155, 170, 191), Font = new Font("Segoe UI", 11f) });
         }
 
-        progress.Dock = DockStyle.Top;
-        progress.Height = 18;
+        var progressRow = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, AutoSize = true, Margin = new Padding(0, 16, 0, 8) };
+        progressRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        progressRow.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+        progress.Dock = DockStyle.Fill;
+        progress.Height = 16;
         progress.Style = ProgressBarStyle.Continuous;
-        progress.Margin = new Padding(0, 18, 0, 10);
-        root.Controls.Add(progress);
+        counter.AutoSize = true;
+        counter.Text = selectedApps.Count > 0 ? $"0 / {selectedApps.Count}" : "0 / 0";
+        counter.ForeColor = Color.FromArgb(155, 170, 191);
+        counter.Margin = new Padding(14, 0, 0, 0);
+        progressRow.Controls.Add(progress, 0, 0);
+        progressRow.Controls.Add(counter, 1, 0);
+        root.Controls.Add(progressRow);
 
-        var bottom = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, AutoSize = true };
+        var bottom = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 3, AutoSize = true };
         bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
         bottom.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-        status.Text = selectedApps.Count > 0 ? "Ready" : "Selection missing";
+        bottom.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+        status.Text = selectedApps.Count > 0 ? "Ready to install" : "Selection missing";
         status.AutoSize = true;
         status.Anchor = AnchorStyles.Left;
-        status.ForeColor = Color.FromArgb(148, 166, 188);
+        status.ForeColor = Color.FromArgb(155, 170, 191);
+
+        cancelButton.Text = "Cancel";
+        cancelButton.AutoSize = true;
+        cancelButton.Enabled = false;
+        cancelButton.Margin = new Padding(10, 0, 10, 0);
+        cancelButton.Padding = new Padding(16, 9, 16, 9);
+        cancelButton.FlatStyle = FlatStyle.Flat;
+        cancelButton.FlatAppearance.BorderColor = Color.FromArgb(53, 70, 92);
+        cancelButton.BackColor = Color.FromArgb(14, 27, 45);
+        cancelButton.ForeColor = Color.White;
+        cancelButton.Click += (_, _) => cancellation?.Cancel();
+
         installButton.Text = "Install my apps";
         installButton.AutoSize = true;
-        installButton.Padding = new Padding(20, 10, 20, 10);
+        installButton.Padding = new Padding(22, 10, 22, 10);
         installButton.FlatStyle = FlatStyle.Flat;
         installButton.FlatAppearance.BorderSize = 0;
-        installButton.BackColor = Color.FromArgb(67, 215, 255);
-        installButton.ForeColor = Color.FromArgb(6, 16, 29);
+        installButton.BackColor = Color.FromArgb(82, 219, 255);
+        installButton.ForeColor = Color.FromArgb(5, 17, 29);
         installButton.Font = new Font("Segoe UI", 10f, FontStyle.Bold);
         installButton.Enabled = selectedApps.Count > 0;
         installButton.Click += async (_, _) => await InstallAsync();
+
         bottom.Controls.Add(status, 0, 0);
-        bottom.Controls.Add(installButton, 1, 0);
+        bottom.Controls.Add(cancelButton, 1, 0);
+        bottom.Controls.Add(installButton, 2, 0);
         root.Controls.Add(bottom);
     }
 
     private void AddAppRow(AppItem app)
     {
-        var panel = new Panel { Width = 800, Height = 68, Margin = new Padding(0, 0, 0, 8), BackColor = Color.FromArgb(16, 31, 51) };
-        var picture = new PictureBox { Location = new Point(18, 10), Size = new Size(46, 46), SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.Transparent };
-        var name = new Label { Text = app.Name, AutoSize = true, Location = new Point(82, 11), Font = new Font("Segoe UI", 10f, FontStyle.Bold), ForeColor = Color.White };
-        var detail = new Label { Text = "Selected on AppForge website", AutoSize = true, Location = new Point(82, 35), Font = new Font("Segoe UI", 8.5f), ForeColor = Color.FromArgb(145, 160, 181) };
-        var ready = new Label { Text = "✓ Ready", AutoSize = true, Location = new Point(690, 24), Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = Color.FromArgb(116, 228, 173) };
-        panel.Controls.Add(picture);
-        panel.Controls.Add(name);
-        panel.Controls.Add(detail);
-        panel.Controls.Add(ready);
+        var panel = new Panel { Width = 830, Height = 64, Margin = new Padding(0, 0, 0, 7), BackColor = Color.FromArgb(16, 31, 50) };
+        var picture = new PictureBox { Location = new Point(16, 10), Size = new Size(42, 42), SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.Transparent };
+        var name = new Label { Text = app.Name, AutoSize = true, Location = new Point(74, 10), Font = new Font("Segoe UI", 10f, FontStyle.Bold), ForeColor = Color.White };
+        var detail = new Label { Text = app.PackageId.StartsWith("url:") ? "Official download page" : "Automatic install via Winget", AutoSize = true, Location = new Point(74, 34), Font = new Font("Segoe UI", 8.5f), ForeColor = Color.FromArgb(140, 157, 179) };
+        var state = new Label { Text = "Ready", AutoSize = false, Width = 128, Height = 24, Location = new Point(680, 20), TextAlign = ContentAlignment.MiddleRight, Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = Color.FromArgb(111, 231, 183) };
+        stateLabels[app.Index] = state;
+        panel.Controls.Add(picture); panel.Controls.Add(name); panel.Controls.Add(detail); panel.Controls.Add(state);
         appList.Controls.Add(panel);
         _ = LoadIconAsync(picture, app.IconUrl);
     }
@@ -154,53 +185,94 @@ internal sealed class MainForm : Form
     private async Task InstallAsync()
     {
         if (selectedApps.Count == 0) return;
+        cancellation = new CancellationTokenSource();
+        var token = cancellation.Token;
         installButton.Enabled = false;
+        cancelButton.Enabled = true;
         progress.Maximum = selectedApps.Count;
         progress.Value = 0;
-        int ok = 0;
+        var ok = 0;
+        var failed = 0;
+        var opened = 0;
+        var sw = Stopwatch.StartNew();
 
         foreach (var app in selectedApps)
         {
-            status.Text = $"Installing {app.Name}...";
+            if (token.IsCancellationRequested) break;
+            SetState(app, "Installing…", Color.FromArgb(103, 210, 255));
+            status.Text = $"Installing {app.Name}…";
             try
             {
                 if (app.PackageId.StartsWith("url:", StringComparison.OrdinalIgnoreCase))
                 {
                     Process.Start(new ProcessStartInfo(app.PackageId[4..]) { UseShellExecute = true });
-                    ok++;
+                    opened++;
+                    SetState(app, "Opened official page", Color.FromArgb(244, 196, 95));
                 }
                 else
                 {
-                    var psi = new ProcessStartInfo("winget", $"install --id \"{app.PackageId}\" -e --silent --accept-package-agreements --accept-source-agreements")
+                    var result = await RunWingetAsync(app.PackageId, token);
+                    if (result == 0)
                     {
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true
-                    };
-                    using var p = Process.Start(psi);
-                    if (p == null) throw new Exception("Could not start Winget.");
-                    await p.WaitForExitAsync();
-                    if (p.ExitCode == 0) ok++;
+                        ok++;
+                        SetState(app, "Installed ✓", Color.FromArgb(111, 231, 183));
+                    }
+                    else
+                    {
+                        failed++;
+                        SetState(app, "Needs attention", Color.FromArgb(255, 139, 139));
+                    }
                 }
             }
-            catch (Exception ex)
+            catch (OperationCanceledException)
             {
-                MessageBox.Show($"{app.Name}: {ex.Message}", "Installation error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SetState(app, "Cancelled", Color.FromArgb(155, 170, 191));
+                break;
             }
-            progress.Value++;
+            catch
+            {
+                failed++;
+                SetState(app, "Failed", Color.FromArgb(255, 139, 139));
+            }
+            progress.Value = Math.Min(progress.Maximum, progress.Value + 1);
+            counter.Text = $"{progress.Value} / {selectedApps.Count}";
         }
 
-        status.Text = $"Finished — {ok}/{selectedApps.Count} completed.";
+        sw.Stop();
+        cancelButton.Enabled = false;
         installButton.Enabled = true;
-        installButton.Text = "Run again";
+        installButton.Text = failed > 0 ? "Retry" : "Run again";
+        if (token.IsCancellationRequested)
+            status.Text = $"Cancelled — {ok} installed.";
+        else if (failed == 0)
+            status.Text = $"Done — {ok} installed{(opened > 0 ? $", {opened} official pages opened" : "")} in {Math.Max(1, (int)sw.Elapsed.TotalMinutes)} min.";
+        else
+            status.Text = $"Finished — {ok} installed, {failed} need attention.";
+    }
+
+    private static async Task<int> RunWingetAsync(string packageId, CancellationToken token)
+    {
+        var psi = new ProcessStartInfo("winget", $"install --id \"{packageId}\" -e --silent --disable-interactivity --accept-package-agreements --accept-source-agreements")
+        {
+            UseShellExecute = false,
+            CreateNoWindow = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
+        };
+        using var process = Process.Start(psi) ?? throw new InvalidOperationException("Winget could not start.");
+        await process.WaitForExitAsync(token);
+        return process.ExitCode;
+    }
+
+    private void SetState(AppItem app, string text, Color color)
+    {
+        if (!stateLabels.TryGetValue(app.Index, out var label)) return;
+        label.Text = text;
+        label.ForeColor = color;
     }
 
     private static List<AppItem> ReadSelectionFromExecutable()
     {
-        // Preferred format: the downloaded EXE is byte-for-byte identical to the built EXE.
-        // A compact bitset token in the filename stores the website selection, preserving
-        // the executable icon and any Authenticode signature.
         try
         {
             var fileName = Path.GetFileNameWithoutExtension(Application.ExecutablePath);
@@ -212,17 +284,13 @@ internal sealed class MainForm : Form
                 var bits = Convert.FromBase64String(token);
                 var ids = new HashSet<int>();
                 for (var index = 0; index < bits.Length * 8; index++)
-                {
                     if ((bits[index / 8] & (1 << (index % 8))) != 0) ids.Add(index);
-                }
                 var fromName = Catalog.Where(a => ids.Contains(a.Index)).ToList();
                 if (fromName.Count > 0) return fromName;
             }
         }
         catch { }
 
-        // Backward compatibility for older AppForge downloads that stored the selection
-        // in a PE overlay.
         try
         {
             var bytes = File.ReadAllBytes(Application.ExecutablePath);
@@ -234,49 +302,33 @@ internal sealed class MainForm : Form
             var end = IndexOf(bytes, endMarker, start);
             if (end < 0 || end <= start) return new();
             var code = Encoding.UTF8.GetString(bytes, start, end - start);
-            var ids = code.Split('.', StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => int.TryParse(x, out var n) ? n : -1)
-                .Where(x => x >= 0)
-                .ToHashSet();
+            var ids = code.Split('.', StringSplitOptions.RemoveEmptyEntries).Select(x => int.TryParse(x, out var n) ? n : -1).Where(x => x >= 0).ToHashSet();
             return Catalog.Where(a => ids.Contains(a.Index)).ToList();
         }
-        catch
-        {
-            return new();
-        }
+        catch { return new(); }
     }
 
-    private static int LastIndexOf(byte[] source, byte[] pattern)
+    private static int IndexOf(byte[] data, byte[] pattern, int start)
     {
-        for (var i = source.Length - pattern.Length; i >= 0; i--)
+        for (var i = start; i <= data.Length - pattern.Length; i++)
         {
             var match = true;
-            for (var j = 0; j < pattern.Length; j++)
-            {
-                if (source[i + j] == pattern[j]) continue;
-                match = false;
-                break;
-            }
+            for (var j = 0; j < pattern.Length; j++) if (data[i + j] != pattern[j]) { match = false; break; }
             if (match) return i;
         }
         return -1;
     }
 
-    private static int IndexOf(byte[] source, byte[] pattern, int start)
+    private static int LastIndexOf(byte[] data, byte[] pattern)
     {
-        for (var i = start; i <= source.Length - pattern.Length; i++)
+        for (var i = data.Length - pattern.Length; i >= 0; i--)
         {
             var match = true;
-            for (var j = 0; j < pattern.Length; j++)
-            {
-                if (source[i + j] == pattern[j]) continue;
-                match = false;
-                break;
-            }
+            for (var j = 0; j < pattern.Length; j++) if (data[i + j] != pattern[j]) { match = false; break; }
             if (match) return i;
         }
         return -1;
     }
-
-    private sealed record AppItem(int Index, string Name, string PackageId, string IconUrl);
 }
+
+internal sealed record AppItem(int Index, string Name, string PackageId, string IconUrl);
