@@ -1,18 +1,223 @@
-const icon = slug => `https://cdn.simpleicons.org/${slug}`;
 const fav = domain => `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+
 const apps = [
-{name:'Google Chrome',category:'Browsers',logo:icon('googlechrome'),popular:10,tags:['essentials','student'],pkg:{windows:'Google.Chrome',linux:'com.google.Chrome',mac:{type:'cask',id:'google-chrome'}}},{name:'Mozilla Firefox',category:'Browsers',logo:icon('firefoxbrowser'),popular:9,tags:['essentials'],pkg:{windows:'Mozilla.Firefox',linux:'org.mozilla.firefox',mac:{type:'cask',id:'firefox'}}},{name:'Brave',category:'Browsers',logo:icon('brave'),popular:8,tags:[],pkg:{windows:'Brave.Brave',linux:'com.brave.Browser',mac:{type:'cask',id:'brave-browser'}}},{name:'Discord',category:'Messaging',logo:icon('discord'),popular:10,tags:['essentials','gaming'],pkg:{windows:'Discord.Discord',linux:'com.discordapp.Discord',mac:{type:'cask',id:'discord'}}},{name:'Telegram',category:'Messaging',logo:icon('telegram'),popular:8,tags:['essentials'],pkg:{windows:'Telegram.TelegramDesktop',linux:'org.telegram.desktop',mac:{type:'cask',id:'telegram'}}},{name:'Slack',category:'Messaging',logo:icon('slack'),popular:7,tags:['developer'],pkg:{windows:'SlackTechnologies.Slack',linux:'com.slack.Slack',mac:{type:'cask',id:'slack'}}},{name:'Steam',category:'Gaming',logo:icon('steam'),popular:10,tags:['gaming'],pkg:{windows:'Valve.Steam',linux:'com.valvesoftware.Steam',mac:{type:'cask',id:'steam'}}},{name:'Prism Launcher',category:'Gaming',logo:fav('prismlauncher.org'),popular:8,tags:['gaming'],pkg:{windows:'PrismLauncher.PrismLauncher',linux:'org.prismlauncher.PrismLauncher',mac:{type:'cask',id:'prismlauncher'}}},{name:'Heroic Games Launcher',category:'Gaming',logo:fav('heroicgameslauncher.com'),popular:8,tags:['gaming'],pkg:{windows:'HeroicGamesLauncher.HeroicGamesLauncher',linux:'com.heroicgameslauncher.hgl',mac:{type:'cask',id:'heroic'}}},{name:'Lutris',category:'Gaming',logo:icon('lutris'),popular:8,tags:['gaming'],pkg:{linux:'net.lutris.Lutris'}},{name:'Bottles',category:'Gaming',logo:fav('usebottles.com'),popular:8,tags:['gaming'],pkg:{linux:'com.usebottles.bottles'}},{name:'ProtonUp-Qt',category:'Gaming',logo:fav('github.com/DavidoTek/ProtonUp-Qt'),popular:7,tags:['gaming'],pkg:{linux:'net.davidotek.pupgui2'}},{name:'7-Zip',category:'Utilities',logo:icon('7zip'),popular:10,tags:['essentials','developer','student'],pkg:{windows:'7zip.7zip',mac:{type:'formula',id:'sevenzip'}}},{name:'VLC',category:'Media',logo:icon('vlcmediaplayer'),popular:10,tags:['essentials','student'],pkg:{windows:'VideoLAN.VLC',linux:'org.videolan.VLC',mac:{type:'cask',id:'vlc'}}},{name:'Spotify',category:'Media',logo:icon('spotify'),popular:9,tags:['essentials'],pkg:{windows:'Spotify.Spotify',linux:'com.spotify.Client',mac:{type:'cask',id:'spotify'}}},{name:'OBS Studio',category:'Media',logo:icon('obsstudio'),popular:9,tags:['creator','gaming'],pkg:{windows:'OBSProject.OBSStudio',linux:'com.obsproject.Studio',mac:{type:'cask',id:'obs'}}},{name:'Audacity',category:'Media',logo:icon('audacity'),popular:7,tags:['creator'],pkg:{windows:'Audacity.Audacity',linux:'org.audacityteam.Audacity',mac:{type:'cask',id:'audacity'}}},{name:'Krita',category:'Media',logo:icon('krita'),popular:7,tags:['creator'],pkg:{windows:'KDE.Krita',linux:'org.kde.krita',mac:{type:'cask',id:'krita'}}},{name:'GIMP',category:'Media',logo:icon('gimp'),popular:7,tags:['creator'],pkg:{windows:'GIMP.GIMP.3',linux:'org.gimp.GIMP',mac:{type:'cask',id:'gimp'}}},{name:'Blender',category:'Media',logo:icon('blender'),popular:8,tags:['creator'],pkg:{windows:'BlenderFoundation.Blender',linux:'org.blender.Blender',mac:{type:'cask',id:'blender'}}},{name:'Visual Studio Code',category:'Development',logo:icon('visualstudiocode'),popular:10,tags:['developer'],pkg:{windows:'Microsoft.VisualStudioCode',linux:'com.visualstudio.code',mac:{type:'cask',id:'visual-studio-code'}}},{name:'Git',category:'Development',logo:icon('git'),popular:10,tags:['developer'],pkg:{windows:'Git.Git',mac:{type:'formula',id:'git'}}},{name:'Python 3',category:'Development',logo:icon('python'),popular:9,tags:['developer','student'],pkg:{windows:'Python.Python.3.13',mac:{type:'formula',id:'python'}}},{name:'Node.js LTS',category:'Development',logo:icon('nodedotjs'),popular:9,tags:['developer'],pkg:{windows:'OpenJS.NodeJS.LTS',mac:{type:'formula',id:'node'}}},{name:'Docker Desktop',category:'Development',logo:icon('docker'),popular:8,tags:['developer'],pkg:{windows:'Docker.DockerDesktop',mac:{type:'cask',id:'docker'}}},{name:'Postman',category:'Development',logo:icon('postman'),popular:8,tags:['developer'],pkg:{windows:'Postman.Postman',linux:'com.getpostman.Postman',mac:{type:'cask',id:'postman'}}},{name:'LibreOffice',category:'Office',logo:icon('libreoffice'),popular:9,tags:['student','essentials'],pkg:{windows:'TheDocumentFoundation.LibreOffice',linux:'org.libreoffice.LibreOffice',mac:{type:'cask',id:'libreoffice'}}},{name:'Obsidian',category:'Office',logo:icon('obsidian'),popular:8,tags:['student','developer'],pkg:{windows:'Obsidian.Obsidian',linux:'md.obsidian.Obsidian',mac:{type:'cask',id:'obsidian'}}},{name:'Thunderbird',category:'Office',logo:icon('thunderbird'),popular:7,tags:[],pkg:{windows:'Mozilla.Thunderbird',linux:'org.mozilla.Thunderbird',mac:{type:'cask',id:'thunderbird'}}},{name:'qBittorrent',category:'Internet',logo:icon('qbittorrent'),popular:8,tags:[],pkg:{windows:'qBittorrent.qBittorrent',linux:'org.qbittorrent.qBittorrent',mac:{type:'cask',id:'qbittorrent'}}},{name:'Tailscale',category:'Internet',logo:icon('tailscale'),popular:8,tags:['developer'],pkg:{windows:'Tailscale.Tailscale',linux:'com.tailscale.Tailscale',mac:{type:'cask',id:'tailscale-app'}}},{name:'Bitwarden',category:'Security',logo:icon('bitwarden'),popular:9,tags:['essentials','student','developer'],pkg:{windows:'Bitwarden.Bitwarden',linux:'com.bitwarden.desktop',mac:{type:'cask',id:'bitwarden'}}},{name:'KeePassXC',category:'Security',logo:icon('keepassxc'),popular:7,tags:[],pkg:{windows:'KeePassXCTeam.KeePassXC',linux:'org.keepassxc.KeePassXC',mac:{type:'cask',id:'keepassxc'}}},{name:'RustDesk',category:'Remote Access',logo:icon('rustdesk'),popular:8,tags:['developer'],pkg:{windows:'RustDesk.RustDesk',linux:'com.rustdesk.RustDesk',mac:{type:'cask',id:'rustdesk'}}},{name:'Flatseal',category:'Utilities',logo:icon('flatpak'),popular:7,tags:['essentials'],pkg:{linux:'com.github.tchx84.Flatseal'}},{name:'Raycast',category:'Utilities',logo:icon('raycast'),popular:8,tags:['essentials','developer'],pkg:{mac:{type:'cask',id:'raycast'}}},{name:'Rectangle',category:'Utilities',logo:fav('rectangleapp.com'),popular:8,tags:['essentials'],pkg:{mac:{type:'cask',id:'rectangle'}}},{name:'iTerm2',category:'Development',logo:icon('iterm2'),popular:8,tags:['developer'],pkg:{mac:{type:'cask',id:'iterm2'}}},
-{name:'Cisco Packet Tracer',category:'Networking',logo:fav('cisco.com'),popular:7,tags:['student'],pkg:{windows:'url:https://www.netacad.com/learning-collections/cisco-packet-tracer'}},{name:'PyCharm Community',category:'Development',logo:fav('jetbrains.com/pycharm'),popular:8,tags:['developer','student'],pkg:{windows:'JetBrains.PyCharm.Community'}},{name:'IntelliJ IDEA Community',category:'Development',logo:fav('jetbrains.com/idea'),popular:8,tags:['developer','student'],pkg:{windows:'JetBrains.IntelliJIDEA.Community'}},{name:'Blockbench',category:'Development',logo:fav('blockbench.net'),popular:7,tags:['creator'],pkg:{windows:'JannisX11.Blockbench'}},{name:'balenaEtcher',category:'Utilities',logo:fav('etcher.balena.io'),popular:8,tags:['essentials'],pkg:{windows:'Balena.Etcher'}},{name:'Rufus',category:'Utilities',logo:fav('rufus.ie'),popular:9,tags:['essentials'],pkg:{windows:'Rufus.Rufus'}},{name:'PeaZip',category:'Utilities',logo:fav('peazip.github.io'),popular:7,tags:['essentials'],pkg:{windows:'Giorgiotani.Peazip'}},{name:'WizTree',category:'Utilities',logo:fav('diskanalyzer.com'),popular:8,tags:['essentials'],pkg:{windows:'AntibodySoftware.WizTree'}},{name:'WinRAR',category:'Utilities',logo:fav('rarlab.com'),popular:9,tags:['essentials'],pkg:{windows:'RARLab.WinRAR'}},{name:'MiniTool Partition Wizard',category:'Utilities',logo:fav('partitionwizard.com'),popular:7,tags:['essentials'],pkg:{windows:'MiniTool.PartitionWizard.Free'}}
+  {name:'Google Chrome',category:'Web Browsers',domain:'google.com',popular:10,tags:['essentials','student'],pkg:{windows:'Google.Chrome',linux:'com.google.Chrome',mac:{type:'cask',id:'google-chrome'}}},
+  {name:'Mozilla Firefox',category:'Web Browsers',domain:'mozilla.org',popular:10,tags:['essentials'],pkg:{windows:'Mozilla.Firefox',linux:'org.mozilla.firefox',mac:{type:'cask',id:'firefox'}}},
+  {name:'Microsoft Edge',category:'Web Browsers',domain:'microsoft.com/edge',popular:9,tags:['essentials'],pkg:{windows:'Microsoft.Edge'}},
+  {name:'Brave',category:'Web Browsers',domain:'brave.com',popular:9,tags:['essentials'],pkg:{windows:'Brave.Brave',linux:'com.brave.Browser',mac:{type:'cask',id:'brave-browser'}}},
+  {name:'Opera',category:'Web Browsers',domain:'opera.com',popular:8,tags:[],pkg:{windows:'Opera.Opera',mac:{type:'cask',id:'opera'}}},
+  {name:'Vivaldi',category:'Web Browsers',domain:'vivaldi.com',popular:8,tags:[],pkg:{windows:'Vivaldi.Vivaldi',linux:'com.vivaldi.Vivaldi',mac:{type:'cask',id:'vivaldi'}}},
+
+  {name:'Discord',category:'Messaging',domain:'discord.com',popular:10,tags:['essentials','gaming'],pkg:{windows:'Discord.Discord',linux:'com.discordapp.Discord',mac:{type:'cask',id:'discord'}}},
+  {name:'Telegram',category:'Messaging',domain:'telegram.org',popular:9,tags:['essentials'],pkg:{windows:'Telegram.TelegramDesktop',linux:'org.telegram.desktop',mac:{type:'cask',id:'telegram'}}},
+  {name:'Slack',category:'Messaging',domain:'slack.com',popular:8,tags:['developer'],pkg:{windows:'SlackTechnologies.Slack',linux:'com.slack.Slack',mac:{type:'cask',id:'slack'}}},
+  {name:'Zoom',category:'Messaging',domain:'zoom.us',popular:9,tags:['student'],pkg:{windows:'Zoom.Zoom',linux:'us.zoom.Zoom',mac:{type:'cask',id:'zoom'}}},
+  {name:'Microsoft Teams',category:'Messaging',domain:'microsoft.com/microsoft-teams',popular:8,tags:['student'],pkg:{windows:'Microsoft.Teams',mac:{type:'cask',id:'microsoft-teams'}}},
+
+  {name:'Steam',category:'Gaming',domain:'steampowered.com',popular:10,tags:['gaming'],pkg:{windows:'Valve.Steam',linux:'com.valvesoftware.Steam',mac:{type:'cask',id:'steam'}}},
+  {name:'Epic Games Launcher',category:'Gaming',domain:'epicgames.com',popular:9,tags:['gaming'],pkg:{windows:'EpicGames.EpicGamesLauncher'}},
+  {name:'Prism Launcher',category:'Gaming',domain:'prismlauncher.org',popular:8,tags:['gaming'],pkg:{windows:'PrismLauncher.PrismLauncher',linux:'org.prismlauncher.PrismLauncher',mac:{type:'cask',id:'prismlauncher'}}},
+  {name:'Heroic Games Launcher',category:'Gaming',domain:'heroicgameslauncher.com',popular:8,tags:['gaming'],pkg:{windows:'HeroicGamesLauncher.HeroicGamesLauncher',linux:'com.heroicgameslauncher.hgl',mac:{type:'cask',id:'heroic'}}},
+
+  {name:'VLC media player',category:'Media',domain:'videolan.org',popular:10,tags:['essentials','student'],pkg:{windows:'VideoLAN.VLC',linux:'org.videolan.VLC',mac:{type:'cask',id:'vlc'}}},
+  {name:'Spotify',category:'Media',domain:'spotify.com',popular:10,tags:['essentials'],pkg:{windows:'Spotify.Spotify',linux:'com.spotify.Client',mac:{type:'cask',id:'spotify'}}},
+  {name:'OBS Studio',category:'Media',domain:'obsproject.com',popular:9,tags:['creator','gaming'],pkg:{windows:'OBSProject.OBSStudio',linux:'com.obsproject.Studio',mac:{type:'cask',id:'obs'}}},
+  {name:'Audacity',category:'Media',domain:'audacityteam.org',popular:8,tags:['creator'],pkg:{windows:'Audacity.Audacity',linux:'org.audacityteam.Audacity',mac:{type:'cask',id:'audacity'}}},
+  {name:'HandBrake',category:'Media',domain:'handbrake.fr',popular:8,tags:['creator'],pkg:{windows:'HandBrake.HandBrake',linux:'fr.handbrake.ghb',mac:{type:'cask',id:'handbrake-app'}}},
+
+  {name:'Visual Studio Code',category:'Development',domain:'code.visualstudio.com',popular:10,tags:['developer','student'],pkg:{windows:'Microsoft.VisualStudioCode',linux:'com.visualstudio.code',mac:{type:'cask',id:'visual-studio-code'}}},
+  {name:'Git',category:'Development',domain:'git-scm.com',popular:10,tags:['developer'],pkg:{windows:'Git.Git',mac:{type:'formula',id:'git'}}},
+  {name:'GitHub Desktop',category:'Development',domain:'desktop.github.com',popular:8,tags:['developer'],pkg:{windows:'GitHub.GitHubDesktop',mac:{type:'cask',id:'github'}}},
+  {name:'Python 3',category:'Development',domain:'python.org',popular:10,tags:['developer','student'],pkg:{windows:'Python.Python.3.13',mac:{type:'formula',id:'python'}}},
+  {name:'Node.js LTS',category:'Development',domain:'nodejs.org',popular:9,tags:['developer'],pkg:{windows:'OpenJS.NodeJS.LTS',mac:{type:'formula',id:'node'}}},
+  {name:'Docker Desktop',category:'Development',domain:'docker.com',popular:9,tags:['developer'],pkg:{windows:'Docker.DockerDesktop',mac:{type:'cask',id:'docker'}}},
+  {name:'Postman',category:'Development',domain:'postman.com',popular:8,tags:['developer'],pkg:{windows:'Postman.Postman',linux:'com.getpostman.Postman',mac:{type:'cask',id:'postman'}}},
+  {name:'PyCharm Community',category:'Development',domain:'jetbrains.com/pycharm',popular:9,tags:['developer','student'],pkg:{windows:'JetBrains.PyCharm.Community',mac:{type:'cask',id:'pycharm-ce'}}},
+  {name:'IntelliJ IDEA Community',category:'Development',domain:'jetbrains.com/idea',popular:9,tags:['developer','student'],pkg:{windows:'JetBrains.IntelliJIDEA.Community',mac:{type:'cask',id:'intellij-idea-ce'}}},
+  {name:'Notepad++',category:'Development',domain:'notepad-plus-plus.org',popular:9,tags:['developer','essentials'],pkg:{windows:'Notepad++.Notepad++'}},
+  {name:'Cisco Packet Tracer',category:'Development',domain:'cisco.com',popular:8,tags:['developer','student'],pkg:{windows:'url:https://www.netacad.com/learning-collections/cisco-packet-tracer'}},
+  {name:'Blockbench',category:'Development',domain:'blockbench.net',popular:8,tags:['developer','creator','gaming'],pkg:{windows:'JannisX11.Blockbench',linux:'net.blockbench.Blockbench',mac:{type:'cask',id:'blockbench'}}},
+
+  {name:'LibreOffice',category:'Documents & Office',domain:'libreoffice.org',popular:9,tags:['student','essentials'],pkg:{windows:'TheDocumentFoundation.LibreOffice',linux:'org.libreoffice.LibreOffice',mac:{type:'cask',id:'libreoffice'}}},
+  {name:'Obsidian',category:'Documents & Office',domain:'obsidian.md',popular:9,tags:['student','developer'],pkg:{windows:'Obsidian.Obsidian',linux:'md.obsidian.Obsidian',mac:{type:'cask',id:'obsidian'}}},
+  {name:'Thunderbird',category:'Documents & Office',domain:'thunderbird.net',popular:8,tags:['student'],pkg:{windows:'Mozilla.Thunderbird',linux:'org.mozilla.Thunderbird',mac:{type:'cask',id:'thunderbird'}}},
+
+  {name:'Krita',category:'Design & Imaging',domain:'krita.org',popular:8,tags:['creator'],pkg:{windows:'KDE.Krita',linux:'org.kde.krita',mac:{type:'cask',id:'krita'}}},
+  {name:'GIMP',category:'Design & Imaging',domain:'gimp.org',popular:9,tags:['creator'],pkg:{windows:'GIMP.GIMP.3',linux:'org.gimp.GIMP',mac:{type:'cask',id:'gimp'}}},
+  {name:'Blender',category:'Design & Imaging',domain:'blender.org',popular:9,tags:['creator'],pkg:{windows:'BlenderFoundation.Blender',linux:'org.blender.Blender',mac:{type:'cask',id:'blender'}}},
+  {name:'Inkscape',category:'Design & Imaging',domain:'inkscape.org',popular:8,tags:['creator'],pkg:{windows:'Inkscape.Inkscape',linux:'org.inkscape.Inkscape',mac:{type:'cask',id:'inkscape'}}},
+  {name:'ShareX',category:'Design & Imaging',domain:'getsharex.com',popular:8,tags:['creator','essentials'],pkg:{windows:'ShareX.ShareX'}},
+
+  {name:'7-Zip',category:'Compression',domain:'7-zip.org',popular:10,tags:['essentials','developer','student'],pkg:{windows:'7zip.7zip',mac:{type:'formula',id:'sevenzip'}}},
+  {name:'PeaZip',category:'Compression',domain:'peazip.github.io',popular:8,tags:['essentials'],pkg:{windows:'Giorgiotani.Peazip'}},
+  {name:'WinRAR',category:'Compression',domain:'rarlab.com',popular:9,tags:['essentials'],pkg:{windows:'RARLab.WinRAR'}},
+
+  {name:'qBittorrent',category:'File Sharing',domain:'qbittorrent.org',popular:9,tags:[],pkg:{windows:'qBittorrent.qBittorrent',linux:'org.qbittorrent.qBittorrent',mac:{type:'cask',id:'qbittorrent'}}},
+  {name:'FileZilla',category:'File Sharing',domain:'filezilla-project.org',popular:8,tags:['developer'],pkg:{windows:'TimKosse.FileZilla.Client',linux:'org.filezillaproject.Filezilla',mac:{type:'cask',id:'filezilla'}}},
+  {name:'WinSCP',category:'File Sharing',domain:'winscp.net',popular:8,tags:['developer'],pkg:{windows:'WinSCP.WinSCP'}},
+
+  {name:'Bitwarden',category:'Security',domain:'bitwarden.com',popular:9,tags:['essentials','student','developer'],pkg:{windows:'Bitwarden.Bitwarden',linux:'com.bitwarden.desktop',mac:{type:'cask',id:'bitwarden'}}},
+  {name:'KeePassXC',category:'Security',domain:'keepassxc.org',popular:8,tags:['essentials'],pkg:{windows:'KeePassXCTeam.KeePassXC',linux:'org.keepassxc.KeePassXC',mac:{type:'cask',id:'keepassxc'}}},
+  {name:'Malwarebytes',category:'Security',domain:'malwarebytes.com',popular:8,tags:['essentials'],pkg:{windows:'Malwarebytes.Malwarebytes'}},
+
+  {name:'PowerToys',category:'Utilities',domain:'learn.microsoft.com/windows/powertoys',popular:10,tags:['essentials','developer'],pkg:{windows:'Microsoft.PowerToys'}},
+  {name:'Everything',category:'Utilities',domain:'voidtools.com',popular:9,tags:['essentials'],pkg:{windows:'voidtools.Everything'}},
+  {name:'WizTree',category:'Utilities',domain:'diskanalyzer.com',popular:9,tags:['essentials'],pkg:{windows:'AntibodySoftware.WizTree'}},
+  {name:'Rufus',category:'Utilities',domain:'rufus.ie',popular:9,tags:['essentials'],pkg:{windows:'Rufus.Rufus'}},
+  {name:'balenaEtcher',category:'Utilities',domain:'etcher.balena.io',popular:8,tags:['essentials','developer'],pkg:{windows:'Balena.Etcher',mac:{type:'cask',id:'balenaetcher'}}},
+  {name:'MiniTool Partition Wizard',category:'Utilities',domain:'partitionwizard.com',popular:8,tags:['essentials'],pkg:{windows:'MiniTool.PartitionWizard.Free'}},
+  {name:'HWiNFO',category:'Utilities',domain:'hwinfo.com',popular:8,tags:['essentials'],pkg:{windows:'REALiX.HWiNFO'}},
+  {name:'CPU-Z',category:'Utilities',domain:'cpuid.com/softwares/cpu-z.html',popular:8,tags:['essentials'],pkg:{windows:'CPUID.CPU-Z'}},
+  {name:'CrystalDiskInfo',category:'Utilities',domain:'crystalmark.info',popular:8,tags:['essentials'],pkg:{windows:'CrystalDewWorld.CrystalDiskInfo'}},
+  {name:'AnyDesk',category:'Utilities',domain:'anydesk.com',popular:8,tags:['essentials'],pkg:{windows:'AnyDeskSoftwareGmbH.AnyDesk'}},
+  {name:'TeamViewer',category:'Utilities',domain:'teamviewer.com',popular:8,tags:['essentials'],pkg:{windows:'TeamViewer.TeamViewer'}},
+  {name:'PuTTY',category:'Utilities',domain:'putty.org',popular:8,tags:['developer'],pkg:{windows:'PuTTY.PuTTY'}},
+  {name:'RustDesk',category:'Utilities',domain:'rustdesk.com',popular:8,tags:['developer'],pkg:{windows:'RustDesk.RustDesk',linux:'com.rustdesk.RustDesk',mac:{type:'cask',id:'rustdesk'}}},
+
+  {name:'Visual C++ Redistributable 2015–2022 x64',category:'Runtimes',domain:'learn.microsoft.com/cpp/windows/latest-supported-vc-redist',popular:9,tags:['gaming','developer','essentials'],pkg:{windows:'Microsoft.VCRedist.2015+.x64'}},
+  {name:'.NET Desktop Runtime 8',category:'Runtimes',domain:'dotnet.microsoft.com',popular:9,tags:['gaming','developer'],pkg:{windows:'Microsoft.DotNet.DesktopRuntime.8'}},
+  {name:'Java 21 (Temurin JDK)',category:'Runtimes',domain:'adoptium.net',popular:8,tags:['developer','student'],pkg:{windows:'EclipseAdoptium.Temurin.21.JDK'}},
+  {name:'Java 17 (Temurin JDK)',category:'Runtimes',domain:'adoptium.net',popular:8,tags:['developer','student'],pkg:{windows:'EclipseAdoptium.Temurin.17.JDK'}},
+
+  {name:'NVIDIA Graphics Drivers',category:'Drivers',domain:'nvidia.com',popular:10,tags:['gaming','drivers'],pkg:{windows:'url:https://www.nvidia.com/Download/index.aspx'}},
+  {name:'NVIDIA App',category:'Drivers',domain:'nvidia.com',popular:10,tags:['gaming','drivers'],pkg:{windows:'url:https://www.nvidia.com/en-us/software/nvidia-app/'}},
+  {name:'AMD Radeon Drivers',category:'Drivers',domain:'amd.com',popular:10,tags:['gaming','drivers'],pkg:{windows:'url:https://www.amd.com/en/support/download/drivers.html'}},
+  {name:'AMD Software: Adrenalin Edition',category:'Drivers',domain:'amd.com',popular:10,tags:['gaming','drivers'],pkg:{windows:'url:https://www.amd.com/en/products/software/adrenalin.html'}}
 ];
-let winIndex=0; apps.forEach(a=>{a.key=a.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');a.desc=`Install ${a.name} on supported systems.`;if(a.pkg.windows)a.winIndex=winIndex++});
-const $=s=>document.querySelector(s); let platform=localStorage.getItem('appforge-platform')||'windows',activeCategory='all'; const selected=new Set(JSON.parse(localStorage.getItem('appforge-selected-v2')||'[]')); const platformNames={windows:'Windows',linux:'Linux',mac:'macOS'};
-function availableApps(){return apps.filter(a=>a.pkg[platform])} function saveSelection(){localStorage.setItem('appforge-selected-v2',JSON.stringify([...selected]))} function logoMarkup(a){return `<img src="${a.logo}" alt="${a.name} icon" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="logo-fallback">${a.fallback||a.name.slice(0,2).toUpperCase()}</span>`}
-function categories(){return [...new Set(availableApps().map(a=>a.category))].sort()} function renderNav(){const cats=categories();$('#categoryNav').innerHTML=cats.map(c=>`<button class="category-link" data-category="${c}"><span>${c}</span><span class="category-count">${availableApps().filter(a=>a.category===c).length}</span></button>`).join('');document.querySelectorAll('.category-link').forEach(b=>b.onclick=()=>{activeCategory=b.dataset.category;document.querySelectorAll('.category-link').forEach(x=>x.classList.toggle('active',x.dataset.category===activeCategory));$('#catalogTitle').textContent=activeCategory==='all'?'All apps':activeCategory;renderApps()})}
-function renderApps(){let q=$('#searchInput').value.toLowerCase();let list=availableApps().filter(a=>(activeCategory==='all'||a.category===activeCategory)&&(!q||`${a.name} ${a.category}`.toLowerCase().includes(q)));let sort=$('#sortSelect').value;list.sort((a,b)=>sort==='name'?a.name.localeCompare(b.name):sort==='category'?a.category.localeCompare(b.category)||a.name.localeCompare(b.name):(b.popular-a.popular)||a.name.localeCompare(b.name));$('#emptyState').classList.toggle('hidden',!!list.length);$('#catalog').innerHTML=list.map(a=>`<label class="app-row ${selected.has(a.key)?'selected':''}"><input type="checkbox" data-key="${a.key}" ${selected.has(a.key)?'checked':''}><span class="app-icon">${logoMarkup(a)}</span><span class="app-info"><strong>${a.name}</strong><small>${a.desc}</small></span><span class="app-category">${a.category}</span>${a.popular>=9?'<span class="popular-badge">Popular</span>':''}<span class="select-indicator">✓</span></label>`).join('');document.querySelectorAll('#catalog input').forEach(i=>i.onchange=()=>{selected.has(i.dataset.key)?selected.delete(i.dataset.key):selected.add(i.dataset.key);saveSelection();renderApps();updateSelectionBar()})}
-function updateSelectionBar(){const c=availableApps().filter(a=>selected.has(a.key));$('#selectionCount').textContent=`${c.length} app${c.length===1?'':'s'} selected for ${platformNames[platform]}`;$('#selectionNames').textContent=c.length?c.slice(0,4).map(a=>a.name).join(', ')+(c.length>4?` +${c.length-4} more`:''):'Choose apps to build your installer.';$('#selectionBar').classList.toggle('hidden',!c.length)}
-function updatePlatformUI(){document.querySelectorAll('.platform-btn').forEach(b=>b.classList.toggle('active',b.dataset.platform===platform));$('#platformBadge').textContent=platformNames[platform];$('#catalogEyebrow').textContent=`${platformNames[platform]} catalog`;activeCategory='all';$('#catalogTitle').textContent='All apps';$('#appTotal').textContent=availableApps().length;$('#categoryTotal').textContent=categories().length;$('#allCount').textContent=availableApps().length;renderNav();renderApps();updateSelectionBar()}
-function applyPreset(t){availableApps().filter(a=>a.tags.includes(t)).forEach(a=>selected.add(a.key));saveSelection();renderApps();updateSelectionBar()}
-function buildUnixInstaller(){const c=availableApps().filter(a=>selected.has(a.key));if(platform==='linux')return '#!/usr/bin/env bash\nset -e\necho "AppForge Linux Installer"\nif ! command -v flatpak >/dev/null 2>&1; then echo "Flatpak is required. Install Flatpak first, then run this file again."; read -r; exit 1; fi\nflatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo\n'+c.map(a=>`echo "Installing ${a.name}..."\nflatpak install -y flathub "${a.pkg.linux}"`).join('\n')+'\necho "AppForge finished."\n';let formulas=c.filter(a=>a.pkg.mac.type==='formula').map(a=>a.pkg.mac.id),casks=c.filter(a=>a.pkg.mac.type==='cask').map(a=>a.pkg.mac.id);return '#!/usr/bin/env bash\nset -e\necho "AppForge macOS Installer"\nif ! command -v brew >/dev/null 2>&1; then echo "Homebrew is required. Install Homebrew first, then run this file again."; exit 1; fi\n'+(formulas.length?`brew install ${formulas.map(x=>`"${x}"`).join(' ')}\n`:'')+(casks.length?`brew install --cask ${casks.map(x=>`"${x}"`).join(' ')}\n`:'')+'echo "AppForge finished."\n'}
-async function downloadInstaller(){const c=availableApps().filter(a=>selected.has(a.key));if(platform==='windows'){const button=$('#downloadScript'),old=button.textContent;button.disabled=true;button.textContent='Preparing EXE…';try{const r=await fetch(`downloads/AppForge-Windows.exe?v=${Date.now()}`);if(!r.ok)throw new Error('The Windows EXE is still being built by GitHub Actions. Try again in a minute.');const blob=await r.blob(),url=URL.createObjectURL(blob),a=document.createElement('a');const code=c.map(x=>x.winIndex).join('.');a.href=url;a.download=`AppForge-Windows--${code}.exe`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}catch(e){alert(e.message)}finally{button.disabled=false;button.textContent=old}return}const blob=new Blob([buildUnixInstaller()],{type:'application/octet-stream'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=platform==='linux'?'AppForge-Linux-Installer.sh':'AppForge-macOS-Installer.command';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-function reviewBundle(){const c=availableApps().filter(a=>selected.has(a.key));$('#dialogEyebrow').textContent=`Your ${platformNames[platform]} installer`;$('#dialogIntro').textContent=platform==='windows'?`AppForge will download one Windows EXE with its own GUI and your ${c.length} selected app${c.length===1?'':'s'}.`:`AppForge will create one installer file containing your ${c.length} selected app${c.length===1?'':'s'}.`;$('#platformNote').textContent=platform==='windows'?'Windows: one .EXE with the AppForge icon, app list, Install button and progress display. It installs through Winget.':platform==='linux'?'Linux downloads a shell installer that uses Flatpak/Flathub.':'macOS downloads a .command installer that uses Homebrew.';$('#selectedList').innerHTML=c.map(a=>`<span class="selected-pill"><span class="mini-logo">${logoMarkup(a)}</span>${a.name}</span>`).join('');$('#downloadScript').textContent=platform==='windows'?'⬇ Download AppForge EXE':'⬇ Download installer';$('#reviewDialog').showModal()}
-document.querySelectorAll('.platform-btn').forEach(b=>b.onclick=()=>{platform=b.dataset.platform;localStorage.setItem('appforge-platform',platform);updatePlatformUI()});document.querySelectorAll('.preset-btn[data-preset]').forEach(b=>b.onclick=()=>applyPreset(b.dataset.preset));$('#clearSelection').onclick=()=>{selected.clear();saveSelection();renderApps();updateSelectionBar()};$('#searchInput').oninput=renderApps;$('#sortSelect').onchange=renderApps;$('#reviewButton').onclick=reviewBundle;$('#dialogClose').onclick=()=>$('#reviewDialog').close();$('#downloadScript').onclick=downloadInstaller;$('#themeToggle').onclick=()=>{document.body.classList.toggle('light');localStorage.setItem('appforge-theme',document.body.classList.contains('light')?'light':'dark')};if(localStorage.getItem('appforge-theme')==='light')document.body.classList.add('light');updatePlatformUI();
+
+let windowsIndex = 0;
+for (const app of apps) {
+  app.key = app.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  app.logo = fav(app.domain);
+  app.desc = app.desc || `${app.name} — install or open the official installer automatically.`;
+  if (app.pkg.windows) app.winIndex = windowsIndex++;
+}
+
+const $ = selector => document.querySelector(selector);
+const $$ = selector => [...document.querySelectorAll(selector)];
+const platformNames = {windows:'Windows', linux:'Linux', mac:'macOS'};
+let platform = localStorage.getItem('appforge-platform') || 'windows';
+if (!platformNames[platform]) platform = 'windows';
+let activeCategory = 'all';
+let selected;
+try { selected = new Set(JSON.parse(localStorage.getItem('appforge-selected-v2') || '[]')); }
+catch { selected = new Set(); }
+
+function availableApps(){ return apps.filter(app => Boolean(app.pkg[platform])); }
+function categories(){ return [...new Set(availableApps().map(app => app.category))].sort((a,b)=>a.localeCompare(b)); }
+function saveSelection(){ localStorage.setItem('appforge-selected-v2', JSON.stringify([...selected])); }
+function logoMarkup(app){
+  const fallback = (app.name.match(/[A-Za-z0-9]/g) || ['A']).slice(0,2).join('').toUpperCase();
+  return `<img src="${app.logo}" alt="${app.name} icon" loading="lazy" referrerpolicy="no-referrer" onerror="this.hidden=true;this.nextElementSibling.style.display='grid'"><span class="logo-fallback">${fallback}</span>`;
+}
+function setText(selector, value){ const el=$(selector); if(el) el.textContent=value; }
+
+function renderNav(){
+  const nav = $('#categoryNav');
+  if(!nav) return;
+  nav.innerHTML = categories().map(cat => `<button class="category-link ${activeCategory===cat?'active':''}" data-category="${cat}" type="button"><span>${cat}</span><span class="category-count">${availableApps().filter(a=>a.category===cat).length}</span></button>`).join('');
+  $$('.category-link').forEach(btn => btn.addEventListener('click', () => {
+    activeCategory = btn.dataset.category;
+    setText('#catalogTitle', activeCategory === 'all' ? 'All apps' : activeCategory);
+    renderNav(); renderApps();
+  }));
+}
+
+function renderApps(){
+  const catalog = $('#catalog'); if(!catalog) return;
+  const q = ($('#searchInput')?.value || '').trim().toLowerCase();
+  let list = availableApps().filter(app => (activeCategory==='all'||app.category===activeCategory) && (!q || `${app.name} ${app.category} ${app.desc}`.toLowerCase().includes(q)));
+  const sort = $('#sortSelect')?.value || 'popular';
+  list.sort((a,b)=> sort==='name' ? a.name.localeCompare(b.name) : sort==='category' ? a.category.localeCompare(b.category)||a.name.localeCompare(b.name) : b.popular-a.popular||a.name.localeCompare(b.name));
+  $('#emptyState')?.classList.toggle('hidden', list.length > 0);
+  catalog.innerHTML = list.map(app => `<label class="app-row ${selected.has(app.key)?'selected':''}">
+    <input type="checkbox" data-key="${app.key}" ${selected.has(app.key)?'checked':''}>
+    <span class="app-icon">${logoMarkup(app)}</span>
+    <span class="app-info"><strong>${app.name}</strong><small>${app.desc}</small></span>
+    <span class="app-category">${app.category}</span>
+    ${app.popular>=9?'<span class="popular-badge">Popular</span>':''}
+    <span class="select-indicator">✓</span>
+  </label>`).join('');
+  $$('#catalog input[type=checkbox]').forEach(input => input.addEventListener('change', () => {
+    selected.has(input.dataset.key) ? selected.delete(input.dataset.key) : selected.add(input.dataset.key);
+    saveSelection(); renderApps(); updateSelectionBar();
+  }));
+}
+
+function updateSelectionBar(){
+  const chosen = availableApps().filter(a=>selected.has(a.key));
+  setText('#selectionCount', `${chosen.length} app${chosen.length===1?'':'s'} selected`);
+  setText('#selectionNames', chosen.length ? chosen.slice(0,5).map(a=>a.name).join(', ') + (chosen.length>5?` +${chosen.length-5} more`:'') : 'Choose apps to build your installer.');
+  $('#selectionBar')?.classList.toggle('hidden', chosen.length===0);
+}
+
+function updatePlatformUI(){
+  $$('.platform-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.platform===platform));
+  setText('#platformBadge', platformNames[platform]);
+  setText('#catalogEyebrow', `${platformNames[platform]} catalog`);
+  setText('#appTotal', availableApps().length);
+  setText('#allCount', availableApps().length);
+  activeCategory='all'; setText('#catalogTitle','All apps');
+  renderNav(); renderApps(); updateSelectionBar();
+}
+
+function applyPreset(tag){
+  availableApps().filter(app=>app.tags.includes(tag)).forEach(app=>selected.add(app.key));
+  saveSelection(); renderApps(); updateSelectionBar();
+}
+
+function buildUnixInstaller(){
+  const chosen=availableApps().filter(a=>selected.has(a.key));
+  if(platform==='linux'){
+    const flatpaks=chosen.filter(a=>typeof a.pkg.linux==='string');
+    return '#!/usr/bin/env bash\nset -e\necho "AppForge Linux Installer"\ncommand -v flatpak >/dev/null 2>&1 || { echo "Flatpak is required."; exit 1; }\nflatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo\n'+flatpaks.map(a=>`echo "Installing ${a.name}..."\nflatpak install -y flathub "${a.pkg.linux}"`).join('\n')+'\necho "AppForge finished."\n';
+  }
+  const formulas=chosen.filter(a=>a.pkg.mac?.type==='formula').map(a=>a.pkg.mac.id);
+  const casks=chosen.filter(a=>a.pkg.mac?.type==='cask').map(a=>a.pkg.mac.id);
+  return '#!/usr/bin/env bash\nset -e\necho "AppForge macOS Installer"\ncommand -v brew >/dev/null 2>&1 || { echo "Homebrew is required."; exit 1; }\n'+(formulas.length?`brew install ${formulas.map(x=>`"${x}"`).join(' ')}\n`:'')+(casks.length?`brew install --cask ${casks.map(x=>`"${x}"`).join(' ')}\n`:'')+'echo "AppForge finished."\n';
+}
+
+async function downloadInstaller(){
+  const chosen=availableApps().filter(a=>selected.has(a.key));
+  if(!chosen.length) return;
+  const button=$('#downloadScript'); const old=button?.textContent;
+  if(button){button.disabled=true;button.textContent='Preparing…';}
+  try{
+    if(platform==='windows'){
+      const response=await fetch(`downloads/AppForge-Windows.exe?v=${Date.now()}`,{cache:'no-store'});
+      if(!response.ok) throw new Error(`Windows EXE is unavailable (${response.status}).`);
+      const blob=await response.blob();
+      if(blob.size<10000) throw new Error('Windows EXE is not ready yet.');
+      const url=URL.createObjectURL(blob); const link=document.createElement('a');
+      link.href=url; link.download=`AppForge-Windows--${chosen.map(a=>a.winIndex).join('.')}.exe`;
+      document.body.appendChild(link); link.click(); link.remove(); setTimeout(()=>URL.revokeObjectURL(url),1500);
+    }else{
+      const blob=new Blob([buildUnixInstaller()],{type:'text/plain'}); const url=URL.createObjectURL(blob); const link=document.createElement('a');
+      link.href=url; link.download=platform==='linux'?'AppForge-Linux-Installer.sh':'AppForge-macOS-Installer.command'; document.body.appendChild(link); link.click(); link.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+    }
+  }catch(err){ alert(`AppForge: ${err.message}`); }
+  finally{if(button){button.disabled=false;button.textContent=old;}}
+}
+
+function reviewBundle(){
+  const chosen=availableApps().filter(a=>selected.has(a.key));
+  if(!chosen.length) return;
+  setText('#dialogEyebrow',`Your ${platformNames[platform]} installer`);
+  setText('#dialogIntro',platform==='windows'?`The EXE will open with AppForge GUI and these ${chosen.length} selected apps.`:`AppForge will create one installer file with these ${chosen.length} selected apps.`);
+  setText('#platformNote',platform==='windows'?'Apps install through Winget. Driver items open the official NVIDIA/AMD download page so AppForge never guesses the wrong GPU driver.':platform==='linux'?'Linux uses Flatpak + Flathub.':'macOS uses Homebrew.');
+  const list=$('#selectedList'); if(list) list.innerHTML=chosen.map(a=>`<span class="selected-pill"><span class="mini-logo">${logoMarkup(a)}</span>${a.name}</span>`).join('');
+  setText('#downloadScript',platform==='windows'?'⬇ Download AppForge EXE':'⬇ Download installer');
+  $('#reviewDialog')?.showModal();
+}
+
+$$('.platform-btn').forEach(btn=>btn.addEventListener('click',()=>{platform=btn.dataset.platform;localStorage.setItem('appforge-platform',platform);updatePlatformUI();}));
+$$('.preset-btn[data-preset]').forEach(btn=>btn.addEventListener('click',()=>applyPreset(btn.dataset.preset)));
+$('#clearSelection')?.addEventListener('click',()=>{selected.clear();saveSelection();renderApps();updateSelectionBar();});
+$('#searchInput')?.addEventListener('input',renderApps);
+$('#sortSelect')?.addEventListener('change',renderApps);
+$('#reviewButton')?.addEventListener('click',reviewBundle);
+$('#dialogClose')?.addEventListener('click',()=>$('#reviewDialog')?.close());
+$('#downloadScript')?.addEventListener('click',downloadInstaller);
+$('#themeToggle')?.addEventListener('click',()=>{document.body.classList.toggle('light');localStorage.setItem('appforge-theme',document.body.classList.contains('light')?'light':'dark');});
+if(localStorage.getItem('appforge-theme')==='light') document.body.classList.add('light');
+updatePlatformUI();
