@@ -6,12 +6,20 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ApplicationIcon>appforge.ico</ApplicationIcon>
-    <AssemblyName>AppForge-Windows</AssemblyName>
+    <AssemblyName>AppForge</AssemblyName>
     <RootNamespace>AppForgeInstaller</RootNamespace>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>false</SelfContained>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
+    <Product>AppForge</Product>
+    <AssemblyTitle>AppForge</AssemblyTitle>
+    <Description>One installer for all your apps.</Description>
+    <Company>AppForge</Company>
+    <Copyright>AppForge</Copyright>
+    <Version>2.2.0</Version>
+    <FileVersion>2.2.0.0</FileVersion>
+    <AssemblyVersion>2.2.0.0</AssemblyVersion>
   </PropertyGroup>
 </Project>
