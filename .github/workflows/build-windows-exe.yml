@@ -1,0 +1,63 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/AppForgeInstaller/**'
+      - '.github/workflows/build-windows-exe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Generate AppForge icon
+        shell: powershell
+        run: |
+          Add-Type -AssemblyName System.Drawing
+          $bmp = New-Object System.Drawing.Bitmap 256,256
+          $g = [System.Drawing.Graphics]::FromImage($bmp)
+          $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+          $g.Clear([System.Drawing.Color]::FromArgb(8,17,31))
+          $brush = New-Object System.Drawing.Drawing2D.LinearGradientBrush ([System.Drawing.Rectangle]::new(16,16,224,224)), ([System.Drawing.Color]::FromArgb(104,224,255)), ([System.Drawing.Color]::FromArgb(167,148,255)), 45
+          $g.FillRoundedRectangle = $null
+          $g.FillRectangle($brush, 22,22,212,212)
+          $font = New-Object System.Drawing.Font('Segoe UI',76,[System.Drawing.FontStyle]::Bold)
+          $sf = New-Object System.Drawing.StringFormat
+          $sf.Alignment = [System.Drawing.StringAlignment]::Center
+          $sf.LineAlignment = [System.Drawing.StringAlignment]::Center
+          $g.DrawString('AF',$font,[System.Drawing.Brushes]::Black,[System.Drawing.RectangleF]::new(0,0,256,256),$sf)
+          $g.Dispose()
+          $hIcon = $bmp.GetHicon()
+          $ico = [System.Drawing.Icon]::FromHandle($hIcon)
+          $fs = [System.IO.File]::Create('src/AppForgeInstaller/appforge.ico')
+          $ico.Save($fs)
+          $fs.Close()
+          $bmp.Dispose()
+
+      - name: Publish single-file EXE
+        run: dotnet publish src/AppForgeInstaller/AppForgeInstaller.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
+
+      - name: Copy EXE to website
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force -Path downloads | Out-Null
+          Copy-Item publish/AppForge-Windows.exe downloads/AppForge-Windows.exe -Force
+
+      - name: Commit built EXE
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add downloads/AppForge-Windows.exe
+          git diff --cached --quiet || git commit -m "Build AppForge Windows EXE"
+          git push
