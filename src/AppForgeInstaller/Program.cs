@@ -33,7 +33,12 @@ internal sealed class MainForm : Form
         new(21,"Docker Desktop","Docker.DockerDesktop"), new(22,"Postman","Postman.Postman"), new(23,"LibreOffice","TheDocumentFoundation.LibreOffice"),
         new(24,"Obsidian","Obsidian.Obsidian"), new(25,"Thunderbird","Mozilla.Thunderbird"), new(26,"qBittorrent","qBittorrent.qBittorrent"),
         new(27,"Tailscale","Tailscale.Tailscale"), new(28,"Bitwarden","Bitwarden.Bitwarden"), new(29,"KeePassXC","KeePassXCTeam.KeePassXC"),
-        new(30,"RustDesk","RustDesk.RustDesk")
+        new(30,"RustDesk","RustDesk.RustDesk"),
+        new(31,"Cisco Packet Tracer","url:https://www.netacad.com/learning-collections/cisco-packet-tracer"),
+        new(32,"PyCharm Community","JetBrains.PyCharm.Community"), new(33,"IntelliJ IDEA Community","JetBrains.IntelliJIDEA.Community"),
+        new(34,"Blockbench","JannisX11.Blockbench"), new(35,"balenaEtcher","Balena.Etcher"), new(36,"Rufus","Rufus.Rufus"),
+        new(37,"PeaZip","Giorgiotani.Peazip"), new(38,"WizTree","AntibodySoftware.WizTree"), new(39,"WinRAR","RARLab.WinRAR"),
+        new(40,"MiniTool Partition Wizard","MiniTool.PartitionWizard.Free")
     };
 
     public MainForm()
@@ -91,7 +96,8 @@ internal sealed class MainForm : Form
         var panel = new Panel { Width = 820, Height = 58, Margin = new Padding(0,0,0,8), BackColor = Color.FromArgb(17,31,52) };
         var check = new CheckBox { Checked = lockedSelection || selectedApps.Contains(app), Enabled = !lockedSelection, AutoSize = true, Location = new Point(16,19), Tag = app };
         var name = new Label { Text = app.Name, AutoSize = true, Location = new Point(48,10), Font = new Font("Segoe UI",10f,FontStyle.Bold), ForeColor = Color.White };
-        var id = new Label { Text = app.PackageId, AutoSize = true, Location = new Point(48,31), Font = new Font("Segoe UI",8.5f), ForeColor = Color.FromArgb(145,160,181) };
+        var packageText = app.PackageId.StartsWith("url:", StringComparison.OrdinalIgnoreCase) ? "Official download / sign-in required" : app.PackageId;
+        var id = new Label { Text = packageText, AutoSize = true, Location = new Point(48,31), Font = new Font("Segoe UI",8.5f), ForeColor = Color.FromArgb(145,160,181) };
         panel.Controls.Add(check); panel.Controls.Add(name); panel.Controls.Add(id); appList.Controls.Add(panel);
     }
 
@@ -113,12 +119,21 @@ internal sealed class MainForm : Form
         foreach (var app in apps)
         {
             status.Text = $"Installing {app.Name}...";
-            var psi = new ProcessStartInfo("winget", $"install --id \"{app.PackageId}\" -e --silent --accept-package-agreements --accept-source-agreements")
-            { UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true };
             try
             {
-                using var p = Process.Start(psi); if (p == null) throw new Exception("Could not start Winget.");
-                await p.WaitForExitAsync(); if (p.ExitCode == 0) ok++;
+                if (app.PackageId.StartsWith("url:", StringComparison.OrdinalIgnoreCase))
+                {
+                    var url = app.PackageId[4..];
+                    Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                    MessageBox.Show($"{app.Name} is distributed through its official account/download page. AppForge opened that page for you.", "Manual download required", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    var psi = new ProcessStartInfo("winget", $"install --id \"{app.PackageId}\" -e --silent --accept-package-agreements --accept-source-agreements")
+                    { UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true };
+                    using var p = Process.Start(psi); if (p == null) throw new Exception("Could not start Winget.");
+                    await p.WaitForExitAsync(); if (p.ExitCode == 0) ok++;
+                }
             }
             catch (Exception ex)
             {
@@ -126,7 +141,7 @@ internal sealed class MainForm : Form
             }
             progress.Value++;
         }
-        status.Text = $"Finished — {ok}/{apps.Count} installed successfully.";
+        status.Text = $"Finished — {ok}/{apps.Count} installed automatically.";
         installButton.Enabled = true; installButton.Text = "Run again";
     }
 
