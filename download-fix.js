@@ -14,13 +14,13 @@
     return r;
   }
 
+  // Encode selected Windows catalog indexes in a compact bitset. The EXE itself is
+  // never modified, so its embedded icon and future Authenticode signature stay intact.
   function windowsSelectionToken(chosen){
-    const maxIndex=Math.max(...chosen.map(a=>a.winIndex));
-    const bytes=new Uint8Array(Math.floor(maxIndex/8)+1);
-    for(const app of chosen){
-      const index=app.winIndex;
-      bytes[Math.floor(index/8)]|=1<<(index%8);
-    }
+    const indexes=chosen.map(a=>Number(a.winIndex)).filter(Number.isInteger);
+    if(!indexes.length) throw new Error('Could not prepare the Windows app selection.');
+    const bytes=new Uint8Array(Math.floor(Math.max(...indexes)/8)+1);
+    for(const index of indexes) bytes[Math.floor(index/8)]|=1<<(index%8);
     let binary='';
     for(const b of bytes) binary+=String.fromCharCode(b);
     return btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
@@ -30,10 +30,8 @@
     const r=await fetchFile('downloads/AppForge-Windows.exe');
     const blob=await r.blob();
     if(blob.size<10000) throw new Error('Windows EXE is not ready yet.');
-
-    // Keep the EXE bytes untouched so its icon and any future Authenticode signature remain valid.
-    // The compact token in the filename represents the website selection.
     const token=windowsSelectionToken(chosen);
+    // AppForge reads the token from this filename and immediately shows ONLY these apps.
     saveBlob(blob,`AppForge-${token}.exe`);
   }
 
