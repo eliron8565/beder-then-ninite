@@ -39,7 +39,16 @@ internal sealed class MainForm : Form
         new(32,"PyCharm Community","JetBrains.PyCharm.Community",Fav("jetbrains.com/pycharm")), new(33,"IntelliJ IDEA Community","JetBrains.IntelliJIDEA.Community",Fav("jetbrains.com/idea")),
         new(34,"Blockbench","JannisX11.Blockbench",Fav("blockbench.net")), new(35,"balenaEtcher","Balena.Etcher",Fav("etcher.balena.io")), new(36,"Rufus","Rufus.Rufus",Fav("rufus.ie")),
         new(37,"PeaZip","Giorgiotani.Peazip",Fav("peazip.github.io")), new(38,"WizTree","AntibodySoftware.WizTree",Fav("diskanalyzer.com")), new(39,"WinRAR","RARLab.WinRAR",Fav("rarlab.com")),
-        new(40,"MiniTool Partition Wizard","MiniTool.PartitionWizard.Free",Fav("partitionwizard.com"))
+        new(40,"MiniTool Partition Wizard","MiniTool.PartitionWizard.Free",Fav("partitionwizard.com")),
+        new(41,"Microsoft Edge","Microsoft.Edge",Fav("microsoft.com/edge")), new(42,"Opera","Opera.Opera",Fav("opera.com")), new(43,"Vivaldi","Vivaldi.Vivaldi",Fav("vivaldi.com")),
+        new(44,"Zoom","Zoom.Zoom",Fav("zoom.us")), new(45,"Microsoft Teams","Microsoft.Teams",Fav("teams.microsoft.com")), new(46,"FileZilla","TimKosse.FileZilla.Client",Fav("filezilla-project.org")),
+        new(47,"Notepad++","Notepad++.Notepad++",Fav("notepad-plus-plus.org")), new(48,"WinSCP","WinSCP.WinSCP",Fav("winscp.net")), new(49,"PuTTY","PuTTY.PuTTY",Fav("putty.org")),
+        new(50,"AnyDesk","AnyDeskSoftwareGmbH.AnyDesk",Fav("anydesk.com")), new(51,"TeamViewer","TeamViewer.TeamViewer",Fav("teamviewer.com")), new(52,"Everything","voidtools.Everything",Fav("voidtools.com")),
+        new(53,"ShareX","ShareX.ShareX",Fav("getsharex.com")), new(54,"HandBrake","HandBrake.HandBrake",Fav("handbrake.fr")), new(55,"GitHub Desktop","GitHub.GitHubDesktop",Fav("desktop.github.com")),
+        new(56,"Inkscape","Inkscape.Inkscape",Fav("inkscape.org")), new(57,"Malwarebytes","Malwarebytes.Malwarebytes",Fav("malwarebytes.com")), new(58,"HWiNFO","REALiX.HWiNFO",Fav("hwinfo.com")),
+        new(59,"CPU-Z","CPUID.CPU-Z",Fav("cpuid.com")), new(60,"CrystalDiskInfo","CrystalDewWorld.CrystalDiskInfo",Fav("crystalmark.info")), new(61,"PowerToys","Microsoft.PowerToys",Fav("learn.microsoft.com/windows/powertoys")),
+        new(62,"NVIDIA Graphics Drivers","url:https://www.nvidia.com/Download/index.aspx",Fav("nvidia.com")), new(63,"NVIDIA App","url:https://www.nvidia.com/en-us/software/nvidia-app/",Fav("nvidia.com")),
+        new(64,"AMD Radeon Drivers","url:https://www.amd.com/en/support/download/drivers.html",Fav("amd.com")), new(65,"AMD Software: Adrenalin Edition","url:https://www.amd.com/en/products/software/adrenalin.html",Fav("amd.com"))
     };
 
     public MainForm()
@@ -77,7 +86,7 @@ internal sealed class MainForm : Form
         var check = new CheckBox { Checked = lockedSelection || selectedApps.Contains(app), Enabled = !lockedSelection, AutoSize = true, Location = new Point(16,23), Tag = app };
         var picture = new PictureBox { Location = new Point(48,9), Size = new Size(46,46), SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.Transparent };
         var name = new Label { Text = app.Name, AutoSize = true, Location = new Point(108,10), Font = new Font("Segoe UI",10f,FontStyle.Bold), ForeColor = Color.White };
-        var packageText = app.PackageId.StartsWith("url:", StringComparison.OrdinalIgnoreCase) ? "Official download / sign-in required" : app.PackageId;
+        var packageText = app.PackageId.StartsWith("url:", StringComparison.OrdinalIgnoreCase) ? "Official download page" : app.PackageId;
         var id = new Label { Text = packageText, AutoSize = true, Location = new Point(108,34), Font = new Font("Segoe UI",8.5f), ForeColor = Color.FromArgb(145,160,181) };
         panel.Controls.Add(check); panel.Controls.Add(picture); panel.Controls.Add(name); panel.Controls.Add(id); appList.Controls.Add(panel);
         _ = LoadIconAsync(picture, app.IconUrl);
@@ -109,7 +118,11 @@ internal sealed class MainForm : Form
             status.Text = $"Installing {app.Name}...";
             try
             {
-                if (app.PackageId.StartsWith("url:", StringComparison.OrdinalIgnoreCase)) Process.Start(new ProcessStartInfo(app.PackageId[4..]) { UseShellExecute = true });
+                if (app.PackageId.StartsWith("url:", StringComparison.OrdinalIgnoreCase))
+                {
+                    Process.Start(new ProcessStartInfo(app.PackageId[4..]) { UseShellExecute = true });
+                    ok++;
+                }
                 else
                 {
                     var psi = new ProcessStartInfo("winget", $"install --id \"{app.PackageId}\" -e --silent --accept-package-agreements --accept-source-agreements") { UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true };
@@ -119,7 +132,7 @@ internal sealed class MainForm : Form
             catch (Exception ex) { MessageBox.Show($"{app.Name}: {ex.Message}", "Installation error", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
             progress.Value++;
         }
-        status.Text = $"Finished — {ok}/{apps.Count} installed automatically."; installButton.Enabled = true; installButton.Text = "Run again";
+        status.Text = $"Finished — {ok}/{apps.Count} completed."; installButton.Enabled = true; installButton.Text = "Run again";
     }
 
     private static List<AppItem> ReadSelectionFromFilename()
