@@ -9,17 +9,19 @@
     <AssemblyName>AppForge</AssemblyName>
     <RootNamespace>AppForgeInstaller</RootNamespace>
     <PublishSingleFile>true</PublishSingleFile>
-    <SelfContained>false</SelfContained>
+    <SelfContained>true</SelfContained>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <Product>AppForge</Product>
     <AssemblyTitle>AppForge</AssemblyTitle>
-    <Description>One installer for all your apps.</Description>
+    <Description>One polished installer for all your apps.</Description>
     <Company>AppForge</Company>
     <Copyright>AppForge</Copyright>
-    <Version>2.2.0</Version>
-    <FileVersion>2.2.0.0</FileVersion>
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
+    <Version>3.0.0</Version>
+    <FileVersion>3.0.0.0</FileVersion>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
   </PropertyGroup>
 </Project>
