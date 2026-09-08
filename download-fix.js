@@ -1,6 +1,5 @@
 // AppForge native downloads: Windows EXE, Linux AppImage, macOS app ZIP.
 (function () {
-  const WIN_MARKER='\nAPPFORGE_SELECTION_V1:';
   const KEY_MARKER='\nAPPFORGE_KEYS_V1:';
 
   function saveBlob(blob,name){
@@ -15,12 +14,27 @@
     return r;
   }
 
+  function windowsSelectionToken(chosen){
+    const maxIndex=Math.max(...chosen.map(a=>a.winIndex));
+    const bytes=new Uint8Array(Math.floor(maxIndex/8)+1);
+    for(const app of chosen){
+      const index=app.winIndex;
+      bytes[Math.floor(index/8)]|=1<<(index%8);
+    }
+    let binary='';
+    for(const b of bytes) binary+=String.fromCharCode(b);
+    return btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  }
+
   async function downloadWindows(chosen){
     const r=await fetchFile('downloads/AppForge-Windows.exe');
-    const base=await r.arrayBuffer();
-    if(base.byteLength<10000) throw new Error('Windows EXE is not ready yet.');
-    const data=new TextEncoder().encode(`${WIN_MARKER}${chosen.map(a=>a.winIndex).join('.')}:END\n`);
-    saveBlob(new Blob([base,data],{type:'application/vnd.microsoft.portable-executable'}),'AppForge.exe');
+    const blob=await r.blob();
+    if(blob.size<10000) throw new Error('Windows EXE is not ready yet.');
+
+    // Keep the EXE bytes untouched so its icon and any future Authenticode signature remain valid.
+    // The compact token in the filename represents the website selection.
+    const token=windowsSelectionToken(chosen);
+    saveBlob(blob,`AppForge-${token}.exe`);
   }
 
   async function downloadLinux(chosen){
