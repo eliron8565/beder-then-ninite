@@ -49,8 +49,15 @@ jobs:
           $fs.Close()
           $bmp.Dispose()
 
-      - name: Publish single-file EXE
-        run: dotnet publish src/AppForgeInstaller/AppForgeInstaller.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
+      - name: Publish compact single-file EXE
+        run: dotnet publish src/AppForgeInstaller/AppForgeInstaller.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish
+
+      - name: Check EXE size
+        shell: powershell
+        run: |
+          $size = (Get-Item publish/AppForge-Windows.exe).Length
+          Write-Host "AppForge EXE size: $([math]::Round($size / 1MB, 2)) MB"
+          if ($size -ge 95MB) { throw "EXE is too large for GitHub Pages repository publishing." }
 
       - name: Copy EXE to website
         shell: powershell
