@@ -18,6 +18,9 @@ concurrency:
 jobs:
   build:
     runs-on: windows-latest
+    env:
+      WINDOWS_CERTIFICATE_BASE64: ${{ secrets.WINDOWS_CERTIFICATE_BASE64 }}
+      WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,7 +29,7 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Generate professional AppForge icon
+      - name: Generate AppForge brand icon
         shell: powershell
         run: |
           Add-Type -AssemblyName System.Drawing
@@ -35,26 +38,22 @@ jobs:
           $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
           $g.Clear([System.Drawing.Color]::Transparent)
 
-          $outer = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255,7,17,31))
-          $g.FillEllipse($outer, 8, 8, 240, 240)
+          # Same visual identity as the website favicon: dark rounded square + cyan/white/violet gradient.
+          $dark = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255,8,17,31))
+          $g.FillRectangle($dark, 10, 10, 236, 236)
 
-          $rect = [System.Drawing.Rectangle]::new(28,28,200,200)
-          $grad = New-Object System.Drawing.Drawing2D.LinearGradientBrush $rect, ([System.Drawing.Color]::FromArgb(255,55,211,255)), ([System.Drawing.Color]::FromArgb(255,126,87,255)), 45
-          $g.FillEllipse($grad, 28, 28, 200, 200)
+          $rect = [System.Drawing.Rectangle]::new(18,18,220,220)
+          $grad = New-Object System.Drawing.Drawing2D.LinearGradientBrush $rect, ([System.Drawing.Color]::FromArgb(255,110,231,255)), ([System.Drawing.Color]::FromArgb(255,167,139,250)), 45
+          $g.FillRectangle($grad, 18, 18, 220, 220)
 
-          $inner = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255,8,19,35))
-          $g.FillEllipse($inner, 47, 47, 162, 162)
-
-          $font = New-Object System.Drawing.Font('Segoe UI',92,[System.Drawing.FontStyle]::Bold,[System.Drawing.GraphicsUnit]::Pixel)
+          $inner = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255,7,17,30))
+          $fontA = New-Object System.Drawing.Font('Segoe UI',112,[System.Drawing.FontStyle]::Bold,[System.Drawing.GraphicsUnit]::Pixel)
+          $fontI = New-Object System.Drawing.Font('Segoe UI',70,[System.Drawing.FontStyle]::Bold,[System.Drawing.GraphicsUnit]::Pixel)
           $sf = New-Object System.Drawing.StringFormat
           $sf.Alignment = [System.Drawing.StringAlignment]::Center
           $sf.LineAlignment = [System.Drawing.StringAlignment]::Center
-          $white = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::White)
-          $g.DrawString('A',$font,$white,[System.Drawing.RectangleF]::new(0,5,256,235),$sf)
-
-          $spark = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255,112,232,255))
-          $g.FillEllipse($spark, 184, 52, 20, 20)
-          $g.FillEllipse($spark, 199, 67, 8, 8)
+          $g.DrawString('A',$fontA,$inner,[System.Drawing.RectangleF]::new(22,26,160,195),$sf)
+          $g.DrawString('i',$fontI,$inner,[System.Drawing.RectangleF]::new(153,66,72,130),$sf)
 
           $g.Dispose()
           $hIcon = $bmp.GetHicon()
@@ -66,6 +65,23 @@ jobs:
 
       - name: Publish compact single-file EXE
         run: dotnet publish src/AppForgeInstaller/AppForgeInstaller.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish
+
+      - name: Sign EXE when trusted certificate is configured
+        shell: powershell
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:WINDOWS_CERTIFICATE_BASE64)) {
+            Write-Host "No Windows code-signing certificate configured. EXE will remain unsigned."
+            exit 0
+          }
+
+          $pfx = Join-Path $env:RUNNER_TEMP 'appforge-signing.pfx'
+          [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE_BASE64))
+          $signtool = Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\bin\*\x64\signtool.exe' | Sort-Object FullName -Descending | Select-Object -First 1
+          if (-not $signtool) { throw 'signtool.exe was not found on the GitHub runner.' }
+          & $signtool.FullName sign /fd SHA256 /td SHA256 /tr http://timestamp.digicert.com /f $pfx /p $env:WINDOWS_CERTIFICATE_PASSWORD publish/AppForge.exe
+          if ($LASTEXITCODE -ne 0) { throw 'Authenticode signing failed.' }
+          & $signtool.FullName verify /pa /v publish/AppForge.exe
+          Remove-Item $pfx -Force
 
       - name: Check EXE size
         shell: powershell
@@ -90,7 +106,7 @@ jobs:
             echo "EXE unchanged"
             exit 0
           fi
-          git commit -m "Build polished AppForge Windows EXE"
+          git commit -m "Build branded AppForge Windows EXE"
           for attempt in 1 2 3; do
             git fetch origin main
             git rebase origin/main && git push origin HEAD:main && exit 0
