@@ -1,58 +1,69 @@
-// AppForge icon system v14 — stable sources and clean fallbacks.
-// Use stable SVG/PNG sources for known products. Never leave a browser broken-image glyph visible.
+// AppForge icon system v15 — full-color product icons.
+// Simple Icons are intentionally NOT used here: their SVGs are monochrome.
 
-const simpleIconSlugs = {
-  'Google Chrome':'googlechrome','Mozilla Firefox':'firefoxbrowser','Microsoft Edge':'microsoftedge','Brave':'brave','Opera':'opera','Vivaldi':'vivaldi',
-  'Discord':'discord','Telegram':'telegram','Slack':'slack','Zoom':'zoom',
-  'Steam':'steam','Epic Games Launcher':'epicgames','Heroic Games Launcher':'heroicgameslauncher',
-  'VLC media player':'vlcmediaplayer','Spotify':'spotify','OBS Studio':'obsstudio','Audacity':'audacity','HandBrake':'handbrake',
-  'Visual Studio Code':'visualstudiocode','Git':'git','GitHub Desktop':'github','Python 3':'python','Node.js LTS':'nodedotjs','Docker Desktop':'docker','Postman':'postman','PyCharm Community':'pycharm','IntelliJ IDEA Community':'intellijidea','Notepad++':'notepadplusplus','Cisco Packet Tracer':'cisco','Blockbench':'blockbench',
-  'LibreOffice':'libreoffice','Obsidian':'obsidian','Thunderbird':'thunderbird',
-  'Krita':'krita','GIMP':'gimp','Blender':'blender','Inkscape':'inkscape','ShareX':'sharex',
-  '7-Zip':'7zip','WinRAR':'winrar','qBittorrent':'qbittorrent','FileZilla':'filezilla',
-  'Bitwarden':'bitwarden','KeePassXC':'keepassxc','Malwarebytes':'malwarebytes',
-  'Rufus':'rufus','balenaEtcher':'balenaetcher','AnyDesk':'anydesk','TeamViewer':'teamviewer','PuTTY':'putty','RustDesk':'rustdesk',
-  'Java 21 (Temurin JDK)':'eclipseadoptium','Java 17 (Temurin JDK)':'eclipseadoptium',
-  'NVIDIA Graphics Drivers':'nvidia','NVIDIA App':'nvidia','AMD Radeon Drivers':'amd','AMD Software: Adrenalin Edition':'amd'
+const iconDomains = {
+  'Google Chrome':'google.com/chrome','Mozilla Firefox':'mozilla.org/firefox','Microsoft Edge':'microsoft.com/edge','Brave':'brave.com','Opera':'opera.com','Vivaldi':'vivaldi.com',
+  'Discord':'discord.com','Telegram':'telegram.org','Slack':'slack.com','Zoom':'zoom.us','Microsoft Teams':'microsoft.com/microsoft-teams',
+  'Steam':'steampowered.com','Epic Games Launcher':'epicgames.com','Prism Launcher':'prismlauncher.org','Heroic Games Launcher':'heroicgameslauncher.com',
+  'VLC media player':'videolan.org','Spotify':'spotify.com','OBS Studio':'obsproject.com','Audacity':'audacityteam.org','HandBrake':'handbrake.fr',
+  'Visual Studio Code':'code.visualstudio.com','Git':'git-scm.com','GitHub Desktop':'desktop.github.com','Python 3':'python.org','Node.js LTS':'nodejs.org','Docker Desktop':'docker.com','Postman':'postman.com','PyCharm Community':'jetbrains.com/pycharm','IntelliJ IDEA Community':'jetbrains.com/idea','Notepad++':'notepad-plus-plus.org','Cisco Packet Tracer':'cisco.com','Blockbench':'blockbench.net',
+  'LibreOffice':'libreoffice.org','Obsidian':'obsidian.md','Thunderbird':'thunderbird.net','Krita':'krita.org','GIMP':'gimp.org','Blender':'blender.org','Inkscape':'inkscape.org','ShareX':'getsharex.com',
+  '7-Zip':'7-zip.org','PeaZip':'peazip.github.io','WinRAR':'rarlab.com','qBittorrent':'qbittorrent.org','FileZilla':'filezilla-project.org','WinSCP':'winscp.net',
+  'Bitwarden':'bitwarden.com','KeePassXC':'keepassxc.org','Malwarebytes':'malwarebytes.com','PowerToys':'learn.microsoft.com/windows/powertoys','Everything':'voidtools.com','WizTree':'diskanalyzer.com','Rufus':'rufus.ie','balenaEtcher':'etcher.balena.io','MiniTool Partition Wizard':'partitionwizard.com','HWiNFO':'hwinfo.com','CPU-Z':'cpuid.com','CrystalDiskInfo':'crystalmark.info','AnyDesk':'anydesk.com','TeamViewer':'teamviewer.com','PuTTY':'putty.org','RustDesk':'rustdesk.com',
+  'Visual C++ Redistributable 2015–2022 x64':'microsoft.com','Java 21 (Temurin JDK)':'adoptium.net','Java 17 (Temurin JDK)':'adoptium.net','NVIDIA Graphics Drivers':'nvidia.com','NVIDIA App':'nvidia.com','AMD Radeon Drivers':'amd.com','AMD Software: Adrenalin Edition':'amd.com'
 };
 
-const exactIconUrls = {
-  // Known icons that were previously broken in the UI.
-  'Microsoft Teams':'https://msicons.com/icons/apps/Microsoft%20Teams.svg',
+const colorIconUrls = {
+  'Microsoft Teams':'https://img.icons8.com/color/144/microsoft-teams.png',
+  'Slack':'https://img.icons8.com/color/144/slack-new.png',
   'PeaZip':'https://raw.githubusercontent.com/peazip/peazip.github.io/master/PeaZip-128.png',
-  'Prism Launcher':'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/prismlauncher.svg',
-  'Slack':'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/slack.svg',
-  'PuTTY':'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/putty.svg',
-  'WinSCP':'https://www.google.com/s2/favicons?domain_url=https%3A%2F%2Fwinscp.net&sz=128',
-  'PowerToys':'https://www.google.com/s2/favicons?domain_url=https%3A%2F%2Flearn.microsoft.com%2Fwindows%2Fpowertoys&sz=128',
-  'Everything':'https://www.google.com/s2/favicons?domain_url=https%3A%2F%2Fvoidtools.com&sz=128',
-  'WizTree':'https://www.google.com/s2/favicons?domain_url=https%3A%2F%2Fdiskanalyzer.com&sz=128',
-  'MiniTool Partition Wizard':'https://www.google.com/s2/favicons?domain_url=https%3A%2F%2Fpartitionwizard.com&sz=128',
-  'HWiNFO':'https://www.google.com/s2/favicons?domain_url=https%3A%2F%2Fhwinfo.com&sz=128',
-  'CPU-Z':'https://www.google.com/s2/favicons?domain_url=https%3A%2F%2Fcpuid.com&sz=128',
-  'CrystalDiskInfo':'https://www.google.com/s2/favicons?domain_url=https%3A%2F%2Fcrystalmark.info&sz=128',
-  'Visual C++ Redistributable 2015–2022 x64':'https://www.google.com/s2/favicons?domain_url=https%3A%2F%2Flearn.microsoft.com&sz=128',
-  '.NET Desktop Runtime 8':'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/dotnet.svg'
+  'PuTTY':'https://img.icons8.com/color/144/putty.png',
+  'Prism Launcher':'https://prismlauncher.org/img/logo-text-darkmode.svg',
+  'WinSCP':'https://img.icons8.com/color/144/winscp.png',
+  'VLC media player':'https://img.icons8.com/color/144/vlc.png',
+  'Visual Studio Code':'https://img.icons8.com/color/144/visual-studio-code-2019.png',
+  'Python 3':'https://img.icons8.com/color/144/python--v1.png',
+  'Git':'https://img.icons8.com/color/144/git.png',
+  'Google Chrome':'https://img.icons8.com/color/144/chrome--v1.png',
+  'Mozilla Firefox':'https://img.icons8.com/color/144/firefox.png',
+  'Microsoft Edge':'https://img.icons8.com/color/144/ms-edge-new.png',
+  'Discord':'https://img.icons8.com/color/144/discord-logo.png',
+  'Spotify':'https://img.icons8.com/color/144/spotify--v1.png',
+  'Steam':'https://img.icons8.com/color/144/steam.png',
+  'Docker Desktop':'https://img.icons8.com/color/144/docker.png',
+  'Node.js LTS':'https://img.icons8.com/color/144/nodejs.png',
+  'IntelliJ IDEA Community':'https://img.icons8.com/color/144/intellij-idea.png',
+  'PyCharm Community':'https://img.icons8.com/color/144/pycharm.png',
+  'Postman':'https://img.icons8.com/external-tal-revivo-color-tal-revivo/144/external-postman-is-the-only-complete-api-development-environment-logo-color-tal-revivo.png',
+  'NVIDIA Graphics Drivers':'https://img.icons8.com/color/144/nvidia.png',
+  'NVIDIA App':'https://img.icons8.com/color/144/nvidia.png',
+  'AMD Radeon Drivers':'https://img.icons8.com/color/144/amd.png',
+  'AMD Software: Adrenalin Edition':'https://img.icons8.com/color/144/amd.png',
+  '7-Zip':'https://img.icons8.com/color/144/7zip.png'
 };
 
-function stableIconFor(app){
-  if (exactIconUrls[app.name]) return exactIconUrls[app.name];
-  const slug = simpleIconSlugs[app.name];
-  if (slug) return `https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/${slug}.svg`;
-  const host = String(app.domain || '').replace(/^https?:\/\//,'').split('/')[0];
-  return host ? `https://www.google.com/s2/favicons?domain_url=${encodeURIComponent(`https://${host}`)}&sz=128` : '';
+function hostFor(app){ return String(iconDomains[app.name] || app.domain || '').replace(/^https?:\/\//,'').split('/')[0]; }
+function googleColorIcon(host){ return `https://www.google.com/s2/favicons?domain_url=${encodeURIComponent(`https://${host}`)}&sz=256`; }
+function duckIcon(host){ return `https://icons.duckduckgo.com/ip3/${host}.ico`; }
+function iconSources(app){
+  const host=hostFor(app), list=[];
+  if(colorIconUrls[app.name]) list.push(colorIconUrls[app.name]);
+  if(host){ list.push(googleColorIcon(host)); list.push(duckIcon(host)); }
+  return [...new Set(list)];
 }
 
-for (const app of apps) app.logo = stableIconFor(app);
-
-// Replace the old renderer. If a remote source fails, the image is removed completely,
-// so the user never sees the ugly browser "broken image" icon.
-logoMarkup = function(app){
-  const fallback = (app.name.match(/[A-Za-z0-9]/g) || ['A']).slice(0,2).join('').toUpperCase();
-  const src = stableIconFor(app);
-  if (!src) return `<span class="logo-fallback always">${fallback}</span>`;
-  return `<img src="${src}" alt="${app.name} icon" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.remove();const f=this.parentElement.querySelector('.logo-fallback');if(f)f.style.display='grid'"><span class="logo-fallback">${fallback}</span>`;
+window.appIconFallback=function(img){
+  let sources=[]; try{sources=JSON.parse(decodeURIComponent(img.dataset.sources||'[]'));}catch{}
+  const next=Number(img.dataset.iconIndex||0)+1;
+  if(next<sources.length){img.dataset.iconIndex=String(next);img.src=sources[next];return;}
+  img.style.display='none'; const f=img.parentElement?.querySelector('.logo-fallback'); if(f)f.style.display='grid';
 };
 
-renderApps();
-updateSelectionBar();
+for(const app of apps){const s=iconSources(app);app.logo=s[0]||'';}
+logoMarkup=function(app){
+  const fallback=(app.name.match(/[A-Za-z0-9]/g)||['A']).slice(0,2).join('').toUpperCase();
+  const sources=iconSources(app); if(!sources.length)return `<span class="logo-fallback always">${fallback}</span>`;
+  const packed=encodeURIComponent(JSON.stringify(sources));
+  return `<img src="${sources[0]}" data-sources="${packed}" data-icon-index="0" alt="${app.name} icon" loading="lazy" referrerpolicy="no-referrer" onerror="appIconFallback(this)"><span class="logo-fallback">${fallback}</span>`;
+};
+renderApps();updateSelectionBar();
