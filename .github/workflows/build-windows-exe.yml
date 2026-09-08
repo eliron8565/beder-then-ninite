@@ -29,7 +29,6 @@ jobs:
           $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
           $g.Clear([System.Drawing.Color]::FromArgb(8,17,31))
           $brush = New-Object System.Drawing.Drawing2D.LinearGradientBrush ([System.Drawing.Rectangle]::new(16,16,224,224)), ([System.Drawing.Color]::FromArgb(104,224,255)), ([System.Drawing.Color]::FromArgb(167,148,255)), 45
-          $g.FillRoundedRectangle = $null
           $g.FillRectangle($brush, 22,22,212,212)
           $font = New-Object System.Drawing.Font('Segoe UI',76,[System.Drawing.FontStyle]::Bold)
           $sf = New-Object System.Drawing.StringFormat
