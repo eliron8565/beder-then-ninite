@@ -1,0 +1,279 @@
+using System.Diagnostics;
+using System.Net.NetworkInformation;
+using System.Text;
+using System.Text.Json;
+
+namespace AppForgeScanner;
+
+internal static class Program
+{
+    [STAThread]
+    static void Main()
+    {
+        ApplicationConfiguration.Initialize();
+        Application.Run(new ScannerForm());
+    }
+}
+
+internal sealed class ScannerForm : Form
+{
+    private readonly Label status = new();
+    private readonly Label osValue = new();
+    private readonly Label networkValue = new();
+    private readonly Label diskValue = new();
+    private readonly Label wingetValue = new();
+    private readonly Label installedValue = new();
+    private readonly Label updatesValue = new();
+    private readonly TextBox reportBox = new();
+    private readonly Button scanButton = new();
+    private readonly Button copyButton = new();
+    private readonly Button appForgeButton = new();
+    private string lastReport = "";
+
+    public ScannerForm()
+    {
+        Text = "AppForge PC Scanner";
+        StartPosition = FormStartPosition.CenterScreen;
+        MinimumSize = new Size(840, 620);
+        Size = new Size(980, 720);
+        BackColor = Color.FromArgb(7, 15, 27);
+        ForeColor = Color.White;
+        Font = new Font("Segoe UI", 10f);
+        BuildUi();
+        Shown += async (_, _) => await ScanAsync();
+    }
+
+    private void BuildUi()
+    {
+        var root = new TableLayoutPanel { Dock = DockStyle.Fill, Padding = new Padding(28), RowCount = 5, ColumnCount = 1, BackColor = BackColor };
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        root.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+        root.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        Controls.Add(root);
+
+        var title = new Label { AutoSize = true, Text = "AppForge PC Scanner", Font = new Font("Segoe UI", 28, FontStyle.Bold), ForeColor = Color.White };
+        root.Controls.Add(title);
+
+        status.AutoSize = true;
+        status.Text = "Ready to scan";
+        status.ForeColor = Color.FromArgb(103, 210, 255);
+        status.Margin = new Padding(0, 4, 0, 18);
+        root.Controls.Add(status);
+
+        var cards = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 3, RowCount = 2, AutoSize = true };
+        for (var i = 0; i < 3; i++) cards.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.333f));
+        cards.Controls.Add(Card("Windows", osValue), 0, 0);
+        cards.Controls.Add(Card("Internet", networkValue), 1, 0);
+        cards.Controls.Add(Card("System drive", diskValue), 2, 0);
+        cards.Controls.Add(Card("Winget", wingetValue), 0, 1);
+        cards.Controls.Add(Card("Installed packages", installedValue), 1, 1);
+        cards.Controls.Add(Card("Updates found", updatesValue), 2, 1);
+        root.Controls.Add(cards);
+
+        reportBox.Dock = DockStyle.Fill;
+        reportBox.Multiline = true;
+        reportBox.ReadOnly = true;
+        reportBox.ScrollBars = ScrollBars.Vertical;
+        reportBox.BackColor = Color.FromArgb(10, 22, 37);
+        reportBox.ForeColor = Color.FromArgb(220, 232, 245);
+        reportBox.BorderStyle = BorderStyle.FixedSingle;
+        reportBox.Font = new Font("Consolas", 10f);
+        reportBox.Margin = new Padding(0, 18, 0, 14);
+        root.Controls.Add(reportBox);
+
+        var buttons = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.RightToLeft, AutoSize = true };
+        scanButton.Text = "SCAN PC";
+        StylePrimary(scanButton);
+        scanButton.Click += async (_, _) => await ScanAsync();
+
+        copyButton.Text = "Copy report";
+        StyleSecondary(copyButton);
+        copyButton.Enabled = false;
+        copyButton.Click += (_, _) => { if (!string.IsNullOrWhiteSpace(lastReport)) Clipboard.SetText(lastReport); };
+
+        appForgeButton.Text = "Open AppForge";
+        StyleSecondary(appForgeButton);
+        appForgeButton.Click += (_, _) => Process.Start(new ProcessStartInfo("https://eliron8565.github.io/beder-then-ninite/") { UseShellExecute = true });
+
+        buttons.Controls.Add(scanButton);
+        buttons.Controls.Add(copyButton);
+        buttons.Controls.Add(appForgeButton);
+        root.Controls.Add(buttons);
+    }
+
+    private static Control Card(string name, Label value)
+    {
+        var panel = new Panel { Height = 105, Dock = DockStyle.Fill, Margin = new Padding(5), BackColor = Color.FromArgb(16, 31, 50) };
+        var title = new Label { Text = name, AutoSize = true, Location = new Point(16, 14), ForeColor = Color.FromArgb(140, 157, 179), Font = new Font("Segoe UI", 9f) };
+        value.Text = "—";
+        value.AutoSize = true;
+        value.Location = new Point(16, 44);
+        value.Font = new Font("Segoe UI", 14f, FontStyle.Bold);
+        value.ForeColor = Color.White;
+        panel.Controls.Add(title);
+        panel.Controls.Add(value);
+        return panel;
+    }
+
+    private static void StylePrimary(Button button)
+    {
+        button.AutoSize = true;
+        button.Padding = new Padding(22, 10, 22, 10);
+        button.FlatStyle = FlatStyle.Flat;
+        button.FlatAppearance.BorderSize = 0;
+        button.BackColor = Color.FromArgb(82, 219, 255);
+        button.ForeColor = Color.FromArgb(5, 17, 29);
+        button.Font = new Font("Segoe UI", 10f, FontStyle.Bold);
+        button.Margin = new Padding(8, 0, 0, 0);
+    }
+
+    private static void StyleSecondary(Button button)
+    {
+        button.AutoSize = true;
+        button.Padding = new Padding(16, 9, 16, 9);
+        button.FlatStyle = FlatStyle.Flat;
+        button.FlatAppearance.BorderColor = Color.FromArgb(53, 70, 92);
+        button.BackColor = Color.FromArgb(14, 27, 45);
+        button.ForeColor = Color.White;
+        button.Margin = new Padding(8, 0, 0, 0);
+    }
+
+    private async Task ScanAsync()
+    {
+        scanButton.Enabled = false;
+        copyButton.Enabled = false;
+        status.Text = "Scanning your PC…";
+        reportBox.Text = "Scanning…";
+
+        var lines = new List<string>();
+        try
+        {
+            var os = Environment.OSVersion.VersionString;
+            osValue.Text = Environment.OSVersion.Version.Build >= 22000 ? "Windows 11" : "Windows";
+            lines.Add($"OS: {os}");
+
+            var online = NetworkInterface.GetIsNetworkAvailable();
+            networkValue.Text = online ? "Online ✓" : "Offline ⚠";
+            networkValue.ForeColor = online ? Color.FromArgb(111, 231, 183) : Color.FromArgb(255, 160, 100);
+            lines.Add($"Internet: {(online ? "available" : "not detected")}");
+
+            var root = Path.GetPathRoot(Environment.SystemDirectory) ?? "C:\\";
+            var drive = new DriveInfo(root);
+            var freeGb = Math.Round(drive.AvailableFreeSpace / 1024d / 1024d / 1024d, 1);
+            diskValue.Text = $"{freeGb} GB free";
+            diskValue.ForeColor = freeGb >= 10 ? Color.FromArgb(111, 231, 183) : Color.FromArgb(255, 160, 100);
+            lines.Add($"System drive free space: {freeGb} GB");
+
+            var wingetVersion = await RunCaptureAsync("winget", "--version", 15000);
+            var hasWinget = wingetVersion.ExitCode == 0;
+            wingetValue.Text = hasWinget ? wingetVersion.Output.Trim() : "Not available";
+            wingetValue.ForeColor = hasWinget ? Color.FromArgb(111, 231, 183) : Color.FromArgb(255, 120, 130);
+            lines.Add($"Winget: {(hasWinget ? wingetVersion.Output.Trim() : "not available")}");
+
+            var installedCount = 0;
+            var updateCount = 0;
+            var updateNames = new List<string>();
+
+            if (hasWinget)
+            {
+                status.Text = "Reading installed apps…";
+                var temp = Path.Combine(Path.GetTempPath(), $"appforge-export-{Guid.NewGuid():N}.json");
+                var export = await RunCaptureAsync("winget", $"export -o \"{temp}\" --include-versions --accept-source-agreements --disable-interactivity", 60000);
+                if (export.ExitCode == 0 && File.Exists(temp))
+                {
+                    try
+                    {
+                        using var doc = JsonDocument.Parse(await File.ReadAllTextAsync(temp));
+                        if (doc.RootElement.TryGetProperty("Sources", out var sources))
+                        {
+                            foreach (var source in sources.EnumerateArray())
+                                if (source.TryGetProperty("Packages", out var packages)) installedCount += packages.GetArrayLength();
+                        }
+                    }
+                    catch { }
+                    try { File.Delete(temp); } catch { }
+                }
+
+                status.Text = "Checking for updates…";
+                var upgrades = await RunCaptureAsync("winget", "upgrade --accept-source-agreements --disable-interactivity", 90000);
+                if (!string.IsNullOrWhiteSpace(upgrades.Output))
+                {
+                    var table = false;
+                    foreach (var raw in upgrades.Output.Split('\n'))
+                    {
+                        var line = raw.TrimEnd();
+                        if (line.Length >= 5 && line.Trim().All(c => c == '-')) { table = true; continue; }
+                        if (!table || string.IsNullOrWhiteSpace(line)) continue;
+                        if (line.Contains("upgrades available", StringComparison.OrdinalIgnoreCase)) continue;
+                        if (line.StartsWith("The following", StringComparison.OrdinalIgnoreCase)) continue;
+                        if (line.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length >= 4)
+                        {
+                            updateCount++;
+                            updateNames.Add(line.Trim());
+                        }
+                    }
+                }
+            }
+
+            installedValue.Text = installedCount > 0 ? installedCount.ToString() : "Detected";
+            updatesValue.Text = updateCount.ToString();
+            updatesValue.ForeColor = updateCount == 0 ? Color.FromArgb(111, 231, 183) : Color.FromArgb(244, 196, 95);
+            lines.Add($"Installed packages detected: {(installedCount > 0 ? installedCount : 0)}");
+            lines.Add($"Updates detected: {updateCount}");
+
+            if (updateNames.Count > 0)
+            {
+                lines.Add("");
+                lines.Add("UPDATE CANDIDATES:");
+                lines.AddRange(updateNames.Take(30));
+            }
+
+            lines.Add("");
+            lines.Add("AppForge PC Scanner is read-only. It does not install, remove, or change apps during a scan.");
+            lastReport = string.Join(Environment.NewLine, lines);
+            reportBox.Text = lastReport;
+            copyButton.Enabled = true;
+            status.Text = updateCount > 0 ? $"Scan complete — {updateCount} update(s) found" : "Scan complete — looking good ✓";
+        }
+        catch (Exception ex)
+        {
+            lastReport = string.Join(Environment.NewLine, lines) + Environment.NewLine + $"Scan error: {ex.Message}";
+            reportBox.Text = lastReport;
+            copyButton.Enabled = true;
+            status.Text = "Scan finished with a warning";
+        }
+        finally
+        {
+            scanButton.Enabled = true;
+        }
+    }
+
+    private static async Task<(int ExitCode, string Output)> RunCaptureAsync(string file, string args, int timeoutMs)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo(file, args)
+            {
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8
+            };
+            using var process = new Process { StartInfo = psi };
+            process.Start();
+            using var cts = new CancellationTokenSource(timeoutMs);
+            var outputTask = process.StandardOutput.ReadToEndAsync(cts.Token);
+            var errorTask = process.StandardError.ReadToEndAsync(cts.Token);
+            await process.WaitForExitAsync(cts.Token);
+            var output = await outputTask;
+            var error = await errorTask;
+            return (process.ExitCode, string.IsNullOrWhiteSpace(output) ? error : output + (string.IsNullOrWhiteSpace(error) ? "" : Environment.NewLine + error));
+        }
+        catch (OperationCanceledException) { return (-2, "Timed out"); }
+        catch (Exception ex) { return (-1, ex.Message); }
+    }
+}
