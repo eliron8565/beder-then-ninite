@@ -26,16 +26,19 @@ internal sealed class ScannerForm : Form
     private readonly Label updatesValue = new();
     private readonly TextBox reportBox = new();
     private readonly Button scanButton = new();
+    private readonly Button updateButton = new();
     private readonly Button copyButton = new();
     private readonly Button appForgeButton = new();
     private string lastReport = "";
+    private bool wingetAvailable;
+    private int detectedUpdates;
 
     public ScannerForm()
     {
         Text = "AppForge PC Scanner";
         StartPosition = FormStartPosition.CenterScreen;
         MinimumSize = new Size(840, 620);
-        Size = new Size(980, 720);
+        Size = new Size(1020, 740);
         BackColor = Color.FromArgb(7, 15, 27);
         ForeColor = Color.White;
         Font = new Font("Segoe UI", 10f);
@@ -84,9 +87,15 @@ internal sealed class ScannerForm : Form
         root.Controls.Add(reportBox);
 
         var buttons = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.RightToLeft, AutoSize = true };
+
         scanButton.Text = "SCAN PC";
         StylePrimary(scanButton);
         scanButton.Click += async (_, _) => await ScanAsync();
+
+        updateButton.Text = "UPDATE NOW";
+        StyleUpdate(updateButton);
+        updateButton.Enabled = false;
+        updateButton.Click += async (_, _) => await UpdateNowAsync();
 
         copyButton.Text = "Copy report";
         StyleSecondary(copyButton);
@@ -98,6 +107,7 @@ internal sealed class ScannerForm : Form
         appForgeButton.Click += (_, _) => Process.Start(new ProcessStartInfo("https://eliron8565.github.io/beder-then-ninite/") { UseShellExecute = true });
 
         buttons.Controls.Add(scanButton);
+        buttons.Controls.Add(updateButton);
         buttons.Controls.Add(copyButton);
         buttons.Controls.Add(appForgeButton);
         root.Controls.Add(buttons);
@@ -129,6 +139,18 @@ internal sealed class ScannerForm : Form
         button.Margin = new Padding(8, 0, 0, 0);
     }
 
+    private static void StyleUpdate(Button button)
+    {
+        button.AutoSize = true;
+        button.Padding = new Padding(22, 10, 22, 10);
+        button.FlatStyle = FlatStyle.Flat;
+        button.FlatAppearance.BorderSize = 0;
+        button.BackColor = Color.FromArgb(111, 231, 183);
+        button.ForeColor = Color.FromArgb(5, 17, 29);
+        button.Font = new Font("Segoe UI", 10f, FontStyle.Bold);
+        button.Margin = new Padding(8, 0, 0, 0);
+    }
+
     private static void StyleSecondary(Button button)
     {
         button.AutoSize = true;
@@ -143,9 +165,12 @@ internal sealed class ScannerForm : Form
     private async Task ScanAsync()
     {
         scanButton.Enabled = false;
+        updateButton.Enabled = false;
         copyButton.Enabled = false;
         status.Text = "Scanning your PC…";
         reportBox.Text = "Scanning…";
+        detectedUpdates = 0;
+        wingetAvailable = false;
 
         var lines = new List<string>();
         try
@@ -167,16 +192,15 @@ internal sealed class ScannerForm : Form
             lines.Add($"System drive free space: {freeGb} GB");
 
             var wingetVersion = await RunCaptureAsync("winget", "--version", 15000);
-            var hasWinget = wingetVersion.ExitCode == 0;
-            wingetValue.Text = hasWinget ? wingetVersion.Output.Trim() : "Not available";
-            wingetValue.ForeColor = hasWinget ? Color.FromArgb(111, 231, 183) : Color.FromArgb(255, 120, 130);
-            lines.Add($"Winget: {(hasWinget ? wingetVersion.Output.Trim() : "not available")}");
+            wingetAvailable = wingetVersion.ExitCode == 0;
+            wingetValue.Text = wingetAvailable ? wingetVersion.Output.Trim() : "Not available";
+            wingetValue.ForeColor = wingetAvailable ? Color.FromArgb(111, 231, 183) : Color.FromArgb(255, 120, 130);
+            lines.Add($"Winget: {(wingetAvailable ? wingetVersion.Output.Trim() : "not available")}");
 
             var installedCount = 0;
-            var updateCount = 0;
             var updateNames = new List<string>();
 
-            if (hasWinget)
+            if (wingetAvailable)
             {
                 status.Text = "Reading installed apps…";
                 var temp = Path.Combine(Path.GetTempPath(), $"appforge-export-{Guid.NewGuid():N}.json");
@@ -196,7 +220,7 @@ internal sealed class ScannerForm : Form
                     try { File.Delete(temp); } catch { }
                 }
 
-                status.Text = "Checking for updates…";
+                status.Text = "Checking for app updates…";
                 var upgrades = await RunCaptureAsync("winget", "upgrade --accept-source-agreements --disable-interactivity", 90000);
                 if (!string.IsNullOrWhiteSpace(upgrades.Output))
                 {
@@ -210,7 +234,7 @@ internal sealed class ScannerForm : Form
                         if (line.StartsWith("The following", StringComparison.OrdinalIgnoreCase)) continue;
                         if (line.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length >= 4)
                         {
-                            updateCount++;
+                            detectedUpdates++;
                             updateNames.Add(line.Trim());
                         }
                     }
@@ -218,10 +242,10 @@ internal sealed class ScannerForm : Form
             }
 
             installedValue.Text = installedCount > 0 ? installedCount.ToString() : "Detected";
-            updatesValue.Text = updateCount.ToString();
-            updatesValue.ForeColor = updateCount == 0 ? Color.FromArgb(111, 231, 183) : Color.FromArgb(244, 196, 95);
+            updatesValue.Text = detectedUpdates.ToString();
+            updatesValue.ForeColor = detectedUpdates == 0 ? Color.FromArgb(111, 231, 183) : Color.FromArgb(244, 196, 95);
             lines.Add($"Installed packages detected: {(installedCount > 0 ? installedCount : 0)}");
-            lines.Add($"Updates detected: {updateCount}");
+            lines.Add($"App updates detected: {detectedUpdates}");
 
             if (updateNames.Count > 0)
             {
@@ -231,11 +255,15 @@ internal sealed class ScannerForm : Form
             }
 
             lines.Add("");
-            lines.Add("AppForge PC Scanner is read-only. It does not install, remove, or change apps during a scan.");
+            lines.Add("UPDATE NOW upgrades supported apps through Winget, then opens Windows Update for Windows and driver updates.");
+            lines.Add("Driver and firmware updates are handled by Windows Update so AppForge does not guess or install random driver packages.");
+
             lastReport = string.Join(Environment.NewLine, lines);
             reportBox.Text = lastReport;
             copyButton.Enabled = true;
-            status.Text = updateCount > 0 ? $"Scan complete — {updateCount} update(s) found" : "Scan complete — looking good ✓";
+            updateButton.Enabled = wingetAvailable && NetworkInterface.GetIsNetworkAvailable();
+            updateButton.Text = detectedUpdates > 0 ? $"UPDATE NOW ({detectedUpdates})" : "CHECK WINDOWS UPDATES";
+            status.Text = detectedUpdates > 0 ? $"Scan complete — {detectedUpdates} app update(s) found" : "Scan complete — apps look good ✓";
         }
         catch (Exception ex)
         {
@@ -247,6 +275,75 @@ internal sealed class ScannerForm : Form
         finally
         {
             scanButton.Enabled = true;
+        }
+    }
+
+    private async Task UpdateNowAsync()
+    {
+        if (!NetworkInterface.GetIsNetworkAvailable())
+        {
+            MessageBox.Show("No internet connection was detected.", "AppForge PC Scanner", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        scanButton.Enabled = false;
+        updateButton.Enabled = false;
+        copyButton.Enabled = false;
+        var updateLog = new List<string>();
+
+        try
+        {
+            if (wingetAvailable)
+            {
+                status.Text = "Updating apps…";
+                reportBox.AppendText(Environment.NewLine + Environment.NewLine + "=== UPDATE NOW ===" + Environment.NewLine);
+                reportBox.AppendText("Updating supported apps through Winget…" + Environment.NewLine);
+
+                var result = await RunCaptureAsync(
+                    "winget",
+                    "upgrade --all --silent --accept-package-agreements --accept-source-agreements --disable-interactivity",
+                    20 * 60 * 1000);
+
+                updateLog.Add("Winget update result:");
+                updateLog.Add(result.Output.Trim());
+                reportBox.AppendText(result.Output.Trim() + Environment.NewLine);
+
+                if (result.ExitCode == 0)
+                    status.Text = "App updates finished ✓ — checking Windows and drivers next";
+                else
+                    status.Text = "App updates finished with warnings — opening Windows Update";
+            }
+
+            try
+            {
+                var uso = await RunCaptureAsync("UsoClient.exe", "StartScan", 15000);
+                updateLog.Add($"Windows Update scan request: {(uso.ExitCode == 0 ? "started" : "requested")}");
+            }
+            catch { }
+
+            Process.Start(new ProcessStartInfo("ms-settings:windowsupdate") { UseShellExecute = true });
+            updateLog.Add("Opened Windows Update for Windows, driver and firmware updates.");
+
+            lastReport += Environment.NewLine + Environment.NewLine + string.Join(Environment.NewLine, updateLog);
+            reportBox.AppendText(Environment.NewLine + "Windows Update opened for driver/system updates." + Environment.NewLine);
+
+            MessageBox.Show(
+                "App updates were handled through Winget.\n\nWindows Update is now open for Windows, driver and firmware updates.\n\nThis keeps driver updates on Microsoft's hardware-matching system instead of installing random drivers.",
+                "AppForge Update Now",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            reportBox.AppendText(Environment.NewLine + $"Update error: {ex.Message}" + Environment.NewLine);
+            status.Text = "Update finished with a warning";
+        }
+        finally
+        {
+            scanButton.Enabled = true;
+            copyButton.Enabled = true;
+            updateButton.Enabled = wingetAvailable;
+            updateButton.Text = "UPDATE NOW";
         }
     }
 
