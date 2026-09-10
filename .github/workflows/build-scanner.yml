@@ -1,0 +1,63 @@
+name: Build AppForge PC Scanner
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/AppForgeScanner/**'
+      - '.github/workflows/build-scanner.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: appforge-pc-scanner
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build self-contained scanner
+        run: dotnet publish src/AppForgeScanner/AppForgeScanner.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o scanner-publish
+
+      - name: Validate scanner EXE
+        shell: powershell
+        run: |
+          $file = 'scanner-publish/AppForge-Scanner.exe'
+          if (-not (Test-Path $file)) { throw 'Scanner EXE was not produced.' }
+          $size = (Get-Item $file).Length
+          Write-Host "Scanner size: $([math]::Round($size / 1MB, 2)) MB"
+          if ($size -lt 5MB) { throw 'Scanner EXE is unexpectedly small.' }
+          $stream = [IO.File]::OpenRead($file)
+          try { $a=$stream.ReadByte(); $b=$stream.ReadByte() } finally { $stream.Dispose() }
+          if ($a -ne 0x4D -or $b -ne 0x5A) { throw 'Scanner does not have a valid MZ header.' }
+          (Get-FileHash $file -Algorithm SHA256).Hash | Set-Content -NoNewline scanner-publish/AppForge-Scanner.exe.sha256
+
+      - name: Publish scanner release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view appforge-scanner-latest >/dev/null 2>&1; then
+            gh release create appforge-scanner-latest --target "${GITHUB_SHA}" --title "AppForge PC Scanner" --notes "Standalone read-only AppForge PC Scanner for Windows."
+          fi
+          gh release upload appforge-scanner-latest scanner-publish/AppForge-Scanner.exe scanner-publish/AppForge-Scanner.exe.sha256 --clobber
+
+      - name: Verify scanner release asset
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          SIZE=$(gh api repos/${GITHUB_REPOSITORY}/releases/tags/appforge-scanner-latest --jq '.assets[] | select(.name=="AppForge-Scanner.exe") | .size')
+          echo "Scanner release size: ${SIZE} bytes"
+          if [ -z "$SIZE" ] || [ "$SIZE" -lt 5242880 ]; then
+            echo "Scanner asset missing or too small"
+            exit 1
+          fi
