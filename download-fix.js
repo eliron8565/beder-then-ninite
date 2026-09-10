@@ -5,7 +5,21 @@
   function saveBlob(blob,name){const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=name;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),5000)}
   function directDownload(path,name){const link=document.createElement('a');link.href=path;link.download=name;link.rel='noopener';document.body.appendChild(link);link.click();link.remove()}
   async function fetchFile(path){const r=await fetch(`${path}${path.includes('?')?'&':'?'}v=${Date.now()}`,{cache:'no-store'});if(!r.ok)throw new Error(`${path.split('/').pop()} is unavailable (${r.status}).`);return r}
-  function windowsSelectionToken(chosen){const indexes=chosen.map(a=>Number(a.winIndex)).filter(Number.isInteger);if(!indexes.length)throw new Error('Could not prepare the Windows app selection.');const bytes=new Uint8Array(Math.floor(Math.max(...indexes)/8)+1);for(const index of indexes)bytes[Math.floor(index/8)]|=1<<(index%8);let binary='';for(const b of bytes)binary+=String.fromCharCode(b);return btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+  function windowsSelectionToken(chosen){
+    const indexes=chosen.map(a=>Number(a.winIndex)).filter(Number.isInteger);
+    if(!indexes.length)throw new Error('Could not prepare the Windows app selection.');
+    // Bytes 0..8 hold the real selection (catalog indexes 0..69).
+    // Bytes 9..12 are a random nonce. The installer ignores those high indexes,
+    // but the nonce makes every download filename unique so browsers do not add
+    // " (1)", " (2)", etc. Those suffixes previously broke selection decoding.
+    const bytes=new Uint8Array(13);
+    for(const index of indexes)bytes[Math.floor(index/8)]|=1<<(index%8);
+    const nonce=bytes.subarray(9,13);
+    if(globalThis.crypto?.getRandomValues)crypto.getRandomValues(nonce);
+    else{const n=(Date.now()^Math.floor(Math.random()*0xffffffff))>>>0;nonce[0]=n&255;nonce[1]=(n>>>8)&255;nonce[2]=(n>>>16)&255;nonce[3]=(n>>>24)&255}
+    let binary='';for(const b of bytes)binary+=String.fromCharCode(b);
+    return btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  }
   function windowsName(chosen){return `AppForge-${windowsSelectionToken(chosen)}.exe`}
   async function downloadWindows(chosen,button){
     const name=windowsName(chosen);
