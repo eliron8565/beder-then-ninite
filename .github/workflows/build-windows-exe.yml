@@ -59,6 +59,14 @@ jobs:
           $fs.Close()
           $bmp.Dispose()
 
+      - name: Normalize GUI source before build
+        shell: powershell
+        run: |
+          $path = 'src/AppForgeInstaller/Program.cs'
+          $source = Get-Content $path -Raw
+          $source = $source.Replace('        Text = "AppForge Installer";', '        base.Text = "AppForge Installer";')
+          Set-Content -Path $path -Value $source -Encoding utf8
+
       - name: Publish self-contained compressed EXE
         run: dotnet publish src/AppForgeInstaller/AppForgeInstaller.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish
 
