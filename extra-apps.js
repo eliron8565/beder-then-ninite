@@ -3,20 +3,20 @@
 (() => {
   const extras = [
     // More browsers
-    ['Zen Browser','Web Browsers','zen-browser.app',9,'Zen-Team.Zen-Browser',71,['essentials']],
-    ['LibreWolf','Web Browsers','librewolf.net',8,'LibreWolf.LibreWolf',72,['privacy']],
-    ['Floorp','Web Browsers','floorp.app',7,'Ablaze.Floorp',73,['privacy']],
-    ['Tor Browser','Web Browsers','torproject.org',9,'TorProject.TorBrowser',74,['privacy','security']],
-    ['Mullvad Browser','Web Browsers','mullvad.net/browser',8,'MullvadVPN.MullvadBrowser',75,['privacy','security']],
-    ['Waterfox','Web Browsers','waterfox.net',7,'Waterfox.Waterfox',76,['privacy']],
-    ['Chromium','Web Browsers','chromium.org',7,'Hibbiki.Chromium',77,['developer']],
-    ['Falkon','Web Browsers','falkon.org',6,'KDE.Falkon',78,[]],
-    ['Ungoogled Chromium','Web Browsers','github.com/ungoogled-software/ungoogled-chromium-windows',7,'eloston.ungoogled-chromium',79,['privacy']],
-    ['Firefox ESR','Web Browsers','mozilla.org/firefox/enterprise',7,'Mozilla.Firefox.ESR',80,[]],
-    ['Thorium Browser','Web Browsers','thorium.rocks',7,'Alex313031.Thorium',81,[]],
-    ['Arc Browser','Web Browsers','arc.net',8,'TheBrowserCompany.Arc',82,[]],
-    ['Opera GX','Web Browsers','opera.com/gx',9,'Opera.OperaGX',83,['gaming']],
-    ['DuckDuckGo Browser','Web Browsers','duckduckgo.com/windows',8,'DuckDuckGo.DesktopBrowser',84,['privacy']],
+    ['Zen Browser','Popular Browsers','zen-browser.app',9,'Zen-Team.Zen-Browser',71,['essentials']],
+    ['LibreWolf','Privacy Browsers','librewolf.net',8,'LibreWolf.LibreWolf',72,['privacy']],
+    ['Floorp','Privacy Browsers','floorp.app',7,'Ablaze.Floorp',73,['privacy']],
+    ['Tor Browser','Privacy Browsers','torproject.org',9,'TorProject.TorBrowser',74,['privacy','security']],
+    ['Mullvad Browser','Privacy Browsers','mullvad.net/browser',8,'MullvadVPN.MullvadBrowser',75,['privacy','security']],
+    ['Waterfox','Privacy Browsers','waterfox.net',7,'Waterfox.Waterfox',76,['privacy']],
+    ['Chromium','Alternative Browsers','chromium.org',7,'Hibbiki.Chromium',77,['developer']],
+    ['Falkon','Alternative Browsers','falkon.org',6,'KDE.Falkon',78,[]],
+    ['Ungoogled Chromium','Privacy Browsers','github.com/ungoogled-software/ungoogled-chromium-windows',7,'eloston.ungoogled-chromium',79,['privacy']],
+    ['Firefox ESR','Alternative Browsers','mozilla.org/firefox/enterprise',7,'Mozilla.Firefox.ESR',80,[]],
+    ['Thorium Browser','Alternative Browsers','thorium.rocks',7,'Alex313031.Thorium',81,[]],
+    ['Arc Browser','Alternative Browsers','arc.net',8,'TheBrowserCompany.Arc',82,[]],
+    ['Opera GX','Gaming Browsers','opera.com/gx',9,'Opera.OperaGX',83,['gaming']],
+    ['DuckDuckGo Browser','Privacy Browsers','duckduckgo.com/windows',8,'DuckDuckGo.DesktopBrowser',84,['privacy']],
 
     // Privacy & security
     ['Proton VPN','Privacy & Security','protonvpn.com',9,'Proton.ProtonVPN',85,['privacy','security','essentials']],
@@ -51,5 +51,19 @@
       desc:`${name} — install or open the official installer automatically.`
     });
   }
+
+  // Split the original browser catalog too, without changing any Windows indexes.
+  const browserGroups = {
+    'Google Chrome':'Popular Browsers',
+    'Mozilla Firefox':'Popular Browsers',
+    'Microsoft Edge':'Popular Browsers',
+    'Brave':'Popular Browsers',
+    'Opera':'Popular Browsers',
+    'Vivaldi':'Popular Browsers'
+  };
+  for (const app of apps) {
+    if (browserGroups[app.name]) app.category = browserGroups[app.name];
+  }
+
   updatePlatformUI();
 })();
