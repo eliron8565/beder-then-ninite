@@ -8,7 +8,7 @@
     let list=availableApps().filter(app=>(activeCategory==='all'||app.category===activeCategory)&&(!q||`${app.name} ${app.category} ${app.desc}`.toLowerCase().includes(q)));
     document.querySelector('#emptyState')?.classList.toggle('hidden',list.length>0);
 
-    const categoryOrder=['Web Browsers','Messaging','Media','File Sharing','Compression','Documents & Office','Design & Imaging','Development','Utilities','Security','Gaming','Runtimes','Drivers'];
+    const categoryOrder=['Web Browsers','AI & Local Models','AI Agents','Privacy & Security','Messaging','Media','File Sharing','Compression','Documents & Office','Design & Imaging','Development','Utilities','Security','Gaming','Runtimes','Drivers'];
     const groups={};
     for(const app of list)(groups[app.category]??=[]).push(app);
     const ordered=[...categoryOrder.filter(c=>groups[c]),...Object.keys(groups).filter(c=>!categoryOrder.includes(c)).sort()];
