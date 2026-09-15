@@ -28,7 +28,7 @@ jobs:
         with: { dotnet-version: '8.0.x' }
 
       - name: Generate AppForge brand icon
-        shell: powershell
+        shell: pwsh
         run: |
           Add-Type -AssemblyName System.Drawing
           $bmp=New-Object System.Drawing.Bitmap 256,256; $g=[System.Drawing.Graphics]::FromImage($bmp); $g.SmoothingMode='AntiAlias'; $g.Clear([System.Drawing.Color]::Transparent)
@@ -40,9 +40,10 @@ jobs:
           $g.Dispose(); $ico=[System.Drawing.Icon]::FromHandle($bmp.GetHicon()); $fs=[System.IO.File]::Create('src/AppForgeInstaller/appforge.ico'); $ico.Save($fs); $fs.Close(); $bmp.Dispose()
 
       - name: Normalize GUI source and inject full web catalog
-        shell: powershell
+        shell: pwsh
         run: |
-          $path='src/AppForgeInstaller/Program.cs'; $s=Get-Content $path -Raw
+          $path='src/AppForgeInstaller/Program.cs'
+          $s=[System.IO.File]::ReadAllText($path,[System.Text.UTF8Encoding]::new($false))
           $s=$s.Replace('        Text = "AppForge Installer";','        base.Text = "AppForge Installer";')
           $old='        A(70,"Free Download Manager","SoftDeluxe.FreeDownloadManager","freedownloadmanager.org")'
           $new=@'
@@ -52,13 +53,23 @@ jobs:
                   A(91,"Ollama","Ollama.Ollama","ollama.com"),A(92,"LM Studio","ElementLabs.LMStudio","lmstudio.ai"),A(93,"Jan","Jan.Jan","jan.ai"),A(94,"GPT4All","Nomic.GPT4All","nomic.ai"),A(95,"AnythingLLM","MintplexLabs.AnythingLLM","anythingllm.com"),A(96,"Claude Desktop","Anthropic.Claude","claude.ai"),A(97,"ChatGPT Desktop","OpenAI.ChatGPT","openai.com"),A(98,"Cursor","Anysphere.Cursor","cursor.com"),A(99,"Windsurf","Codeium.Windsurf","windsurf.com"),A(100,"GitHub Desktop + Copilot tools","url:https://github.com/features/copilot","github.com"),A(101,"Comet Browser","url:https://www.perplexity.ai/comet","perplexity.ai")
           '@
           if(-not $s.Contains($old)){throw 'Catalog anchor not found'}
-          $s=$s.Replace($old,$new.Trim()); Set-Content $path $s -Encoding utf8
+          $s=$s.Replace($old,$new.Trim())
+          [System.IO.File]::WriteAllText($path,$s,[System.Text.UTF8Encoding]::new($false))
+
+      - name: Verify GUI source stays valid UTF-8
+        shell: pwsh
+        run: |
+          $path='src/AppForgeInstaller/Program.cs'
+          $bytes=[System.IO.File]::ReadAllBytes($path)
+          $strict=[System.Text.UTF8Encoding]::new($false,$true)
+          $text=$strict.GetString($bytes)
+          if($text.Contains('â€¦') -or $text.Contains('â†') -or $text.Contains('ï¿½')){throw 'Mojibake detected in GUI source'}
 
       - name: Publish self-contained compressed EXE
         run: dotnet publish src/AppForgeInstaller/AppForgeInstaller.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish
 
       - name: Sign EXE when trusted certificate is configured
-        shell: powershell
+        shell: pwsh
         run: |
           if([string]::IsNullOrWhiteSpace($env:WINDOWS_CERTIFICATE_BASE64)){Write-Host 'No trusted signing certificate configured.'; exit 0}
           $pfx=Join-Path $env:RUNNER_TEMP 'appforge-signing.pfx'; [IO.File]::WriteAllBytes($pfx,[Convert]::FromBase64String($env:WINDOWS_CERTIFICATE_BASE64))
@@ -67,7 +78,7 @@ jobs:
           if($LASTEXITCODE-ne 0){throw 'Authenticode signing failed'}
 
       - name: Validate Windows executable
-        shell: powershell
+        shell: pwsh
         run: |
           $file='publish/AppForge.exe'; if(-not(Test-Path $file)){throw 'EXE not produced'}; $size=(Get-Item $file).Length
           if($size-lt 10MB-or $size-ge 95MB){throw "Invalid EXE size: $size"}
@@ -92,9 +103,6 @@ jobs:
           git add downloads/AppForge-Windows.exe
           git diff --cached --quiet && exit 0
           git commit -m "Sync validated Windows installer for website downloads"
-          # The build modifies tracked source/icon files and creates build output. The EXE
-          # is already safely committed above, so discard every remaining working-tree
-          # change before rebasing that commit onto the latest main branch.
           git reset --hard HEAD
           git clean -fd
           git pull --rebase origin main
