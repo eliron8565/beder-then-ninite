@@ -15,7 +15,7 @@
     ['Firefox ESR','Alternative Browsers','mozilla.org/firefox/enterprise',7,'Mozilla.Firefox.ESR',80,[]],
     ['Thorium Browser','Alternative Browsers','thorium.rocks',7,'Alex313031.Thorium',81,[]],
     ['Arc Browser','Alternative Browsers','arc.net',8,'TheBrowserCompany.Arc',82,[]],
-    ['Opera GX','Gaming Browsers','opera.com/gx',9,'Opera.OperaGX',83,['gaming']],
+    ['Opera GX','AI Browsers','opera.com/gx',9,'Opera.OperaGX',83,['gaming','ai','free']],
     ['DuckDuckGo Browser','Privacy Browsers','duckduckgo.com/windows',8,'DuckDuckGo.DesktopBrowser',84,['privacy']],
 
     // Privacy & security
@@ -38,7 +38,10 @@
     ['ChatGPT Desktop','AI Agents','openai.com/chatgpt/desktop',10,'OpenAI.ChatGPT',97,['ai','agent']],
     ['Cursor','AI Agents','cursor.com',10,'Anysphere.Cursor',98,['ai','agent','developer']],
     ['Windsurf','AI Agents','windsurf.com',9,'Codeium.Windsurf',99,['ai','agent','developer']],
-    ['GitHub Desktop + Copilot tools','AI Agents','github.com/features/copilot',7,'url:https://github.com/features/copilot',100,['ai','agent','developer']]
+    ['GitHub Desktop + Copilot tools','AI Agents','github.com/features/copilot',7,'url:https://github.com/features/copilot',100,['ai','agent','developer']],
+
+    // Free AI browser. Basic AI features are available without a paid subscription.
+    ['Comet Browser','AI Browsers','perplexity.ai',9,'url:https://www.perplexity.ai/comet',101,['ai','agent','free']]
   ];
 
   for (const [name,category,domain,popular,windows,winIndex,tags] of extras) {
@@ -53,12 +56,13 @@
   }
 
   // Split the original browser catalog too, without changing any Windows indexes.
+  // Free built-in AI browsers live under AI Browsers.
   const browserGroups = {
     'Google Chrome':'Popular Browsers',
     'Mozilla Firefox':'Popular Browsers',
     'Microsoft Edge':'Popular Browsers',
-    'Brave':'Popular Browsers',
-    'Opera':'Popular Browsers',
+    'Brave':'AI Browsers',
+    'Opera':'AI Browsers',
     'Vivaldi':'Popular Browsers'
   };
   for (const app of apps) {
