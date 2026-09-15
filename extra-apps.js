@@ -2,6 +2,9 @@
 // Windows indexes stay append-only: personalized installer tokens depend on them.
 (() => {
   const extras = [
+    // Download managers — index 70 is already supported by AppForgeInstaller.
+    ['Free Download Manager','Utilities','freedownloadmanager.org',9,'SoftDeluxe.FreeDownloadManager',70,['essentials','free']],
+
     // More browsers
     ['Zen Browser','Popular Browsers','zen-browser.app',9,'Zen-Team.Zen-Browser',71,['essentials']],
     ['LibreWolf','Privacy Browsers','librewolf.net',8,'LibreWolf.LibreWolf',72,['privacy']],
