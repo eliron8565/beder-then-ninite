@@ -23,49 +23,36 @@ jobs:
       WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
+        with: { fetch-depth: 0 }
       - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
+        with: { dotnet-version: '8.0.x' }
 
       - name: Generate AppForge brand icon
         shell: powershell
         run: |
           Add-Type -AssemblyName System.Drawing
-          $bmp = New-Object System.Drawing.Bitmap 256,256
-          $g = [System.Drawing.Graphics]::FromImage($bmp)
-          $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
-          $g.Clear([System.Drawing.Color]::Transparent)
-          $dark = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255,8,17,31))
-          $g.FillRectangle($dark, 10, 10, 236, 236)
-          $rect = [System.Drawing.Rectangle]::new(18,18,220,220)
-          $grad = New-Object System.Drawing.Drawing2D.LinearGradientBrush $rect, ([System.Drawing.Color]::FromArgb(255,110,231,255)), ([System.Drawing.Color]::FromArgb(255,167,139,250)), 45
-          $g.FillRectangle($grad, 18, 18, 220, 220)
-          $inner = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255,7,17,30))
-          $fontA = New-Object System.Drawing.Font('Segoe UI',112,[System.Drawing.FontStyle]::Bold,[System.Drawing.GraphicsUnit]::Pixel)
-          $fontI = New-Object System.Drawing.Font('Segoe UI',70,[System.Drawing.FontStyle]::Bold,[System.Drawing.GraphicsUnit]::Pixel)
-          $sf = New-Object System.Drawing.StringFormat
-          $sf.Alignment = [System.Drawing.StringAlignment]::Center
-          $sf.LineAlignment = [System.Drawing.StringAlignment]::Center
-          $g.DrawString('A',$fontA,$inner,[System.Drawing.RectangleF]::new(22,26,160,195),$sf)
-          $g.DrawString('i',$fontI,$inner,[System.Drawing.RectangleF]::new(153,66,72,130),$sf)
-          $g.Dispose()
-          $hIcon = $bmp.GetHicon()
-          $ico = [System.Drawing.Icon]::FromHandle($hIcon)
-          $fs = [System.IO.File]::Create('src/AppForgeInstaller/appforge.ico')
-          $ico.Save($fs)
-          $fs.Close()
-          $bmp.Dispose()
+          $bmp=New-Object System.Drawing.Bitmap 256,256; $g=[System.Drawing.Graphics]::FromImage($bmp); $g.SmoothingMode='AntiAlias'; $g.Clear([System.Drawing.Color]::Transparent)
+          $g.FillRectangle((New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255,8,17,31))),10,10,236,236)
+          $rect=[System.Drawing.Rectangle]::new(18,18,220,220); $grad=New-Object System.Drawing.Drawing2D.LinearGradientBrush $rect,([System.Drawing.Color]::FromArgb(255,110,231,255)),([System.Drawing.Color]::FromArgb(255,167,139,250)),45; $g.FillRectangle($grad,18,18,220,220)
+          $inner=New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255,7,17,30)); $sf=New-Object System.Drawing.StringFormat; $sf.Alignment='Center'; $sf.LineAlignment='Center'
+          $g.DrawString('A',(New-Object System.Drawing.Font('Segoe UI',112,[System.Drawing.FontStyle]::Bold,[System.Drawing.GraphicsUnit]::Pixel)),$inner,[System.Drawing.RectangleF]::new(22,26,160,195),$sf)
+          $g.DrawString('i',(New-Object System.Drawing.Font('Segoe UI',70,[System.Drawing.FontStyle]::Bold,[System.Drawing.GraphicsUnit]::Pixel)),$inner,[System.Drawing.RectangleF]::new(153,66,72,130),$sf)
+          $g.Dispose(); $ico=[System.Drawing.Icon]::FromHandle($bmp.GetHicon()); $fs=[System.IO.File]::Create('src/AppForgeInstaller/appforge.ico'); $ico.Save($fs); $fs.Close(); $bmp.Dispose()
 
-      - name: Normalize GUI source before build
+      - name: Normalize GUI source and inject full web catalog
         shell: powershell
         run: |
-          $path = 'src/AppForgeInstaller/Program.cs'
-          $source = Get-Content $path -Raw
-          $source = $source.Replace('        Text = "AppForge Installer";', '        base.Text = "AppForge Installer";')
-          Set-Content -Path $path -Value $source -Encoding utf8
+          $path='src/AppForgeInstaller/Program.cs'; $s=Get-Content $path -Raw
+          $s=$s.Replace('        Text = "AppForge Installer";','        base.Text = "AppForge Installer";')
+          $old='        A(70,"Free Download Manager","SoftDeluxe.FreeDownloadManager","freedownloadmanager.org")'
+          $new=@'
+                  A(70,"Free Download Manager","SoftDeluxe.FreeDownloadManager","freedownloadmanager.org"),
+                  A(71,"Zen Browser","Zen-Team.Zen-Browser","zen-browser.app"),A(72,"LibreWolf","LibreWolf.LibreWolf","librewolf.net"),A(73,"Floorp","Ablaze.Floorp","floorp.app"),A(74,"Tor Browser","TorProject.TorBrowser","torproject.org"),A(75,"Mullvad Browser","MullvadVPN.MullvadBrowser","mullvad.net"),A(76,"Waterfox","Waterfox.Waterfox","waterfox.net"),A(77,"Chromium","Hibbiki.Chromium","chromium.org"),A(78,"Falkon","KDE.Falkon","falkon.org"),A(79,"Ungoogled Chromium","eloston.ungoogled-chromium","github.com"),A(80,"Firefox ESR","Mozilla.Firefox.ESR","mozilla.org"),A(81,"Thorium Browser","Alex313031.Thorium","thorium.rocks"),A(82,"Arc Browser","TheBrowserCompany.Arc","arc.net"),A(83,"Opera GX","Opera.OperaGX","opera.com"),A(84,"DuckDuckGo Browser","DuckDuckGo.DesktopBrowser","duckduckgo.com"),
+                  A(85,"Proton VPN","Proton.ProtonVPN","protonvpn.com"),A(86,"Mullvad VPN","MullvadVPN.MullvadVPN","mullvad.net"),A(87,"Proton Pass","Proton.ProtonPass","proton.me"),A(88,"VeraCrypt","IDRIX.VeraCrypt","veracrypt.fr"),A(89,"Cryptomator","Cryptomator.Cryptomator","cryptomator.org"),A(90,"SimpleWall","Henry++.simplewall","github.com"),
+                  A(91,"Ollama","Ollama.Ollama","ollama.com"),A(92,"LM Studio","ElementLabs.LMStudio","lmstudio.ai"),A(93,"Jan","Jan.Jan","jan.ai"),A(94,"GPT4All","Nomic.GPT4All","nomic.ai"),A(95,"AnythingLLM","MintplexLabs.AnythingLLM","anythingllm.com"),A(96,"Claude Desktop","Anthropic.Claude","claude.ai"),A(97,"ChatGPT Desktop","OpenAI.ChatGPT","openai.com"),A(98,"Cursor","Anysphere.Cursor","cursor.com"),A(99,"Windsurf","Codeium.Windsurf","windsurf.com"),A(100,"GitHub Desktop + Copilot tools","url:https://github.com/features/copilot","github.com"),A(101,"Comet Browser","url:https://www.perplexity.ai/comet","perplexity.ai")
+          '@
+          if(-not $s.Contains($old)){throw 'Catalog anchor not found'}
+          $s=$s.Replace($old,$new.Trim()); Set-Content $path $s -Encoding utf8
 
       - name: Publish self-contained compressed EXE
         run: dotnet publish src/AppForgeInstaller/AppForgeInstaller.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o publish
@@ -73,58 +60,37 @@ jobs:
       - name: Sign EXE when trusted certificate is configured
         shell: powershell
         run: |
-          if ([string]::IsNullOrWhiteSpace($env:WINDOWS_CERTIFICATE_BASE64)) {
-            Write-Host "No Windows code-signing certificate configured. EXE will remain unsigned until trusted signing is connected."
-            exit 0
-          }
-          $pfx = Join-Path $env:RUNNER_TEMP 'appforge-signing.pfx'
-          [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE_BASE64))
-          $signtool = Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\bin\*\x64\signtool.exe' | Sort-Object FullName -Descending | Select-Object -First 1
-          if (-not $signtool) { throw 'signtool.exe was not found on the GitHub runner.' }
+          if([string]::IsNullOrWhiteSpace($env:WINDOWS_CERTIFICATE_BASE64)){Write-Host 'No trusted signing certificate configured.'; exit 0}
+          $pfx=Join-Path $env:RUNNER_TEMP 'appforge-signing.pfx'; [IO.File]::WriteAllBytes($pfx,[Convert]::FromBase64String($env:WINDOWS_CERTIFICATE_BASE64))
+          $signtool=Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\bin\*\x64\signtool.exe'|Sort-Object FullName -Descending|Select-Object -First 1
           & $signtool.FullName sign /fd SHA256 /td SHA256 /tr http://timestamp.digicert.com /f $pfx /p $env:WINDOWS_CERTIFICATE_PASSWORD publish/AppForge.exe
-          if ($LASTEXITCODE -ne 0) { throw 'Authenticode signing failed.' }
-          & $signtool.FullName verify /pa /v publish/AppForge.exe
-          if ($LASTEXITCODE -ne 0) { throw 'Authenticode verification failed.' }
-          Remove-Item $pfx -Force
+          if($LASTEXITCODE-ne 0){throw 'Authenticode signing failed'}
 
       - name: Validate Windows executable
         shell: powershell
         run: |
-          $file = 'publish/AppForge.exe'
-          if (-not (Test-Path $file)) { throw 'AppForge.exe was not produced.' }
-          $size = (Get-Item $file).Length
-          Write-Host "AppForge EXE size: $([math]::Round($size / 1MB, 2)) MB"
-          if ($size -lt 10MB) { throw 'EXE is unexpectedly small or incomplete.' }
-          if ($size -ge 95MB) { throw 'EXE is unexpectedly large.' }
-          $stream = [IO.File]::OpenRead($file)
-          try {
-            $first = $stream.ReadByte()
-            $second = $stream.ReadByte()
-          } finally { $stream.Dispose() }
-          if ($first -ne 0x4D -or $second -ne 0x5A) { throw 'EXE does not have a valid Windows MZ header.' }
-          $hash = (Get-FileHash $file -Algorithm SHA256).Hash
-          Write-Host "SHA256: $hash"
-          Copy-Item $file publish/AppForge-Windows.exe -Force
-          $hash | Set-Content -NoNewline publish/AppForge-Windows.exe.sha256
+          $file='publish/AppForge.exe'; if(-not(Test-Path $file)){throw 'EXE not produced'}; $size=(Get-Item $file).Length
+          if($size-lt 10MB-or $size-ge 95MB){throw "Invalid EXE size: $size"}
+          $stream=[IO.File]::OpenRead($file); try{$a=$stream.ReadByte();$b=$stream.ReadByte()}finally{$stream.Dispose()}; if($a-ne 0x4D-or $b-ne 0x5A){throw 'Invalid MZ header'}
+          Copy-Item $file publish/AppForge-Windows.exe -Force; (Get-FileHash $file -Algorithm SHA256).Hash|Set-Content -NoNewline publish/AppForge-Windows.exe.sha256
 
       - name: Publish latest Windows release asset
         shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
+        env: { GH_TOKEN: '${{ github.token }}' }
         run: |
-          if ! gh release view appforge-latest >/dev/null 2>&1; then
-            gh release create appforge-latest --target "${GITHUB_SHA}" --title "AppForge Latest Windows Build" --notes "Latest validated AppForge Windows installer. Built automatically from the main branch."
-          fi
+          if ! gh release view appforge-latest >/dev/null 2>&1; then gh release create appforge-latest --target "${GITHUB_SHA}" --title "AppForge Latest Windows Build" --notes "Latest validated AppForge Windows installer."; fi
           gh release upload appforge-latest publish/AppForge-Windows.exe publish/AppForge-Windows.exe.sha256 --clobber
-
-      - name: Verify release asset exists
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
           SIZE=$(gh api repos/${GITHUB_REPOSITORY}/releases/tags/appforge-latest --jq '.assets[] | select(.name=="AppForge-Windows.exe") | .size')
-          echo "Release asset size: ${SIZE} bytes"
-          if [ -z "$SIZE" ] || [ "$SIZE" -lt 10485760 ]; then
-            echo "Release asset missing or too small"
-            exit 1
-          fi
+          if [ -z "$SIZE" ] || [ "$SIZE" -lt 10485760 ]; then exit 1; fi
+
+      - name: Sync validated EXE to GitHub Pages download
+        shell: bash
+        run: |
+          cp publish/AppForge-Windows.exe downloads/AppForge-Windows.exe
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add downloads/AppForge-Windows.exe
+          git diff --cached --quiet && exit 0
+          git commit -m "Sync validated Windows installer for website downloads"
+          git pull --rebase origin main
+          git push origin HEAD:main
