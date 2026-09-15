@@ -15,7 +15,7 @@
     ['Firefox ESR','Alternative Browsers','mozilla.org/firefox/enterprise',7,'Mozilla.Firefox.ESR',80,[]],
     ['Thorium Browser','Alternative Browsers','thorium.rocks',7,'Alex313031.Thorium',81,[]],
     ['Arc Browser','Alternative Browsers','arc.net',8,'TheBrowserCompany.Arc',82,[]],
-    ['Opera GX','AI Browsers','opera.com/gx',9,'Opera.OperaGX',83,['gaming','ai','free']],
+    ['Opera GX','Gaming Browsers','opera.com/gx',9,'Opera.OperaGX',83,['gaming','ai','free']],
     ['DuckDuckGo Browser','Privacy Browsers','duckduckgo.com/windows',8,'DuckDuckGo.DesktopBrowser',84,['privacy']],
 
     // Privacy & security
@@ -47,27 +47,13 @@
   for (const [name,category,domain,popular,windows,winIndex,tags] of extras) {
     const key=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
     if (apps.some(a=>a.key===key)) continue;
-    apps.push({
-      name,category,domain,popular,tags,
-      pkg:{windows},winIndex,
-      key,logo:fav(domain),
-      desc:`${name} — install or open the official installer automatically.`
-    });
+    apps.push({name,category,domain,popular,tags,pkg:{windows},winIndex,key,logo:fav(domain),desc:`${name} — install or open the official installer automatically.`});
   }
 
-  // Split the original browser catalog too, without changing any Windows indexes.
-  // Free built-in AI browsers live under AI Browsers.
   const browserGroups = {
-    'Google Chrome':'Popular Browsers',
-    'Mozilla Firefox':'Popular Browsers',
-    'Microsoft Edge':'Popular Browsers',
-    'Brave':'AI Browsers',
-    'Opera':'AI Browsers',
-    'Vivaldi':'Popular Browsers'
+    'Google Chrome':'Popular Browsers','Mozilla Firefox':'Popular Browsers','Microsoft Edge':'Popular Browsers',
+    'Brave':'AI Browsers','Opera':'AI Browsers','Vivaldi':'Popular Browsers'
   };
-  for (const app of apps) {
-    if (browserGroups[app.name]) app.category = browserGroups[app.name];
-  }
-
+  for (const app of apps) if (browserGroups[app.name]) app.category=browserGroups[app.name];
   updatePlatformUI();
 })();
