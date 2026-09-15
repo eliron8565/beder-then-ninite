@@ -24,8 +24,9 @@
     }));
   };
 
-  function browserSection(list,sort){
-    const browserApps=list.filter(a=>browserCategories.includes(a.category));
+  function browserSection(allAvailable,sort,q){
+    let browserApps=allAvailable.filter(a=>browserCategories.includes(a.category));
+    if(q) browserApps=browserApps.filter(app=>`${app.name} ${app.category} ${app.desc}`.toLowerCase().includes(q));
     if(!browserApps.length) return '';
     let shown=browserApps;
     if(browserView!=='all') shown=browserApps.filter(a=>a.category===browserView);
@@ -45,8 +46,8 @@
   window.renderApps = function(){
     const catalog=document.querySelector('#catalog'); if(!catalog) return;
     const q=(document.querySelector('#searchInput')?.value||'').trim().toLowerCase();
-    let list=availableApps().filter(app=>(activeCategory==='all'||app.category===activeCategory)&&(!q||`${app.name} ${app.category} ${app.desc}`.toLowerCase().includes(q)));
-    document.querySelector('#emptyState')?.classList.toggle('hidden',list.length>0);
+    const allAvailable=availableApps();
+    let list=allAvailable.filter(app=>(activeCategory==='all'||app.category===activeCategory)&&(!q||`${app.name} ${app.category} ${app.desc}`.toLowerCase().includes(q)));
 
     const sort=document.querySelector('#sortSelect')?.value||'popular';
     const groups={};
@@ -57,9 +58,10 @@
     const ordered=[...categoryOrder.filter(c=>groups[c]),...Object.keys(groups).filter(c=>!categoryOrder.includes(c)).sort()];
     for(const cat of ordered) groups[cat].sort((a,b)=>sort==='popular'?(b.popular-a.popular)||a.name.localeCompare(b.name):a.name.localeCompare(b.name));
 
-    const browsers=(activeCategory==='all'||browserCategories.includes(activeCategory))?browserSection(list,sort):'';
+    const browsers=activeCategory==='all'?browserSection(allAvailable,sort,q):'';
     const others=ordered.map(cat=>`<section class="app-group"><h2>${cat}</h2><div class="app-group-list">${groups[cat].map(appCard).join('')}</div></section>`).join('');
     catalog.innerHTML=browsers+others;
+    document.querySelector('#emptyState')?.classList.toggle('hidden',Boolean(browsers||others));
 
     const browserSelect=document.querySelector('#browserCategorySelect');
     if(browserSelect) browserSelect.addEventListener('change',()=>{browserView=browserSelect.value;renderApps();});
