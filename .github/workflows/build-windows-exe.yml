@@ -86,6 +86,9 @@ jobs:
       - name: Sync validated EXE to GitHub Pages download
         shell: bash
         run: |
+          # Build steps intentionally modify generated source/icon files. Restore every
+          # tracked build-only change before syncing the validated binary so rebase is clean.
+          git restore src/AppForgeInstaller/Program.cs src/AppForgeInstaller/appforge.ico 2>/dev/null || true
           cp publish/AppForge-Windows.exe downloads/AppForge-Windows.exe
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
