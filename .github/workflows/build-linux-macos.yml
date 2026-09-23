@@ -94,15 +94,18 @@ jobs:
           path: built
       - name: Publish files
         run: |
-          mkdir -p downloads
-          cp built/AppForge-Linux.AppImage downloads/AppForge-Linux.AppImage
-          cp built/AppForge-macOS.zip downloads/AppForge-macOS.zip
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add downloads/AppForge-Linux.AppImage downloads/AppForge-macOS.zip
-          git commit -m "Update Linux and macOS AppForge builds" || exit 0
-          for i in 1 2 3; do
-            git pull --rebase origin main && git push origin HEAD:main && exit 0
-            sleep 5
+          for i in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p downloads
+            cp built/AppForge-Linux.AppImage downloads/AppForge-Linux.AppImage
+            cp built/AppForge-macOS.zip downloads/AppForge-macOS.zip
+            git add downloads/AppForge-Linux.AppImage downloads/AppForge-macOS.zip
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m "Update Linux and macOS AppForge builds"
+            git push origin HEAD:main && exit 0
+            sleep 3
           done
           exit 1
