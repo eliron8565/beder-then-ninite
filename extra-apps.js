@@ -53,7 +53,9 @@
   for (const [name,category,domain,popular,windows,winIndex,tags] of extras) {
     const key=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
     if (apps.some(a=>a.key===key)) continue;
-    apps.push({name,category,domain,popular,tags,pkg:{windows},winIndex,key,logo:fav(domain),desc:`${name} — install or open the official installer automatically.`});
+    const pkg={windows};
+    if(name==='Floorp'){pkg.linux='one.ablaze.floorp';pkg.mac={type:'cask',id:'floorp'};}
+    apps.push({name,category,domain,popular,tags,pkg,winIndex,key,logo:fav(domain),desc:`${name} — install or open the official installer automatically.`});
   }
 
   const browserGroups = {
