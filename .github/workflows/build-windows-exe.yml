@@ -39,21 +39,12 @@ jobs:
           $g.DrawString('i',(New-Object System.Drawing.Font('Segoe UI',70,[System.Drawing.FontStyle]::Bold,[System.Drawing.GraphicsUnit]::Pixel)),$inner,[System.Drawing.RectangleF]::new(153,66,72,130),$sf)
           $g.Dispose(); $ico=[System.Drawing.Icon]::FromHandle($bmp.GetHicon()); $fs=[System.IO.File]::Create('src/AppForgeInstaller/appforge.ico'); $ico.Save($fs); $fs.Close(); $bmp.Dispose()
 
-      - name: Normalize GUI source and inject full web catalog
+      - name: Normalize GUI source before build
         shell: pwsh
         run: |
           $path='src/AppForgeInstaller/Program.cs'
           $s=[System.IO.File]::ReadAllText($path,[System.Text.UTF8Encoding]::new($false))
           $s=$s.Replace('        Text = "AppForge Installer";','        base.Text = "AppForge Installer";')
-          $old='        A(70,"Free Download Manager","SoftDeluxe.FreeDownloadManager","freedownloadmanager.org")'
-          $new=@'
-                  A(70,"Free Download Manager","SoftDeluxe.FreeDownloadManager","freedownloadmanager.org"),
-                  A(71,"Zen Browser","Zen-Team.Zen-Browser","zen-browser.app"),A(72,"LibreWolf","LibreWolf.LibreWolf","librewolf.net"),A(73,"Floorp","Ablaze.Floorp","floorp.app"),A(74,"Tor Browser","TorProject.TorBrowser","torproject.org"),A(75,"Mullvad Browser","MullvadVPN.MullvadBrowser","mullvad.net"),A(76,"Waterfox","Waterfox.Waterfox","waterfox.net"),A(77,"Chromium","Hibbiki.Chromium","chromium.org"),A(78,"Falkon","KDE.Falkon","falkon.org"),A(79,"Ungoogled Chromium","eloston.ungoogled-chromium","github.com"),A(80,"Firefox ESR","Mozilla.Firefox.ESR","mozilla.org"),A(81,"Thorium Browser","Alex313031.Thorium","thorium.rocks"),A(82,"Arc Browser","TheBrowserCompany.Arc","arc.net"),A(83,"Opera GX","Opera.OperaGX","opera.com"),A(84,"DuckDuckGo Browser","DuckDuckGo.DesktopBrowser","duckduckgo.com"),
-                  A(85,"Proton VPN","Proton.ProtonVPN","protonvpn.com"),A(86,"Mullvad VPN","MullvadVPN.MullvadVPN","mullvad.net"),A(87,"Proton Pass","Proton.ProtonPass","proton.me"),A(88,"VeraCrypt","IDRIX.VeraCrypt","veracrypt.fr"),A(89,"Cryptomator","Cryptomator.Cryptomator","cryptomator.org"),A(90,"SimpleWall","Henry++.simplewall","github.com"),
-                  A(91,"Ollama","Ollama.Ollama","ollama.com"),A(92,"LM Studio","ElementLabs.LMStudio","lmstudio.ai"),A(93,"Jan","Jan.Jan","jan.ai"),A(94,"GPT4All","Nomic.GPT4All","nomic.ai"),A(95,"AnythingLLM","MintplexLabs.AnythingLLM","anythingllm.com"),A(96,"Claude Desktop","Anthropic.Claude","claude.ai"),A(97,"ChatGPT Desktop","OpenAI.ChatGPT","openai.com"),A(98,"Cursor","Anysphere.Cursor","cursor.com"),A(99,"Windsurf","Codeium.Windsurf","windsurf.com"),A(100,"GitHub Desktop + Copilot tools","url:https://github.com/features/copilot","github.com"),A(101,"Comet Browser","url:https://www.perplexity.ai/comet","perplexity.ai")
-          '@
-          if(-not $s.Contains($old)){throw 'Catalog anchor not found'}
-          $s=$s.Replace($old,$new.Trim())
           [System.IO.File]::WriteAllText($path,$s,[System.Text.UTF8Encoding]::new($false))
 
       - name: Verify GUI source stays valid UTF-8
