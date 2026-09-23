@@ -36,6 +36,7 @@ CATALOG={
 'bitwarden':('Bitwarden','com.bitwarden.desktop','bitwarden'),
 'keepassxc':('KeePassXC','org.keepassxc.KeePassXC','keepassxc'),
 'rustdesk':('RustDesk','com.rustdesk.RustDesk','rustdesk'),
+'floorp':('Floorp','one.ablaze.floorp','floorp'),
 }
 
 MAC_FORMULAS={
