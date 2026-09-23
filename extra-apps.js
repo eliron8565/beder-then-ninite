@@ -44,7 +44,10 @@
     ['GitHub Desktop + Copilot tools','AI Agents','github.com/features/copilot',7,'url:https://github.com/features/copilot',100,['ai','agent','developer']],
 
     // Free AI browser. Basic AI features are available without a paid subscription.
-    ['Comet Browser','AI Browsers','perplexity.ai',9,'url:https://www.perplexity.ai/comet',101,['ai','agent','free']]
+    ['Comet Browser','AI Browsers','perplexity.ai',9,'url:https://www.perplexity.ai/comet',101,['ai','agent','free']],
+
+    // PDF tools
+    ['PDF24 Creator','Documents & Office','pdf24.org',9,'geeksoftwareGmbH.PDF24Creator',102,['essentials','student','free']]
   ];
 
   for (const [name,category,domain,popular,windows,winIndex,tags] of extras) {
