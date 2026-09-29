@@ -3,7 +3,7 @@
   const appCard = app => `<label class="app-row ${selected.has(app.key)?'selected':''}"><input type="checkbox" data-key="${app.key}" ${selected.has(app.key)?'checked':''}><span class="app-icon">${logoMarkup(app)}</span><span class="app-info"><strong>${app.name}</strong><small>${app.desc}</small></span></label>`;
 
   const browserCategories=['Popular Browsers','Privacy Browsers','Gaming Browsers','Alternative Browsers','AI Browsers'];
-  const categoryOrder=['AI & Local Models','AI Agents','Privacy & Security','Messaging','Media','File Sharing','Compression','Documents & Office','Design & Imaging','Development','Utilities','Security','Gaming','Runtimes','Drivers'];
+  const categoryOrder=['AI & Local Models','AI Agents','Privacy & Security','Minecraft','Messaging','Media','File Sharing','Compression','Documents & Office','Design & Imaging','Development','Utilities','Security','Gaming','Runtimes','Drivers'];
   let browserView='all';
 
   window.renderNav = function(){
