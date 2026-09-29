@@ -32,7 +32,7 @@ const apps = [
   {name:'IntelliJ IDEA Community',category:'Development',domain:'jetbrains.com/idea',popular:9,tags:['developer','student'],pkg:{windows:'JetBrains.IntelliJIDEA.Community',mac:{type:'cask',id:'intellij-idea-ce'}}},
   {name:'Notepad++',category:'Development',domain:'notepad-plus-plus.org',popular:9,tags:['developer','essentials'],pkg:{windows:'Notepad++.Notepad++'}},
   {name:'Cisco Packet Tracer',category:'Development',domain:'cisco.com',popular:8,tags:['developer','student'],pkg:{windows:'url:https://www.netacad.com/learning-collections/cisco-packet-tracer'}},
-  {name:'Blockbench',category:'Development',domain:'blockbench.net',popular:8,tags:['developer','creator','gaming'],pkg:{windows:'JannisX11.Blockbench',linux:'net.blockbench.Blockbench',mac:{type:'cask',id:'blockbench'}}},
+  {name:'Blockbench',category:'Minecraft',domain:'blockbench.net',popular:8,tags:['developer','creator','gaming'],pkg:{windows:'JannisX11.Blockbench',linux:'net.blockbench.Blockbench',mac:{type:'cask',id:'blockbench'}}},
   {name:'LibreOffice',category:'Documents & Office',domain:'libreoffice.org',popular:9,tags:['student','essentials'],pkg:{windows:'TheDocumentFoundation.LibreOffice',linux:'org.libreoffice.LibreOffice',mac:{type:'cask',id:'libreoffice'}}},
   {name:'Obsidian',category:'Documents & Office',domain:'obsidian.md',popular:9,tags:['student','developer'],pkg:{windows:'Obsidian.Obsidian',linux:'md.obsidian.Obsidian',mac:{type:'cask',id:'obsidian'}}},
   {name:'Thunderbird',category:'Documents & Office',domain:'thunderbird.net',popular:8,tags:['student'],pkg:{windows:'Mozilla.Thunderbird',linux:'org.mozilla.Thunderbird',mac:{type:'cask',id:'thunderbird'}}},
