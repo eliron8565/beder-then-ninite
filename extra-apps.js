@@ -47,7 +47,10 @@
     ['Comet Browser','AI Browsers','perplexity.ai',9,'url:https://www.perplexity.ai/comet',101,['ai','agent','free']],
 
     // PDF tools
-    ['PDF24 Creator','Documents & Office','pdf24.org',9,'geeksoftwareGmbH.PDF24Creator',102,['essentials','student','free']]
+    ['PDF24 Creator','Documents & Office','pdf24.org',9,'geeksoftwareGmbH.PDF24Creator',102,['essentials','student','free']],
+
+    // Minecraft creation tools
+    ['MCreator','Minecraft','mcreator.net',10,'url:https://mcreator.net/download',103,['gaming','creator','developer','free']]
   ];
 
   for (const [name,category,domain,popular,windows,winIndex,tags] of extras) {
@@ -55,6 +58,7 @@
     if (apps.some(a=>a.key===key)) continue;
     const pkg={windows};
     if(name==='Floorp'){pkg.linux='one.ablaze.floorp';pkg.mac={type:'cask',id:'floorp'};}
+    if(name==='MCreator'){pkg.linux='url:https://mcreator.net/download';pkg.mac={type:'url',id:'https://mcreator.net/download'};}
     apps.push({name,category,domain,popular,tags,pkg,winIndex,key,logo:fav(domain),desc:`${name} — install or open the official installer automatically.`});
   }
 
