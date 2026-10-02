@@ -110,3 +110,49 @@ body.gta .app-row.selected{background:linear-gradient(90deg,rgba(255,255,255,.18
 body.gta .app-info strong{font-weight:700;text-shadow:0 1px 2px rgba(16,27,45,.4)}
 body.gta .browser-scroll-list{scrollbar-color:rgba(255,255,255,.55) rgba(32,50,78,.5)}
 body.gta .theme-picker-wrap:after{background:linear-gradient(90deg,#fff,#dba7c0,#7890b4)}
+
+/* v31 — each theme gets its own UI language, not only a palette */
+body.cyberpunk .workspace-top{border-left:5px solid #f7ef38}
+body.cyberpunk .app-group{position:relative;border-left:2px solid #00f0ff}
+body.cyberpunk .app-group:after{content:"SYS // APPFORGE";position:absolute;right:9px;top:7px;font:700 7px Consolas,monospace;letter-spacing:.12em;color:#ff2a9d;opacity:.55}
+body.cyberpunk .app-row:hover{transform:translateX(7px)}
+body.cyberpunk .search-wrap:before{content:">";font:900 14px Consolas;color:#f7ef38}
+body.cyberpunk .selection-bar:before{content:"INSTALL QUEUE // READY";font:800 8px Consolas;letter-spacing:.14em;color:#00f0ff;position:absolute;top:-17px;left:14px}
+
+body.gta .workspace-top{border-bottom:3px solid rgba(255,255,255,.65)}
+body.gta .app-group{transform:rotate(0);transition:.2s}
+body.gta .app-group:hover{transform:translateY(-4px) rotate(-.15deg)}
+body.gta .app-group:nth-child(even):hover{transform:translateY(-4px) rotate(.15deg)}
+body.gta .app-group:after{content:"LOS SANTOS";position:absolute;right:10px;top:8px;font:900 7px Inter,sans-serif;letter-spacing:.16em;color:rgba(255,255,255,.42)}
+body.gta .app-row{border-bottom:1px solid rgba(255,255,255,.035)}
+body.gta .selection-bar:before{content:"APPFORGE • LOS SANTOS SETUP";position:absolute;top:-18px;left:14px;font:900 8px Inter,sans-serif;letter-spacing:.1em;color:#fff}
+
+body.minecraft{font-smooth:never}
+body.minecraft .workspace-top,body.minecraft .app-group,body.minecraft .how-card{box-shadow:inset 3px 3px rgba(255,255,255,.08),inset -4px -4px rgba(0,0,0,.26),5px 5px 0 rgba(0,0,0,.18)}
+body.minecraft .app-group:before{height:5px;margin:-8px -4px 8px;background:repeating-linear-gradient(90deg,#74bd5e 0 18px,#64a951 18px 36px);opacity:1}
+body.minecraft .app-group:after{content:"▦";position:absolute;right:8px;top:7px;color:#9be083;font-size:13px}
+body.minecraft .app-row{border-radius:0;min-height:36px}
+body.minecraft .app-row:hover{transform:translateX(4px);box-shadow:inset 0 -3px rgba(0,0,0,.22)}
+body.minecraft input[type=checkbox]{accent-color:#6fbd5c}
+body.minecraft .theme-picker,body.minecraft .theme-picker-wrap{border-radius:0}
+body.minecraft .selection-bar:before{content:"CRAFT YOUR SETUP";position:absolute;top:-20px;left:12px;color:#a5e48c;font:900 9px Inter;letter-spacing:.08em;text-shadow:2px 2px #1b2c18}
+
+body.league .workspace-top{border-top:1px solid #c99b3d;border-bottom:1px solid #0ac8b9}
+body.league .app-group{position:relative;border-radius:4px 18px 4px 18px}
+body.league .app-group:before{height:2px;margin:-14px 18% 11px;background:linear-gradient(90deg,transparent,#c99b3d,#f1df9a,#c99b3d,transparent);opacity:.9}
+body.league .app-group:after{content:"◇";position:absolute;right:10px;top:5px;color:#c99b3d;font-size:17px}
+body.league .app-row:hover{transform:translateX(4px);box-shadow:inset 0 0 18px rgba(10,200,185,.05)}
+body.league .primary-btn{clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 50%,calc(100% - 8px) 100%,8px 100%,0 50%)}
+body.league .selection-bar:before{content:"◇  SUMMON YOUR SETUP  ◇";position:absolute;top:-20px;left:50%;transform:translateX(-50%);white-space:nowrap;color:#d7b45f;font:800 9px Georgia,serif;letter-spacing:.14em}
+
+body.apex .workspace-top{border-left:4px solid #cf413a}
+body.apex .app-group{position:relative;border-left:3px solid rgba(207,65,58,.55)}
+body.apex .app-group:before{height:3px;margin:-14px -12px 11px;background:linear-gradient(90deg,#cf413a 0 35%,transparent 35% 45%,#eee9df 45% 62%,transparent 62%);opacity:.85}
+body.apex .app-group:after{content:"///";position:absolute;right:9px;top:6px;color:#cf413a;font:900 12px Inter;letter-spacing:-.05em}
+body.apex .app-row:hover{transform:translateX(6px);border-left:2px solid #cf413a}
+body.apex .primary-btn{clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+body.apex .selection-bar:before{content:"LOADOUT // APP INSTALLATION";position:absolute;top:-18px;left:14px;color:#e85a50;font:900 8px Inter;letter-spacing:.13em}
+
+/* Theme transition */
+body,body:before,.workspace-top,.hero:after,.how-card,.app-group,.app-row,.primary-btn,.category-link,.preset-btn,.selection-bar,.dialog-card{transition:background .28s ease,border-color .28s ease,color .2s ease,box-shadow .28s ease,transform .16s ease}
+@media(max-width:760px){body.cyberpunk .app-group:after,body.gta .app-group:after,body.minecraft .app-group:after,body.league .app-group:after,body.apex .app-group:after{display:none}}
