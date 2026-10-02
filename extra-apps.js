@@ -50,7 +50,11 @@
     ['PDF24 Creator','Documents & Office','pdf24.org',9,'geeksoftwareGmbH.PDF24Creator',102,['essentials','student','free']],
 
     // Minecraft creation tools
-    ['MCreator','Minecraft','mcreator.net',10,'url:https://mcreator.net/download',103,['gaming','creator','developer','free']]
+    ['MCreator','Minecraft','mcreator.net',10,'url:https://mcreator.net/download',103,['gaming','creator','developer','free']],
+    ['Minecraft Launcher','Minecraft','minecraft.net',10,'Mojang.MinecraftLauncher',104,['gaming','essentials']],
+    ['Modrinth App','Minecraft','modrinth.com',10,'Modrinth.ModrinthApp',105,['gaming','mods','free']],
+    ['XMCL','Minecraft','xmcl.app',8,'CI010.XMinecraftLauncher',106,['gaming','mods','free']],
+    ['Amulet Editor','Minecraft','amuletmc.com',8,'url:https://www.amuletmc.com/',107,['gaming','creator']]
   ];
 
   for (const [name,category,domain,popular,windows,winIndex,tags] of extras) {
@@ -59,6 +63,7 @@
     const pkg={windows};
     if(name==='Floorp'){pkg.linux='one.ablaze.floorp';pkg.mac={type:'cask',id:'floorp'};}
     if(name==='MCreator'){pkg.linux='url:https://mcreator.net/download';pkg.mac={type:'url',id:'https://mcreator.net/download'};}
+    if(name==='Modrinth App'){pkg.linux='com.modrinth.ModrinthApp';pkg.mac={type:'cask',id:'modrinth-app'};}
     apps.push({name,category,domain,popular,tags,pkg,winIndex,key,logo:fav(domain),desc:`${name} — install or open the official installer automatically.`});
   }
 
