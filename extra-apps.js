@@ -96,7 +96,10 @@
     ['Revolt','Messaging','revolt.chat',8,'url:https://revolt.chat/',130,['gaming','free']],
     ['Element','Messaging','element.io',9,'url:https://element.io/download',131,['privacy','free']],
     ['Mumble','Messaging','mumble.info',8,'url:https://www.mumble.info/downloads/',132,['gaming','free']],
-    ['Guilded','Messaging','guilded.gg',8,'url:https://www.guilded.gg/downloads',134,['gaming','free']]
+    ['Guilded','Messaging','guilded.gg',8,'url:https://www.guilded.gg/downloads',134,['gaming','free']],
+    ['Anki','Documents & Office','apps.ankiweb.net',9,'Anki.Anki',135,['student','free']],
+    ['LocalSend','Utilities','localsend.org',9,'LocalSend.LocalSend',136,['essentials','free']],
+    ['Ventoy','Utilities','ventoy.net',9,'Ventoy.Ventoy',137,['developer','free']]
   ];
 
   for (const [name,category,domain,popular,windows,winIndex,tags] of extras) {
