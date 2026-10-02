@@ -5,12 +5,12 @@
   function saveBlob(blob,name){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000)}
   async function fetchFile(path){const r=await fetch(`${path}${path.includes('?')?'&':'?'}v=${Date.now()}`,{cache:'no-store'});if(!r.ok)throw new Error(`${path.split('/').pop()} is unavailable (${r.status}).`);return r}
 
-  function windowsIndexes(chosen){return [...new Set(chosen.map(a=>Number(a.winIndex)).filter(i=>Number.isInteger(i)&&i>=0&&i<=111))].sort((a,b)=>a-b)}
+  function windowsIndexes(chosen){return [...new Set(chosen.map(a=>Number(a.winIndex)).filter(i=>Number.isInteger(i)&&i>=0&&i<=143))].sort((a,b)=>a-b)}
   function windowsSelectionToken(chosen){
     const ids=windowsIndexes(chosen);if(!ids.length)throw new Error('Could not prepare the Windows app selection.');
-    // 14 bytes = indexes 0..111. No random bytes: every bit is selection data.
+    // 18 bytes = indexes 0..143. No random bytes: every bit is selection data.
     // Variable-length Base64URL bitsets are supported by the installer.
-    const bytes=new Uint8Array(14);for(const i of ids)bytes[Math.floor(i/8)]|=1<<(i%8);
+    const bytes=new Uint8Array(18);for(const i of ids)bytes[Math.floor(i/8)]|=1<<(i%8);
     let s='';for(const b of bytes)s+=String.fromCharCode(b);
     return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
   }
