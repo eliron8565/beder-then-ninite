@@ -76,3 +76,37 @@ body.gta .app-group h2{color:#f0c27a}
 body.gta .app-row:hover{background:rgba(77,198,155,.07);border-color:rgba(77,198,155,.12)}
 body.gta .app-row.selected{background:linear-gradient(90deg,rgba(59,178,135,.18),rgba(239,165,104,.07));box-shadow:inset 3px 0 #60d3a3}
 body.gta .theme-picker-wrap{border-color:rgba(90,213,166,.45);box-shadow:inset 0 1px rgba(255,255,255,.03)}
+
+/* Theme polish v30 */
+.theme-picker-wrap{position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.035)}
+.theme-picker-wrap:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--forge-cyan),var(--forge-violet));opacity:.75}
+.theme-picker{cursor:pointer}.app-group{overflow:hidden}.app-group:before{content:"";display:block;height:1px;margin:-14px -12px 12px;background:linear-gradient(90deg,transparent,var(--forge-cyan),transparent);opacity:.18}
+.app-row:active{transform:translateX(3px) scale(.985)}.selection-bar{animation:themeBarIn .28s ease-out}@keyframes themeBarIn{from{transform:translateY(16px);opacity:0}}
+
+/* GTA V — Los Santos loading-screen inspired palette and skyline atmosphere */
+body.gta{--forge-cyan:#79a8c9;--forge-blue:#557fa8;--forge-violet:#c286a8;--forge-green:#50845d;--forge-amber:#e6b8a0;--bg:#18243a;--panel:#233653;--panel2:#2a4261;--text:#fff;--muted:#c3c8d5;--line:#58708d;background:linear-gradient(180deg,#d9a4bd 0%,#aa9fc0 18%,#7184aa 44%,#415a82 68%,#233651 100%);background-attachment:fixed}
+body.gta:before{opacity:1;background:
+ linear-gradient(90deg,transparent 0 5%,rgba(28,48,78,.70) 5% 9%,transparent 9% 15%,rgba(35,55,87,.68) 15% 19%,transparent 19% 26%,rgba(42,61,92,.65) 26% 31%,transparent 31% 68%,rgba(34,54,85,.64) 68% 75%,transparent 75% 82%,rgba(39,59,91,.67) 82% 88%,transparent 88%) bottom/100% 36% no-repeat,
+ linear-gradient(180deg,rgba(238,174,194,.26),rgba(77,100,145,.08) 52%,rgba(20,36,58,.52))}
+body.gta:after{opacity:.45;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px);background-size:100% 4px;mask-image:linear-gradient(to bottom,black,transparent 80%)}
+body.gta .hero{min-height:390px;align-items:center}
+body.gta .hero:before{width:540px;height:300px;right:2%;top:20px;border-radius:0;background:
+ linear-gradient(90deg,transparent 0 10%,rgba(28,49,80,.78) 10% 20%,transparent 20% 28%,rgba(34,54,87,.72) 28% 44%,transparent 44% 58%,rgba(38,57,89,.72) 58% 72%,transparent 72%) bottom/100% 78% no-repeat;filter:none;animation:none;opacity:.65}
+body.gta .hero:after{border:2px solid rgba(255,255,255,.22);background:linear-gradient(180deg,rgba(235,174,198,.10),rgba(37,57,88,.30));box-shadow:inset 0 0 80px rgba(29,45,72,.25)}
+body.gta .brandline strong{font-weight:900;text-transform:uppercase;letter-spacing:-.04em;text-shadow:3px 3px 0 rgba(23,35,56,.5)}
+body.gta .brandline span{color:#fff;border-color:rgba(255,255,255,.38);background:rgba(37,55,84,.4)}
+body.gta .hero-copy h1{font-weight:900;text-transform:none;text-shadow:4px 5px 0 rgba(25,36,56,.34),0 12px 35px rgba(21,31,49,.28)}
+body.gta .hero-copy h1 em{background:linear-gradient(180deg,#fff 0 57%,#e7edf5 58% 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:1px rgba(15,23,36,.28);filter:drop-shadow(3px 4px 0 #253650)}
+body.gta .hero-copy p{color:#eef1f7;text-shadow:0 2px 8px rgba(25,36,56,.55)}
+body.gta .hero-badges span{color:#fff;background:rgba(37,55,84,.62);border-color:rgba(255,255,255,.22)}
+body.gta .how-card,body.gta .workspace-top,body.gta .app-group,body.gta .trust-section,body.gta .selection-bar,body.gta .dialog-card{background:linear-gradient(180deg,rgba(40,60,91,.91),rgba(25,42,67,.94));border-color:rgba(255,255,255,.22);box-shadow:0 18px 48px rgba(19,29,48,.30),inset 0 1px rgba(255,255,255,.10)}
+body.gta .search-wrap,body.gta .platform-picker,body.gta .top-mini,body.gta .category-link,body.gta .preset-btn,body.gta .theme-picker-wrap{background:rgba(31,50,79,.86);border-color:rgba(255,255,255,.20)}
+body.gta .theme-picker{background:#263d60;color:#fff}
+body.gta .primary-btn,body.gta .platform-btn.active,body.gta .category-link.active{background:linear-gradient(180deg,#f3f3f3,#d9dce2);color:#17243a;border:2px solid #fff;box-shadow:0 0 0 2px #253650,4px 5px 0 rgba(25,38,61,.5);font-weight:900}
+body.gta .primary-btn:hover{background:#fff;color:#31527d;transform:translateY(-2px)}
+body.gta .app-group h2{color:#fff;font-weight:900;text-transform:uppercase;text-shadow:2px 2px 0 #243550;border-bottom-color:rgba(255,255,255,.22)}
+body.gta .app-row:hover{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.14)}
+body.gta .app-row.selected{background:linear-gradient(90deg,rgba(255,255,255,.18),rgba(117,144,183,.10));box-shadow:inset 4px 0 #fff}
+body.gta .app-info strong{font-weight:700;text-shadow:0 1px 2px rgba(16,27,45,.4)}
+body.gta .browser-scroll-list{scrollbar-color:rgba(255,255,255,.55) rgba(32,50,78,.5)}
+body.gta .theme-picker-wrap:after{background:linear-gradient(90deg,#fff,#dba7c0,#7890b4)}
