@@ -96,7 +96,6 @@
     ['Revolt','Messaging','revolt.chat',8,'url:https://revolt.chat/',130,['gaming','free']],
     ['Element','Messaging','element.io',9,'url:https://element.io/download',131,['privacy','free']],
     ['Mumble','Messaging','mumble.info',8,'url:https://www.mumble.info/downloads/',132,['gaming','free']],
-    ['TeamSpeak','Messaging','teamspeak.com',8,'url:https://www.teamspeak.com/en/downloads/',133,['gaming']],
     ['Guilded','Messaging','guilded.gg',8,'url:https://www.guilded.gg/downloads',134,['gaming','free']]
   ];
 
