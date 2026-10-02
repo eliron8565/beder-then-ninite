@@ -40,7 +40,7 @@
       'AI Browsers':'AI Browsers (Free)'
     };
     const options=[['all','All Browsers'],...browserCategories.map(c=>[c,labels[c]||c.replace(' Browsers','')])];
-    return `<section class="app-group browser-group"><div class="browser-group-head"><h2>Web Browsers</h2><select id="browserCategorySelect" class="browser-category-select">${options.map(([v,t])=>`<option value="${v}" ${browserView===v?'selected':''}>${t}</option>`).join('')}</select></div><div class="app-group-list">${shown.map(appCard).join('')}</div></section>`;
+    return `<section class="app-group browser-group"><div class="browser-group-head"><h2>Web Browsers</h2><select id="browserCategorySelect" class="browser-category-select">${options.map(([v,t])=>`<option value="${v}" ${browserView===v?'selected':''}>${t}</option>`).join('')}</select></div><div class="app-group-list browser-scroll-list">${shown.map(appCard).join('')}</div><div class="browser-scroll-hint">↕ Scroll for more browsers</div></section>`;
   }
 
   window.renderApps = function(){
@@ -74,6 +74,13 @@
     .browser-group-head h2{border:0!important;margin:0!important;padding:0!important}
     .browser-category-select{min-width:160px;height:32px;padding:0 30px 0 10px;border:1px solid rgba(105,226,255,.22);border-radius:9px;background:#0b1b2f;color:#f1f7fd;font:600 12px Inter,Segoe UI,sans-serif;outline:none;cursor:pointer}
     .browser-category-select:focus{border-color:rgba(105,226,255,.65);box-shadow:0 0 0 3px rgba(105,226,255,.08)}
+    .browser-scroll-list{max-height:360px;overflow-y:auto;overscroll-behavior:contain;padding-right:5px;scrollbar-width:thin;scrollbar-color:rgba(105,226,255,.45) rgba(8,17,30,.35)}
+    .browser-scroll-list::-webkit-scrollbar{width:7px}
+    .browser-scroll-list::-webkit-scrollbar-track{background:rgba(8,17,30,.35);border-radius:10px}
+    .browser-scroll-list::-webkit-scrollbar-thumb{background:rgba(105,226,255,.42);border-radius:10px}
+    .browser-scroll-list::-webkit-scrollbar-thumb:hover{background:rgba(105,226,255,.68)}
+    .browser-scroll-hint{text-align:center;color:#7895b2;font:600 10px Inter,Segoe UI,sans-serif;padding:7px 0 1px;opacity:.85}
+    @media(max-width:700px){.browser-scroll-list{max-height:320px}}
   `;
   document.head.appendChild(style);
 
