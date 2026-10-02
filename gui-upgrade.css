@@ -234,3 +234,41 @@ body.backrooms .selection-bar:before{content:"LEVEL 0 // INSTALL QUEUE // DO NOT
 body.backrooms .browser-scroll-list{scrollbar-color:#d4c575 #554f31}
 @keyframes backroomsFlicker{0%,7%,9%,52%,54%,100%{opacity:.78}8%,53%{opacity:.30}}
 @media(prefers-reduced-motion:reduce){body.backrooms .hero:before,body.backrooms .hero-copy h1:after{animation:none}}
+
+/* v34 — Backrooms redesign: clean liminal office, readable first */
+body.backrooms{--forge-cyan:#f2df78;--forge-blue:#a99b58;--forge-violet:#81764a;--forge-green:#d9cf8a;--forge-amber:#f7e78c;--bg:#c8bc72;--panel:#777047;--panel2:#625c39;--text:#fffbe1;--muted:#ded8ad;--line:#a69b61;background:
+linear-gradient(180deg,rgba(229,217,137,.94) 0 13%,rgba(191,179,105,.96) 13% 14%,rgba(154,144,84,.98) 14% 72%,rgba(107,100,59,1) 72% 100%);background-attachment:fixed}
+body.backrooms:before{opacity:1;background:
+linear-gradient(90deg,transparent 0 24%,rgba(73,68,40,.16) 24% 24.5%,transparent 24.5% 49%,rgba(73,68,40,.13) 49% 49.5%,transparent 49.5% 74%,rgba(73,68,40,.15) 74% 74.5%,transparent 74.5%),
+linear-gradient(0deg,transparent 0 71%,rgba(255,247,178,.12) 71% 72%,transparent 72%),
+repeating-linear-gradient(90deg,rgba(255,248,180,.045) 0 1px,transparent 1px 92px)}
+body.backrooms:after{opacity:.55;background:
+radial-gradient(ellipse 11% 3% at 16% 8%,rgba(255,255,218,.88),transparent 72%),
+radial-gradient(ellipse 11% 3% at 50% 8%,rgba(255,255,218,.78),transparent 72%),
+radial-gradient(ellipse 11% 3% at 84% 8%,rgba(255,255,218,.82),transparent 72%),
+linear-gradient(180deg,transparent 0 72%,rgba(57,53,31,.24) 72%);mask-image:none}
+body.backrooms .theme-fx{opacity:.35}
+body.backrooms .theme-fx i{display:none}
+body.backrooms .hero{min-height:auto}
+body.backrooms .hero:before{display:none}
+body.backrooms .hero:after{border:1px solid rgba(255,246,171,.32);background:rgba(86,80,47,.22);box-shadow:0 22px 70px rgba(54,50,29,.20),inset 0 1px rgba(255,249,196,.12)}
+body.backrooms .hero-copy h1{font-family:Inter,Arial,sans-serif;letter-spacing:-.045em;text-shadow:0 3px 18px rgba(54,49,27,.42)}
+body.backrooms .hero-copy h1 em{background:linear-gradient(90deg,#fff8bb,#ead878);-webkit-background-clip:text;background-clip:text;color:transparent;filter:none;-webkit-text-stroke:0}
+body.backrooms .hero-copy h1:after{height:3px;background:#f3e28a;box-shadow:0 0 14px rgba(255,241,153,.38);animation:none}
+body.backrooms .hero-copy:after{content:"LEVEL 0  /  SOFTWARE TERMINAL";margin-top:17px;padding:5px 8px;border:1px solid rgba(245,230,142,.42);background:rgba(69,65,39,.46);color:#f8e994;font:700 8px Consolas,monospace;letter-spacing:.12em}
+body.backrooms .how-card,body.backrooms .workspace-top,body.backrooms .app-group,body.backrooms .trust-section,body.backrooms .selection-bar,body.backrooms .dialog-card{border-radius:8px;background:linear-gradient(180deg,rgba(83,78,47,.91),rgba(64,60,37,.95));border:1px solid rgba(244,229,141,.23);box-shadow:0 14px 40px rgba(48,44,26,.22),inset 0 1px rgba(255,248,191,.07);clip-path:none}
+body.backrooms .workspace-top{border-top:2px solid rgba(244,229,141,.55)}
+body.backrooms .search-wrap,body.backrooms .platform-picker,body.backrooms .top-mini,body.backrooms .category-link,body.backrooms .preset-btn,body.backrooms .theme-picker-wrap{border-radius:6px;background:rgba(69,65,40,.86);border-color:rgba(221,207,126,.28)}
+body.backrooms .theme-picker{border-radius:4px;background:#514d30;color:#fff4ad}
+body.backrooms .primary-btn,body.backrooms .platform-btn.active,body.backrooms .category-link.active{border-radius:5px;background:linear-gradient(180deg,#efe18a,#cbbb68);color:#3e3922;border:1px solid #f9ec9c;box-shadow:0 5px 14px rgba(50,46,27,.22);font-weight:800}
+body.backrooms .primary-btn:hover{background:#fff0a1;box-shadow:0 7px 20px rgba(52,47,27,.28);transform:translateY(-2px)}
+body.backrooms .app-group{position:relative;border-left:2px solid rgba(235,219,132,.52)}
+body.backrooms .app-group:before{height:1px;margin:-14px -12px 11px;background:linear-gradient(90deg,transparent,#e7d77f,transparent);opacity:.4}
+body.backrooms .app-group:after{content:"LEVEL 0";right:9px;top:8px;color:rgba(247,232,143,.34);font:700 7px Consolas,monospace;letter-spacing:.1em}
+body.backrooms .app-group h2{color:#fff1a0;text-transform:none;font-family:Inter,Arial,sans-serif;letter-spacing:-.01em;text-shadow:none}
+body.backrooms .app-row{border-radius:5px}
+body.backrooms .app-row:hover{background:rgba(255,242,158,.075);border-color:rgba(245,230,142,.10);transform:translateX(3px)}
+body.backrooms .app-row:hover .app-icon{transform:scale(1.08);filter:none}
+body.backrooms .app-row.selected{background:rgba(240,221,121,.12);box-shadow:inset 3px 0 #f0dd79}
+body.backrooms .selection-bar:before{content:"LEVEL 0  •  INSTALL QUEUE";top:-17px;color:#f0dd79;font:700 8px Consolas,monospace;letter-spacing:.1em}
+body.backrooms .browser-scroll-list{scrollbar-color:#d7c875 #514c30}
