@@ -1,17 +1,16 @@
-// Optional Cyberpunk-inspired AppForge theme.
+// AppForge visual theme selector.
 (() => {
   const key='appforge-theme';
-  const button=document.querySelector('#cyberpunkToggle');
-  if(!button)return;
-  const apply=on=>{
-    document.body.classList.toggle('cyberpunk',on);
-    button.setAttribute('aria-pressed',String(on));
-    button.textContent=on?'⚡ DEFAULT':'⚡ CYBERPUNK';
+  const picker=document.querySelector('#themePicker');
+  if(!picker)return;
+  const themes=['cyberpunk','gta','minecraft','league','apex'];
+  const apply=value=>{
+    const theme=themes.includes(value)?value:'default';
+    document.body.classList.remove(...themes);
+    if(theme!=='default')document.body.classList.add(theme);
+    picker.value=theme;
+    localStorage.setItem(key,theme);
   };
-  apply(localStorage.getItem(key)==='cyberpunk');
-  button.addEventListener('click',()=>{
-    const on=!document.body.classList.contains('cyberpunk');
-    apply(on);
-    localStorage.setItem(key,on?'cyberpunk':'default');
-  });
+  apply(localStorage.getItem(key)||'default');
+  picker.addEventListener('change',()=>apply(picker.value));
 })();
