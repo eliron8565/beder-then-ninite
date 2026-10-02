@@ -54,7 +54,10 @@
     ['Minecraft Launcher','Minecraft','minecraft.net',10,'Mojang.MinecraftLauncher',104,['gaming','essentials']],
     ['Modrinth App','Minecraft','modrinth.com',10,'Modrinth.ModrinthApp',105,['gaming','mods','free']],
     ['XMCL','Minecraft','xmcl.app',8,'CI010.XMinecraftLauncher',106,['gaming','mods','free']],
-    ['Amulet Editor','Minecraft','amuletmc.com',8,'url:https://www.amuletmc.com/',107,['gaming','creator']]
+    ['Amulet Editor','Minecraft','amuletmc.com',8,'url:https://www.amuletmc.com/',107,['gaming','creator']],
+
+    // Discord alternative
+    ['Root','Messaging','rootapp.com',9,'url:https://www.rootapp.com/',108,['gaming','free']]
   ];
 
   for (const [name,category,domain,popular,windows,winIndex,tags] of extras) {
