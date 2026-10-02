@@ -17,3 +17,42 @@ body.cyberpunk .cyberpunk-toggle{border-radius:1px;background:#f7ef38;color:#090
 body.cyberpunk .cyberpunk-toggle:before{content:"MODE // "}
 body.cyberpunk .app-icon{filter:drop-shadow(2px 2px 0 rgba(0,240,255,.22))}
 @media(max-width:1050px){.cyberpunk-toggle{order:4}}
+
+.theme-picker-wrap{height:44px;display:flex;align-items:center;gap:7px;padding:0 8px 0 10px;border:1px solid rgba(105,226,255,.16);background:rgba(12,26,43,.78);border-radius:10px}.theme-picker-wrap>span{font:800 8px Inter,sans-serif;letter-spacing:.1em;color:#7895b2}.theme-picker{height:30px;max-width:150px;border:0;outline:0;background:#0b1b2f;color:#f1f7fd;font:700 10px Inter,sans-serif;border-radius:6px;padding:0 7px}
+
+/* GTA V inspired: sunset, city-night neon, street energy */
+body.gta{--forge-cyan:#48d8ff;--forge-blue:#288ee8;--forge-violet:#ff4fa7;--forge-green:#5de69a;--forge-amber:#ffb44a;--bg:#07121d;--panel:#102235;--panel2:#142a40;--line:#31536b;background:linear-gradient(180deg,#101426 0,#12213a 42%,#08131c 100%)}
+body.gta:before{opacity:1;background:radial-gradient(circle at 78% 4%,rgba(255,91,151,.30),transparent 25%),radial-gradient(circle at 20% 2%,rgba(255,170,73,.22),transparent 29%),linear-gradient(180deg,transparent 65%,rgba(24,110,94,.10))}
+body.gta .hero-copy h1 em{background:linear-gradient(90deg,#ffb34a,#ff5799,#4fdcff);-webkit-background-clip:text;background-clip:text;color:transparent}
+body.gta .primary-btn,body.gta .platform-btn.active,body.gta .category-link.active{background:linear-gradient(135deg,#ff5c9c,#f29b4b);box-shadow:0 8px 25px rgba(255,75,143,.22)}
+body.gta .app-row.selected{box-shadow:inset 3px 0 #55e5cf;background:linear-gradient(90deg,rgba(255,74,145,.16),rgba(74,215,255,.06))}
+
+/* Minecraft inspired: blocky grass/stone UI without game assets */
+body.minecraft{--forge-cyan:#72d86b;--forge-blue:#4c9b48;--forge-violet:#8d6b45;--forge-green:#7de36d;--forge-amber:#e8d477;--bg:#111811;--panel:#1a2519;--panel2:#243222;--line:#486044;background:#111811}
+body.minecraft:before{opacity:.38;background-image:linear-gradient(90deg,rgba(123,88,54,.13) 1px,transparent 1px),linear-gradient(rgba(99,153,78,.14) 1px,transparent 1px);background-size:32px 32px}
+body.minecraft .hero:after,body.minecraft .how-card,body.minecraft .workspace-top,body.minecraft .app-group,body.minecraft .trust-section,body.minecraft .selection-bar,body.minecraft .dialog-card,body.minecraft .search-wrap,body.minecraft .category-link,body.minecraft .preset-btn,body.minecraft .primary-btn{border-radius:2px}
+body.minecraft .hero-copy h1 em{background:linear-gradient(#9be26f 0 48%,#6fa34d 48% 58%,#98704a 58%);-webkit-background-clip:text;background-clip:text;color:transparent}
+body.minecraft .primary-btn,body.minecraft .platform-btn.active,body.minecraft .category-link.active{background:#65b957;border:2px solid #9be083;box-shadow:inset 0 -4px rgba(0,0,0,.25),4px 4px 0 rgba(0,0,0,.25)}
+body.minecraft .app-group h2{color:#9be083;text-shadow:2px 2px #20321d}
+body.minecraft .app-row.selected{background:#263d24;box-shadow:inset 4px 0 #82d66e}
+
+/* League inspired: dark blue, gold, arcane elegance */
+body.league{--forge-cyan:#0ac8b9;--forge-blue:#0a96aa;--forge-violet:#6b5ba8;--forge-green:#4fd4b2;--forge-amber:#c99b3d;--bg:#050d15;--panel:#091826;--panel2:#0d2030;--line:#24485c;background:radial-gradient(circle at 50% -20%,#12354b 0,transparent 38%),#050d15}
+body.league:before{opacity:.7;background:radial-gradient(circle at 50% 0,rgba(201,155,61,.12),transparent 28%)}
+body.league .hero-copy h1 em{background:linear-gradient(90deg,#c8943d,#f0e6b1,#0ac8b9);-webkit-background-clip:text;background-clip:text;color:transparent}
+body.league .how-card,body.league .workspace-top,body.league .app-group,body.league .trust-section,body.league .selection-bar,body.league .dialog-card{border-color:rgba(201,155,61,.27);box-shadow:0 16px 50px rgba(0,0,0,.32),inset 0 0 0 1px rgba(10,200,185,.035)}
+body.league .primary-btn,body.league .platform-btn.active,body.league .category-link.active{background:linear-gradient(135deg,#8d6829,#d3aa55);color:#07111a;box-shadow:0 8px 25px rgba(201,155,61,.18)}
+body.league .app-group h2{color:#d5ad59}
+body.league .app-row.selected{background:linear-gradient(90deg,rgba(10,200,185,.15),rgba(201,155,61,.07));box-shadow:inset 2px 0 #c99b3d}
+
+/* Apex inspired: red, white, black, angular tactical UI */
+body.apex{--forge-cyan:#e44b43;--forge-blue:#c93d36;--forge-violet:#8c2525;--forge-green:#e8c9a5;--forge-amber:#ffcc8b;--bg:#0d0e0e;--panel:#171818;--panel2:#202121;--text:#f1eee8;--muted:#aaa7a0;--line:#493331;background:#0d0e0e}
+body.apex:before{opacity:.5;background:linear-gradient(120deg,transparent 0 62%,rgba(201,61,54,.11) 62% 68%,transparent 68%),repeating-linear-gradient(90deg,transparent 0 79px,rgba(255,255,255,.018) 80px)}
+body.apex .hero:after,body.apex .how-card,body.apex .workspace-top,body.apex .app-group,body.apex .trust-section,body.apex .selection-bar,body.apex .dialog-card{border-radius:1px;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
+body.apex .hero-copy h1 em{background:linear-gradient(90deg,#f0ede5,#e34b43);-webkit-background-clip:text;background-clip:text;color:transparent}
+body.apex .primary-btn,body.apex .platform-btn.active,body.apex .category-link.active{border-radius:1px;background:#cf413a;color:#fff;box-shadow:4px 4px 0 #38201e}
+body.apex .app-group h2{color:#e85a50;text-transform:uppercase;letter-spacing:.06em}
+body.apex .app-row.selected{background:rgba(207,65,58,.16);box-shadow:inset 3px 0 #e85a50}
+
+body.gta .theme-picker-wrap,body.minecraft .theme-picker-wrap,body.league .theme-picker-wrap,body.apex .theme-picker-wrap,body.cyberpunk .theme-picker-wrap{border-color:var(--forge-cyan)}
+@media(max-width:760px){.theme-picker-wrap{width:100%;justify-content:space-between}.theme-picker{max-width:none;flex:1}}
