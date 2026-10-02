@@ -101,7 +101,9 @@
     ['LocalSend','Utilities','localsend.org',9,'LocalSend.LocalSend',136,['essentials','free']],
     ['Ventoy','Utilities','ventoy.net',9,'Ventoy.Ventoy',137,['developer','free']],
     ['Moonlight','Gaming','moonlight-stream.org',9,'MoonlightGameStreamingProject.Moonlight',138,['gaming','free']],
-    ['RetroArch','Gaming','retroarch.com',9,'Libretro.RetroArch',139,['gaming','free']]
+    ['RetroArch','Gaming','retroarch.com',9,'Libretro.RetroArch',139,['gaming','free']],
+    ['EarTrumpet','Utilities','eartrumpet.app',9,'File-New-Project.EarTrumpet',140,['essentials','free']],
+    ['SoundSwitch','Utilities','soundswitch.aaflalo.me',9,'AntoineAflalo.SoundSwitch',141,['essentials','free']]
   ];
 
   for (const [name,category,domain,popular,windows,winIndex,tags] of extras) {
