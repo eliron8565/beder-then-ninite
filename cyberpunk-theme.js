@@ -3,7 +3,7 @@
   const key='appforge-theme';
   const picker=document.querySelector('#themePicker');
   if(!picker)return;
-  const themes=['cyberpunk','gta','minecraft','league','apex'];
+  const themes=['cyberpunk','gta','minecraft','league','apex','backrooms'];
   const apply=value=>{
     const theme=themes.includes(value)?value:'default';
     document.body.classList.remove(...themes);
