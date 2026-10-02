@@ -156,3 +156,41 @@ body.apex .selection-bar:before{content:"LOADOUT // APP INSTALLATION";position:a
 /* Theme transition */
 body,body:before,.workspace-top,.hero:after,.how-card,.app-group,.app-row,.primary-btn,.category-link,.preset-btn,.selection-bar,.dialog-card{transition:background .28s ease,border-color .28s ease,color .2s ease,box-shadow .28s ease,transform .16s ease}
 @media(max-width:760px){body.cyberpunk .app-group:after,body.gta .app-group:after,body.minecraft .app-group:after,body.league .app-group:after,body.apex .app-group:after{display:none}}
+
+/* v32 ULTRA — immersive, reactive, theme-specific presentation */
+:root{--mx:50%;--my:30%}.theme-fx{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}.theme-fx i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.13;will-change:transform}.theme-fx i:nth-child(1){width:36vw;height:36vw;left:calc(var(--mx) - 18vw);top:calc(var(--my) - 18vw);background:var(--forge-cyan);transition:left .5s ease-out,top .5s ease-out}.theme-fx i:nth-child(2){width:28vw;height:28vw;right:-8vw;top:10vh;background:var(--forge-violet);animation:fxFloat 9s ease-in-out infinite}.theme-fx i:nth-child(3){width:32vw;height:32vw;left:-10vw;bottom:-12vw;background:var(--forge-blue);animation:fxFloat 12s ease-in-out infinite reverse}@keyframes fxFloat{50%{transform:translate(4vw,-3vh) scale(1.12)}}.theme-switching .workspace{animation:themeReveal .42s cubic-bezier(.2,.8,.2,1)}@keyframes themeReveal{0%{opacity:.35;filter:blur(5px);transform:scale(.992)}100%{opacity:1;filter:none;transform:none}}
+.app-group{box-shadow:0 14px 34px rgba(0,0,0,.08)}.app-group:hover{box-shadow:0 22px 55px rgba(0,0,0,.22)}.app-row{position:relative}.app-row:after{content:"";position:absolute;left:7px;right:7px;bottom:0;height:1px;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg,var(--forge-cyan),transparent);transition:transform .2s}.app-row:hover:after{transform:scaleX(1)}.app-icon{transition:.18s}.app-row:hover .app-icon{transform:scale(1.12) rotate(-2deg)}.hero-copy h1{position:relative}.hero-copy h1:after{content:"";display:block;width:74px;height:4px;margin-top:18px;background:linear-gradient(90deg,var(--forge-cyan),var(--forge-violet));box-shadow:0 0 18px var(--forge-cyan)}.primary-btn{position:relative;overflow:hidden}.primary-btn:after{content:"";position:absolute;inset:-80% -30%;background:linear-gradient(110deg,transparent 38%,rgba(255,255,255,.28) 50%,transparent 62%);transform:translateX(-80%);transition:.5s}.primary-btn:hover:after{transform:translateX(80%)}
+
+/* Cyberpunk ultra HUD */
+body.cyberpunk .theme-fx{background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,240,255,.015) 4px)}
+body.cyberpunk .workspace-top:after{content:"NET // ONLINE  •  BUILD 2077";position:absolute;right:12px;bottom:-14px;color:#00f0ff;font:700 7px Consolas;letter-spacing:.14em}
+body.cyberpunk .app-group:hover{box-shadow:8px 8px 0 rgba(255,42,157,.12),-3px -3px 0 rgba(0,240,255,.10)}
+body.cyberpunk .app-row:hover .app-info strong{text-shadow:2px 0 #ff2a9d,-2px 0 #00f0ff}
+
+/* GTA V ultra loading-screen atmosphere */
+body.gta .theme-fx i{filter:blur(90px);opacity:.16}body.gta .theme-fx i:nth-child(1){background:#f1b0c8}body.gta .theme-fx i:nth-child(2){background:#738bb7}
+body.gta .hero-copy:after{content:"LOS SANTOS • SAN ANDREAS";display:inline-block;margin-top:18px;padding:6px 9px;background:#fff;color:#243653;font:900 8px Inter;letter-spacing:.13em;box-shadow:3px 3px 0 #263957}
+body.gta .app-group:hover{box-shadow:7px 8px 0 rgba(31,48,75,.30),0 24px 55px rgba(27,40,64,.22)}
+body.gta .app-row:hover .app-icon{transform:scale(1.15) rotate(-4deg)}
+
+/* Minecraft ultra block-world UI */
+body.minecraft .theme-fx{background:linear-gradient(transparent 70%,rgba(72,105,56,.08) 70%),repeating-linear-gradient(90deg,transparent 0 31px,rgba(0,0,0,.05) 32px)}
+body.minecraft .theme-fx i{filter:none;border-radius:0;opacity:.06;width:96px!important;height:96px!important}
+body.minecraft .hero-copy:after{content:"◼ ◼ ◼  APPFORGE WORKBENCH  ◼ ◼ ◼";display:inline-block;margin-top:15px;padding:7px 10px;background:#263d24;border:2px solid #74bd5e;color:#b9ec9f;font:900 8px Inter;letter-spacing:.08em;box-shadow:4px 4px #101b0f}
+body.minecraft .app-row:hover .app-icon{transform:translateY(-2px) scale(1.08);image-rendering:auto}
+body.minecraft .primary-btn:after{display:none}
+
+/* League ultra fantasy-client feel */
+body.league .theme-fx i{opacity:.09}body.league .theme-fx i:nth-child(1){background:#0ac8b9}body.league .theme-fx i:nth-child(2){background:#c99b3d}
+body.league .hero-copy:after{content:"◇  APPFORGE COLLECTION  ◇";display:inline-block;margin-top:18px;color:#d8b45f;font:700 9px Georgia,serif;letter-spacing:.18em}
+body.league .app-group:hover{box-shadow:0 0 0 1px rgba(201,155,61,.25),0 20px 60px rgba(0,0,0,.35),inset 0 0 30px rgba(10,200,185,.035)}
+body.league .app-icon{filter:drop-shadow(0 0 6px rgba(10,200,185,.18))}
+
+/* Apex ultra tactical loadout */
+body.apex .theme-fx{background:repeating-linear-gradient(135deg,transparent 0 100px,rgba(207,65,58,.025) 101px 103px)}
+body.apex .hero-copy:after{content:"///  LOADOUT TERMINAL  //  ONLINE";display:inline-block;margin-top:16px;color:#e85a50;font:900 8px Inter;letter-spacing:.16em}
+body.apex .app-group:hover{transform:translateY(-3px);box-shadow:8px 8px 0 rgba(207,65,58,.12),0 20px 50px rgba(0,0,0,.3)}
+body.apex .app-row:hover .app-icon{transform:translateX(3px) scale(1.1)}
+
+@media(prefers-reduced-motion:reduce){.theme-fx i,.theme-switching .workspace{animation:none!important}.theme-fx i:nth-child(1){transition:none}}
+@media(max-width:760px){.theme-fx i{opacity:.07}.hero-copy:after{font-size:7px!important;max-width:100%}}
