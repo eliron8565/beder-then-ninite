@@ -99,7 +99,9 @@
     ['Guilded','Messaging','guilded.gg',8,'url:https://www.guilded.gg/downloads',134,['gaming','free']],
     ['Anki','Documents & Office','apps.ankiweb.net',9,'Anki.Anki',135,['student','free']],
     ['LocalSend','Utilities','localsend.org',9,'LocalSend.LocalSend',136,['essentials','free']],
-    ['Ventoy','Utilities','ventoy.net',9,'Ventoy.Ventoy',137,['developer','free']]
+    ['Ventoy','Utilities','ventoy.net',9,'Ventoy.Ventoy',137,['developer','free']],
+    ['Moonlight','Gaming','moonlight-stream.org',9,'MoonlightGameStreamingProject.Moonlight',138,['gaming','free']],
+    ['RetroArch','Gaming','retroarch.com',9,'Libretro.RetroArch',139,['gaming','free']]
   ];
 
   for (const [name,category,domain,popular,windows,winIndex,tags] of extras) {
