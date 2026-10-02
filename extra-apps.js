@@ -57,7 +57,47 @@
     ['Amulet Editor','Minecraft','amuletmc.com',8,'url:https://www.amuletmc.com/',107,['gaming','creator']],
 
     // Discord alternative
-    ['Root','Messaging','rootapp.com',9,'url:https://www.rootapp.com/',108,['gaming','free']]
+    ['Root','Messaging','rootapp.com',9,'url:https://www.rootapp.com/',108,['gaming','free']],
+
+    // Minecraft / modding
+    ['CurseForge','Minecraft','curseforge.com',10,'Overwolf.CurseForge',109,['gaming','mods']],
+    ['Fabric','Minecraft','fabricmc.net',9,'url:https://fabricmc.net/use/installer/',110,['gaming','mods','developer','free']],
+    ['NeoForge','Minecraft','neoforged.net',8,'url:https://neoforged.net/',111,['gaming','mods','developer','free']],
+    ['Aseprite','Design & Imaging','aseprite.org',8,'url:https://www.aseprite.org/',112,['creator']],
+
+    // Gaming launchers
+    ['EA app','Gaming','ea.com/ea-app',9,'ElectronicArts.EADesktop',113,['gaming']],
+    ['Ubisoft Connect','Gaming','ubisoftconnect.com',9,'Ubisoft.Connect',114,['gaming']],
+    ['GOG GALAXY','Gaming','gog.com/galaxy',9,'GOG.Galaxy',115,['gaming']],
+    ['Playnite','Gaming','playnite.link',9,'Playnite.Playnite',116,['gaming','free']],
+
+    // Gaming performance
+    ['MSI Afterburner','Gaming','msi.com/Landing/afterburner',9,'url:https://www.msi.com/Landing/afterburner/graphics-cards',117,['gaming']],
+
+    // Cybersecurity
+    ['Wireshark','Security','wireshark.org',10,'WiresharkFoundation.Wireshark',118,['security','developer','student']],
+    ['Nmap','Security','nmap.org',10,'Insecure.Nmap',119,['security','developer','student']],
+    ['VirtualBox','Development','virtualbox.org',9,'Oracle.VirtualBox',120,['developer','student']],
+    ['Burp Suite Community','Security','portswigger.net/burp/communitydownload',10,'PortSwigger.BurpSuite.Community',121,['security','developer','student','free']],
+    ['OWASP ZAP','Security','zaproxy.org',9,'url:https://www.zaproxy.org/download/',122,['security','developer','student','free']],
+
+    // AI image workflows
+    ['ComfyUI','AI & Local Models','comfy.org',9,'url:https://www.comfy.org/download',123,['ai','creator','free']],
+
+    // Content creation / game development
+    ['DaVinci Resolve','Media','blackmagicdesign.com/products/davinciresolve',10,'url:https://www.blackmagicdesign.com/products/davinciresolve',124,['creator','free']],
+    ['CapCut','Media','capcut.com',9,'url:https://www.capcut.com/tools/desktop-video-editor',125,['creator']],
+    ['Kdenlive','Media','kdenlive.org',9,'url:https://kdenlive.org/download/',126,['creator','free']],
+    ['Godot','Development','godotengine.org',10,'url:https://godotengine.org/download/',127,['developer','creator','free']],
+    ['Unreal Engine','Development','unrealengine.com',10,'url:https://www.unrealengine.com/download',128,['developer','creator','gaming']],
+    ['Unity Hub','Development','unity.com/download',10,'url:https://unity.com/download',129,['developer','creator','gaming']],
+
+    // Messaging / Discord alternatives
+    ['Revolt','Messaging','revolt.chat',8,'url:https://revolt.chat/',130,['gaming','free']],
+    ['Element','Messaging','element.io',9,'url:https://element.io/download',131,['privacy','free']],
+    ['Mumble','Messaging','mumble.info',8,'url:https://www.mumble.info/downloads/',132,['gaming','free']],
+    ['TeamSpeak','Messaging','teamspeak.com',8,'url:https://www.teamspeak.com/en/downloads/',133,['gaming']],
+    ['Guilded','Messaging','guilded.gg',8,'url:https://www.guilded.gg/downloads',134,['gaming','free']]
   ];
 
   for (const [name,category,domain,popular,windows,winIndex,tags] of extras) {
