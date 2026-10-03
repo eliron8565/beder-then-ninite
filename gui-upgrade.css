@@ -292,3 +292,60 @@ body.apex .app-group-list{scrollbar-color:#cf413a66 transparent}
 body.backrooms .app-group-list{scrollbar-color:#d7c87566 transparent}
 @media(max-width:1100px){.app-group{height:370px;min-height:370px;max-height:370px}}
 @media(max-width:760px){.app-group{height:340px;min-height:340px;max-height:340px}}
+
+/* v36 — APEX OVERDRIVE: original tactical arena UI */
+body.apex{--apex-red:#ef3d32;--apex-hot:#ff675d;--apex-ink:#090b0d;--apex-steel:#171b1f;--apex-paper:#e9e5dc;--apex-line:#596168;background:
+radial-gradient(circle at 78% 18%,rgba(239,61,50,.14),transparent 23%),
+linear-gradient(125deg,#07090b 0 52%,#111519 52% 100%);color:#f4f1e9}
+body.apex:before{opacity:1;background:
+linear-gradient(115deg,transparent 0 64%,rgba(239,61,50,.08) 64% 64.4%,transparent 64.4%),
+repeating-linear-gradient(135deg,transparent 0 68px,rgba(255,255,255,.018) 69px 70px),
+linear-gradient(90deg,rgba(239,61,50,.025) 1px,transparent 1px),
+linear-gradient(rgba(239,61,50,.018) 1px,transparent 1px);background-size:auto,auto,54px 54px,54px 54px}
+body.apex:after{opacity:.8;background:
+linear-gradient(115deg,transparent 0 76%,rgba(239,61,50,.13) 76% 77%,transparent 77%),
+linear-gradient(115deg,transparent 0 82%,rgba(233,229,220,.035) 82% 86%,transparent 86%);mask-image:none}
+body.apex .theme-fx i:nth-child(1){background:#ef3d32;opacity:.14;filter:blur(95px)}
+body.apex .theme-fx i:nth-child(2){background:#e9e5dc;opacity:.035}
+body.apex .theme-fx i:nth-child(3){background:#ef3d32;opacity:.07}
+body.apex .topbar{background:rgba(8,10,12,.88);border-bottom:1px solid rgba(239,61,50,.30);box-shadow:0 12px 35px rgba(0,0,0,.30);backdrop-filter:blur(18px)}
+body.apex .brand-mark{clip-path:polygon(12% 0,100% 0,88% 100%,0 100%);background:linear-gradient(135deg,#f34a3f,#b71f1a);box-shadow:0 0 22px rgba(239,61,50,.28)}
+body.apex .brand-text strong{letter-spacing:.08em;text-transform:uppercase}
+body.apex .hero{position:relative;isolation:isolate}
+body.apex .hero:before{content:"";display:block;position:absolute;z-index:-1;right:1%;top:5%;width:38%;height:86%;opacity:.52;filter:none;border-radius:0;background:
+linear-gradient(145deg,transparent 0 18%,rgba(239,61,50,.82) 18% 19.5%,transparent 19.5% 31%,rgba(239,61,50,.22) 31% 33%,transparent 33%),
+linear-gradient(35deg,transparent 0 56%,rgba(233,229,220,.10) 56% 57%,transparent 57%);clip-path:polygon(25% 0,100% 0,78% 100%,0 100%)}
+body.apex .hero:after{content:"APF // DROP 01";position:absolute;right:5%;bottom:12%;width:auto;height:auto;border:0;background:none;color:rgba(233,229,220,.18);font:900 clamp(30px,5vw,74px)/.8 Inter,sans-serif;letter-spacing:-.08em;transform:rotate(-90deg) translateX(35%);box-shadow:none}
+body.apex .hero-copy h1{font-style:italic;text-transform:uppercase;letter-spacing:-.065em;line-height:.86;text-shadow:5px 5px 0 rgba(0,0,0,.36)}
+body.apex .hero-copy h1 em{background:linear-gradient(90deg,#ff665b,#ef3d32 70%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:0}
+body.apex .hero-copy h1:after{width:118px;height:7px;margin-top:23px;background:linear-gradient(90deg,#ef3d32 0 72%,transparent 72% 78%,#e9e5dc 78%);box-shadow:none;clip-path:polygon(0 0,100% 0,92% 100%,0 100%)}
+body.apex .hero-copy:after{content:"///  APPFORGE DEPLOYMENT SYSTEM  •  READY";padding:7px 12px;margin-top:15px;display:inline-block;background:#e9e5dc;color:#111416;font:900 8px Inter,sans-serif;letter-spacing:.14em;clip-path:polygon(0 0,100% 0,95% 100%,0 100%)}
+body.apex .hero-sub{max-width:650px;color:#b8bec2}
+body.apex .how-card,body.apex .workspace-top,body.apex .app-group,body.apex .trust-section,body.apex .selection-bar,body.apex .dialog-card{border-radius:2px;background:linear-gradient(155deg,rgba(24,28,32,.96),rgba(9,11,13,.98));border:1px solid rgba(116,125,132,.18);box-shadow:8px 10px 0 rgba(0,0,0,.15),0 20px 55px rgba(0,0,0,.30);clip-path:polygon(0 0,calc(100% - 13px) 0,100% 13px,100% 100%,10px 100%,0 calc(100% - 10px))}
+body.apex .app-group{border-left:3px solid #ef3d32}
+body.apex .app-group:before{height:2px;margin:-14px -12px 11px;background:linear-gradient(90deg,#ef3d32 0 26%,rgba(239,61,50,.08) 26% 100%)}
+body.apex .app-group:after{content:"LOADOUT";position:absolute;right:13px;top:9px;color:rgba(239,61,50,.42);font:900 7px Inter,sans-serif;letter-spacing:.16em}
+body.apex .app-group h2{text-transform:uppercase;font-style:italic;letter-spacing:.035em;color:#f4f1e9}
+body.apex .app-row{border-radius:1px;border-left:2px solid transparent;transition:transform .14s ease,background .14s ease,border .14s ease}
+body.apex .app-row:hover{background:linear-gradient(90deg,rgba(239,61,50,.15),rgba(239,61,50,.025));border-left-color:#ef3d32;transform:translateX(5px)}
+body.apex .app-row:after{height:1px;background:linear-gradient(90deg,#ef3d32,transparent)}
+body.apex .app-row:hover .app-icon{transform:scale(1.13) rotate(-3deg);filter:drop-shadow(0 0 7px rgba(239,61,50,.32))}
+body.apex .app-row.selected{background:linear-gradient(90deg,rgba(239,61,50,.22),rgba(239,61,50,.045));box-shadow:inset 3px 0 #ff5d52}
+body.apex .search-wrap,body.apex .platform-picker,body.apex .top-mini,body.apex .category-link,body.apex .preset-btn,body.apex .theme-picker-wrap{border-radius:1px;background:rgba(13,16,18,.92);border-color:rgba(121,130,136,.23);clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%)}
+body.apex .search-wrap:focus-within{border-color:#ef3d32;box-shadow:0 0 0 1px rgba(239,61,50,.28),0 0 28px rgba(239,61,50,.08)}
+body.apex .theme-picker{background:#111518;color:#eeeae2;border-radius:0}
+body.apex .primary-btn,body.apex .platform-btn.active,body.apex .category-link.active{border-radius:0;background:#ef3d32;color:#fff;border:0;box-shadow:5px 5px 0 #741713;text-transform:uppercase;font-style:italic;font-weight:900;letter-spacing:.04em;clip-path:polygon(7px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+body.apex .primary-btn:hover{background:#ff5c51;transform:translate(-2px,-2px);box-shadow:8px 8px 0 #741713}
+body.apex .primary-btn:after{background:linear-gradient(110deg,transparent 38%,rgba(255,255,255,.34) 50%,transparent 62%)}
+body.apex .selection-bar{border-top:2px solid #ef3d32}
+body.apex .selection-bar:before{content:"/// LOADOUT QUEUE  •  DEPLOY WHEN READY";position:absolute;top:-19px;left:18px;color:#ff5c51;font:900 8px Inter,sans-serif;letter-spacing:.13em}
+body.apex .app-group-list{scrollbar-color:#ef3d32 #111416}
+body.apex .app-group-list::-webkit-scrollbar-thumb{background:#ef3d32;border-radius:0}
+body.apex .app-group-list::-webkit-scrollbar-track{background:#111416}
+body.apex .workspace-top{position:relative;border-top:2px solid #ef3d32}
+body.apex .workspace-top:after{content:"SECTOR // ONLINE   01";position:absolute;right:15px;top:10px;color:rgba(239,61,50,.38);font:900 7px Inter,sans-serif;letter-spacing:.15em}
+body.apex .trust-section{position:relative;overflow:hidden}
+body.apex .trust-section:after{content:"/// VERIFIED DEPLOYMENT";position:absolute;right:-28px;bottom:18px;color:rgba(239,61,50,.10);font:900 24px Inter,sans-serif;letter-spacing:-.04em;transform:rotate(-8deg)}
+body.apex .how-card:hover,body.apex .app-group:hover{transform:translateY(-4px);border-color:rgba(239,61,50,.35);box-shadow:9px 10px 0 rgba(239,61,50,.09),0 25px 65px rgba(0,0,0,.38)}
+@media(max-width:760px){body.apex .hero:before,body.apex .hero:after,body.apex .workspace-top:after{display:none}body.apex .hero-copy h1{line-height:.95}body.apex .app-group{clip-path:none}}
+@media(prefers-reduced-motion:no-preference){body.apex .brand-mark{animation:apexPulse 3.2s ease-in-out infinite}@keyframes apexPulse{50%{box-shadow:0 0 34px rgba(239,61,50,.45)}}}
