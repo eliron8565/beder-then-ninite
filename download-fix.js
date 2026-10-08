@@ -61,13 +61,13 @@
     }).filter(Boolean).join(' ');
     const lines=['native_done=0','if false; then :; '+nativeLines+'; fi'];
     if(ids.length){
-      lines.push('if command -v flatpak >/dev/null 2>&1; then');
+      lines.push('if [ "$native_done" -eq 0 ] && command -v flatpak >/dev/null 2>&1; then');
       lines.push('flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo && flatpak install --user -y flathub '+ids.map(quote).join(' '));
       lines.push('elif [ "$native_done" -eq 0 ]; then echo "No supported package manager found. Install Flatpak: https://flatpak.org/setup/"; fi');
     }else{
       lines.push('if [ "$native_done" -eq 0 ]; then echo "No compatible native package manager found."; fi');
     }
-    return lines.join('\\n');
+    return lines.join('; ');
   }
   function commandFor(chosen){if(platform==='windows'){const ids=chosen.map(a=>a.pkg.windows).filter(v=>v&&!String(v).startsWith('url:'));return ids.map(id=>`winget install --id "${id}" -e --silent --accept-package-agreements --accept-source-agreements --disable-interactivity`).join(' ; ')}if(platform==='linux')return linuxCommand(chosen);const pkgs=chosen.map(a=>a.pkg.mac).filter(Boolean),f=pkgs.filter(p=>p.type==='formula').map(p=>p.id),c=pkgs.filter(p=>p.type==='cask').map(p=>p.id),parts=[];if(f.length)parts.push(`brew install ${f.map(x=>`"${x}"`).join(' ')}`);if(c.length)parts.push(`brew install --cask ${c.map(x=>`"${x}"`).join(' ')}`);return parts.join(' ; ')}
   function refreshCommand(){const box=document.querySelector('#installCommand'),hint=document.querySelector('#commandHint');if(!box)return;const chosen=availableApps().filter(a=>selected.has(a.key)),cmd=commandFor(chosen);const mgr=document.querySelector('#linuxManagerWrap');if(mgr)mgr.style.display='none';box.textContent=cmd||'No compatible packages found for this manager. Try Flatpak or select another app.';if(hint)hint.textContent=platform==='windows'?'Runs with Windows Package Manager (winget).':platform==='linux'?'Runs with the selected Linux package manager. Only supported packages are included.':'Runs with Homebrew.'}
