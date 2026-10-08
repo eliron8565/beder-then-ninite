@@ -47,20 +47,30 @@
     'obs':{apt:'obs-studio',dnf:'obs-studio',pacman:'obs-studio',zypper:'obs-studio'}
   };
   function linuxCommand(chosen){
-    const manager=document.querySelector('#linuxPackageManager')?.value||'flatpak';
-    if(manager!=='flatpak'){
-      const names=[...new Set(chosen.map(a=>linuxNative[a.key]?.[manager]).filter(Boolean))];
-      if(!names.length)return '';
-      const args=names.map(n=>"'"+n+"'").join(' ');
-      const cmd={apt:'sudo apt update && sudo apt install -y ',dnf:'sudo dnf install -y ',pacman:'sudo pacman -S --needed --noconfirm ',zypper:'sudo zypper install -y '}[manager];
-      return cmd+args;
-    }
     const ids=[...new Set(chosen.map(a=>a.pkg.linux).filter(v=>typeof v==='string'&&/^[a-zA-Z0-9_-]+(?:\\.[a-zA-Z0-9_-]+)+$/.test(v)))];
-    if(!ids.length)return '';
-    return "flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo && flatpak install --user -y flathub "+ids.map(id=>"'"+id+"'").join(' ');
+    const candidates=['apt','dnf','pacman','zypper'];
+    const mappings=Object.fromEntries(candidates.map(m=>[m,[...new Set(chosen.map(a=>linuxNative[a.key]?.[m]).filter(Boolean))]]));
+    if(!ids.length&&!candidates.some(m=>mappings[m].length))return '';
+    const quote=v=>"'"+v.replace(/'/g,"'\\''")+"'";
+    const nativeLines=candidates.map(m=>{
+      const names=mappings[m];if(!names.length)return '';
+      const args=names.map(quote).join(' ');
+      const command={apt:'sudo apt-get update && sudo apt-get install -y ',dnf:'sudo dnf install -y ',pacman:'sudo pacman -S --needed --noconfirm ',zypper:'sudo zypper install -y '}[m]+args;
+      const detector={apt:'apt-get',dnf:'dnf',pacman:'pacman',zypper:'zypper'}[m];
+      return 'elif command -v '+detector+' >/dev/null 2>&1; then '+command+'; native_done=1';
+    }).filter(Boolean).join(' ');
+    const lines=['native_done=0','if false; then :; '+nativeLines+'; fi'];
+    if(ids.length){
+      lines.push('if command -v flatpak >/dev/null 2>&1; then');
+      lines.push('flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo && flatpak install --user -y flathub '+ids.map(quote).join(' '));
+      lines.push('elif [ "$native_done" -eq 0 ]; then echo "No supported package manager found. Install Flatpak: https://flatpak.org/setup/"; fi');
+    }else{
+      lines.push('if [ "$native_done" -eq 0 ]; then echo "No compatible native package manager found."; fi');
+    }
+    return lines.join('\\n');
   }
   function commandFor(chosen){if(platform==='windows'){const ids=chosen.map(a=>a.pkg.windows).filter(v=>v&&!String(v).startsWith('url:'));return ids.map(id=>`winget install --id "${id}" -e --silent --accept-package-agreements --accept-source-agreements --disable-interactivity`).join(' ; ')}if(platform==='linux')return linuxCommand(chosen);const pkgs=chosen.map(a=>a.pkg.mac).filter(Boolean),f=pkgs.filter(p=>p.type==='formula').map(p=>p.id),c=pkgs.filter(p=>p.type==='cask').map(p=>p.id),parts=[];if(f.length)parts.push(`brew install ${f.map(x=>`"${x}"`).join(' ')}`);if(c.length)parts.push(`brew install --cask ${c.map(x=>`"${x}"`).join(' ')}`);return parts.join(' ; ')}
-  function refreshCommand(){const box=document.querySelector('#installCommand'),hint=document.querySelector('#commandHint');if(!box)return;const chosen=availableApps().filter(a=>selected.has(a.key)),cmd=commandFor(chosen);const mgr=document.querySelector('#linuxManagerWrap');if(mgr)mgr.style.display=platform==='linux'?'block':'none';box.textContent=cmd||'No compatible packages found for this manager. Try Flatpak or select another app.';if(hint)hint.textContent=platform==='windows'?'Runs with Windows Package Manager (winget).':platform==='linux'?'Runs with the selected Linux package manager. Only supported packages are included.':'Runs with Homebrew.'}
+  function refreshCommand(){const box=document.querySelector('#installCommand'),hint=document.querySelector('#commandHint');if(!box)return;const chosen=availableApps().filter(a=>selected.has(a.key)),cmd=commandFor(chosen);const mgr=document.querySelector('#linuxManagerWrap');if(mgr)mgr.style.display='none';box.textContent=cmd||'No compatible packages found for this manager. Try Flatpak or select another app.';if(hint)hint.textContent=platform==='windows'?'Runs with Windows Package Manager (winget).':platform==='linux'?'Runs with the selected Linux package manager. Only supported packages are included.':'Runs with Homebrew.'}
   function wireCommand(){const mgr=document.querySelector('#linuxPackageManager');if(mgr&&!mgr.dataset.wired){mgr.dataset.wired='1';mgr.addEventListener('change',refreshCommand);}const copy=document.querySelector('#copyInstallCommand');if(copy&&!copy.dataset.wired){copy.dataset.wired='1';copy.addEventListener('click',async()=>{refreshCommand();const text=document.querySelector('#installCommand')?.textContent||'';if(!text||text.startsWith('No compatible'))return;try{await navigator.clipboard.writeText(text);const old=copy.textContent;copy.textContent='✓ Copied';setTimeout(()=>copy.textContent=old,1600)}catch{alert('Could not copy automatically.')}})}const review=document.querySelector('#reviewButton');if(review&&!review.dataset.commandWired){review.dataset.commandWired='1';review.addEventListener('click',()=>setTimeout(refreshCommand,0))}}
   function wire(){const old=document.querySelector('#downloadScript');if(!old||old.dataset.nativeDownload==='1'){wireCommand();return}const button=old.cloneNode(true);button.dataset.nativeDownload='1';old.replaceWith(button);button.addEventListener('click',async()=>{const chosen=availableApps().filter(a=>selected.has(a.key));if(!chosen.length)return;const oldText=button.textContent;button.disabled=true;button.textContent=platform==='windows'?'Downloading AppForge…':'Preparing AppForge…';try{if(platform==='windows')downloadWindows(chosen);else if(platform==='linux')await downloadLinux(chosen);else await downloadMac(chosen)}catch(e){alert(`AppForge: ${e.message}`)}finally{button.disabled=false;button.textContent=oldText}});wireCommand()}
   wire();
